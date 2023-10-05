@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -154,7 +155,8 @@ namespace Dashboard.Forms
             try
             {
                 // Specify the full path to the ADB executable
-                string adbPath = @"C:\platform-tools\adb.exe"; 
+                // string adbPath = @"C:\platform-tools\adb.exe";
+                string adbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "platform-tools", "adb.exe");
 
                 // Construct the ADB command
                 string adbCommand = $"shell service call isms 7 i32 0 s16 \"com.android.mms.service\" s16 \"{phoneNumber}\" s16 \"null\" s16 \"'{message}'\" s16 \"null\" s16 \"null\"";

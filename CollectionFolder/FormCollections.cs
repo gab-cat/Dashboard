@@ -30,6 +30,7 @@ namespace Dashboard.Forms
         private bool pastdue;
         private decimal total_amount_due;
         private decimal change;
+        List<int> saleIds = new List<int>();
 
 
         public FormCollections(string employee_name, string role)
@@ -123,6 +124,8 @@ namespace Dashboard.Forms
 
         private void searchCX()
         {
+            saleIds.Clear();
+            totalAmounts.Clear();
             try
             {
                 using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
@@ -187,6 +190,7 @@ namespace Dashboard.Forms
                 }
 
                 ConfigureDataGridViewColumns();
+                LoadSaleIDsAndAmountDue(customerId);
             }
             catch (Exception ex)
             {
@@ -213,6 +217,8 @@ namespace Dashboard.Forms
         {
             if (CustomerGrid.SelectedRows.Count > 0)
             {
+                saleIds.Clear();
+                totalAmounts.Clear();
                 DataGridViewRow selectedRow = CustomerGrid.SelectedRows[0];
 
                 // Get the data from the selected row
@@ -251,6 +257,7 @@ namespace Dashboard.Forms
                 loadIndicators(customerId);
                 lblTotalPastDue.Text = "₱ " + GetTotalPastDueAmount(customerId).ToString("0.00");
                 CalculatePaymentSummary(customerId);
+
                 LoadSaleIDsAndAmountDue(customerId);
                 clearPaymentInfo();
                 PopulateListViewForCustomer(customerId, comboBox1.SelectedItem.ToString());
@@ -501,10 +508,11 @@ namespace Dashboard.Forms
             });
         }
 
-        List<int> saleIds = new List<int>();
+       
         private void LoadSaleIDsAndAmountDue(int customerId)
         {
             saleIds.Clear();
+            totalAmounts.Clear();
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
                 try
@@ -666,7 +674,7 @@ namespace Dashboard.Forms
                         memo1.Show();
                     }
 
-                    MessageBox.Show("Payment successfully processed.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    SendPaymentConfirmationEmail(customerId, txtEmail.Text, paymentAmount, paymentMethod);
 
                     btnSubmitPayment.Enabled = false;
                 }
@@ -1075,7 +1083,7 @@ namespace Dashboard.Forms
                 if (!string.IsNullOrEmpty(recipientEmail))
                 {
                     string subject = "Past Due Amount Notification";
-                    string body = $"Dear Customer,\n\nThis is a reminder that you have a past due amount of {pastDue}. Please make the payment at your earliest convenience.\n\nSincerely,\nCollections Department - New Bernales Hardware Store";
+                    string body = $"Dear Mr./Ms. {txtName.Text} ,\n\nGood day! This is a reminder that you have a past due amount of {pastDue}. Please make the payment at your earliest convenience.\n\nSincerely,\nCollections Department - New Bernales Hardware Store";
 
                     try
                     {
@@ -1120,6 +1128,44 @@ namespace Dashboard.Forms
                 MessageBox.Show("Please select a customer to notify.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+        }
+
+        private void SendPaymentConfirmationEmail(int customerId, string recipientEmail, decimal paymentAmount, string paymentMethod)
+        {
+            string fromEmail = "gabriel.catimbang30@gmail.com";
+            string fromPassword = "dzfh ejih ihxr vpdd";
+
+            string subject = "Payment Confirmation";
+            string body = $"Dear Mr./Ms. {txtName.Text},\n\nGood day! This email is to confirm the receipt of your payment of ₱ {paymentAmount.ToString("0.00")} via {paymentMethod}.\n\nThank you for your prompt payment.\n\nSincerely,\nCollections Department - New Bernales Hardware Store";
+
+            try
+            {
+                MailMessage message = new MailMessage
+                {
+                    From = new MailAddress(fromEmail, "Contact Center"),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = false, 
+                };
+
+                message.To.Add(recipientEmail);
+
+                SmtpClient client = new SmtpClient("smtp.gmail.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(fromEmail, fromPassword),
+                    EnableSsl = true,
+                };
+
+                
+                client.Send(message);
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred while sending the email: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
