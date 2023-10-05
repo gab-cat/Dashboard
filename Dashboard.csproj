@@ -176,7 +176,6 @@
     <Compile Include="CollectionFolder\FormCollections.Designer.cs">
       <DependentUpon>FormCollections.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CustomPageEvent.cs" />
     <Compile Include="Forms\FormOrder.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -36,8 +36,6 @@ namespace Dashboard
         private int tempIndex;
         private Form activeForm;
         public string username;
-        // private string connectionString = "datasource=localhost;port=3306;username=root;password=root;database=mydb;";
-        private string connectionString = "datasource=sql12.freesqldatabase.com;port=3306;username=sql12647212;password=31a2n6pHbR;database=sql12647212;";
         public int customer_id;
         private string role;
         public Dashboard(string firstName, string lastName, string role)
@@ -152,7 +150,6 @@ namespace Dashboard
                     {
                         averageSales = dataTable.AsEnumerable().Average(row => Convert.ToDouble(row["total_sales"]));
                     }
-                    // Add more data type checks as needed
                 }
             }
 

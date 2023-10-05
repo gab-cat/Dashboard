@@ -54,7 +54,7 @@ namespace Dashboard.Forms
                     From = new MailAddress(fromEmail, "Gabriel Catimbang"),
                     Subject = subject,
                     Body = body,
-                    IsBodyHtml = true, // Set this to true if your body contains HTML
+                    IsBodyHtml = true, 
                 };
 
                 message.To.Add(recipientEmail);
@@ -71,8 +71,8 @@ namespace Dashboard.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string recipientEmail = email_address; // Replace with the recipient's email address
-            string subject = Subject.Text.ToString(); // Replace with your email subject
+            string recipientEmail = email_address; 
+            string subject = Subject.Text.ToString(); 
             string plainTextBody = textBox3.Text; // Get the plain text from the TextBox
             string htmlBody = ConvertPlainTextToHtml(plainTextBody); // Convert to HTML format
 
@@ -81,7 +81,6 @@ namespace Dashboard.Forms
             string body = htmlBody + "<br /><br />" + GetEmailOutro(); // Combine with the outro
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 SendsEmail(recipientEmail, subject, body);
             });
 

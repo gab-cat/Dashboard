@@ -6,7 +6,7 @@ public class CustomProgressBar : ProgressBar
     public CustomProgressBar()
     {
         SetStyle(ControlStyles.UserPaint, true);
-        ForeColor = Color.Blue; // Set the foreground color to blue
+        ForeColor = Color.Blue; 
     }
 
     protected override void OnPaint(PaintEventArgs e)

@@ -30,7 +30,7 @@ namespace Dashboard
                                                         );
 
         private const int ProgressBarFillDuration = 3000; // 5 seconds
-        private const int ProgressBarMaximum = 100; // Maximum value for the progress bar
+        private const int ProgressBarMaximum = 100; 
         private CustomProgressBar customProgressBar1;
         bool isDatabaseConnected = false;
 
@@ -41,15 +41,15 @@ namespace Dashboard
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 25, 25));
 
             Shown += Initializer_Shown;
-            customProgressBar1 = new CustomProgressBar(); // Initialize the custom progress bar
+            customProgressBar1 = new CustomProgressBar(); 
             Color color = Color.FromArgb(139, 139, 177);
-            customProgressBar1.ForeColor = color; // Set the foreground color (not needed since it's set in the CustomProgressBar constructor)
+            customProgressBar1.ForeColor = color; 
 
 
-            customProgressBar1.Size = new Size(510, 15); // Width = 200, Height = 50
+            customProgressBar1.Size = new Size(510, 15); 
 
             // Set the location of the progress bar
-            customProgressBar1.Location = new Point(0, 100); // X = 10, Y = 10
+            customProgressBar1.Location = new Point(0, 100); 
 
             Controls.Add(customProgressBar1);
             customProgressBar1.BringToFront();
@@ -59,9 +59,8 @@ namespace Dashboard
         private async void Initializer_Shown(object sender, EventArgs e)
         {
             customProgressBar1.Maximum = ProgressBarMaximum;
-            customProgressBar1.Value = 0; // Initial value at 0
+            customProgressBar1.Value = 0; 
 
-            // Fill the first half of the progress bar
             for (int i = 0; i <= ProgressBarMaximum / 2; i++)
             {
                 customProgressBar1.Value = i;
@@ -77,7 +76,7 @@ namespace Dashboard
                     {
                         throw new Exception("Unable to establish a database connection.");
                     }
-                    // Create a professionally worded message with a "Liabilities and Responsibilities" link
+
                     string message = "This software is intended solely for legitimate business purposes. Any unauthorized use or misuse of this software may result in legal action by the company." +
                         "\n\nBy clicking 'Agree,' you acknowledge and accept the following:" +
                         "\n\nLiabilities and Responsibilities:" +
@@ -85,7 +84,6 @@ namespace Dashboard
                         "\n- Any misuse, unauthorized access, or violation of laws and regulations while using this software may lead to legal consequences." +
                         "\n\nPlease take a moment to review the full 'Liabilities and Responsibilities' before proceeding. Click 'Agree' to signify your understanding and acceptance.";
 
-                    // Show a confirmation message with a "Liabilities and Responsibilities" link
                     var result = MessageBox.Show(
                         message,
                         "Software Usage Agreement",
@@ -98,7 +96,7 @@ namespace Dashboard
                         // await connection.OpenAsync(); // Use asynchronous connection open
                         label4.Text = "Successfully authenticated to database server   .   .   .";
                         await Task.Delay(1500);
-                        // Fill the second half of the progress bar
+
                         label4.Text = "Establishing connection with the database server   .   .   .";
                         for (int i = customProgressBar1.Value; i <= ProgressBarMaximum; i++)
                         {
@@ -106,7 +104,7 @@ namespace Dashboard
                             await Task.Delay(ProgressBarFillDuration / (ProgressBarMaximum / 2));
                         }
 
-                        // Wait for 1 second
+
                         label4.Text = "Initializing software  .   .   .";
                         await Task.Delay(1000);
 

@@ -21,11 +21,7 @@ namespace Dashboard
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-
-            // Define the border color and width
             Color borderColor = Color.Black;
-
-            // Create a rectangle that defines the border area
             Rectangle borderRectangle = new Rectangle(
                 new Point(0, 0),
                 new Size(ClientSize.Width, ClientSize.Height)

@@ -99,19 +99,19 @@ namespace Dashboard.Forms
 
                     // Set specific widths for columns
 
-                    dataGridView1.Columns["#"].Width = 30; // Width of '#' column
-                    dataGridView1.Columns["product_id"].Width = 70; // Width of 'product_id' column
-                    dataGridView1.Columns["product_name"].Width = 130; // Width of 'product_name' column
-                    dataGridView1.Columns["description"].Width = 290; // Width of 'description' column
-                    dataGridView1.Columns["selling_price"].Width = 70; // Width of 'selling_price' column
-                    dataGridView1.Columns["quantity_in_stock"].Width = 50; // Width of 'quantity_in_stock' column
+                    dataGridView1.Columns["#"].Width = 30; 
+                    dataGridView1.Columns["product_id"].Width = 70; 
+                    dataGridView1.Columns["product_name"].Width = 130; 
+                    dataGridView1.Columns["description"].Width = 290; 
+                    dataGridView1.Columns["selling_price"].Width = 70; 
+                    dataGridView1.Columns["quantity_in_stock"].Width = 50; 
 
-                    dataGridView1.Columns["#"].HeaderText = "#"; // Rename '#' column header
-                    dataGridView1.Columns["product_id"].HeaderText = "Product ID"; // Rename 'product_id' column header
-                    dataGridView1.Columns["product_name"].HeaderText = "Item"; // Rename 'product_name' column header
-                    dataGridView1.Columns["description"].HeaderText = "Description"; // Rename 'description' column header
-                    dataGridView1.Columns["selling_price"].HeaderText = "Price"; // Rename 'selling_price' column header
-                    dataGridView1.Columns["quantity_in_stock"].HeaderText = "Stock"; // Rename 'quantity_in_stock' column header
+                    dataGridView1.Columns["#"].HeaderText = "#"; 
+                    dataGridView1.Columns["product_id"].HeaderText = "Product ID"; 
+                    dataGridView1.Columns["product_name"].HeaderText = "Item"; 
+                    dataGridView1.Columns["description"].HeaderText = "Description"; 
+                    dataGridView1.Columns["selling_price"].HeaderText = "Price"; 
+                    dataGridView1.Columns["quantity_in_stock"].HeaderText = "Stock"; 
 
                     // Update stock values based on the pending order
                     foreach (DataGridViewRow row in dataGridView1.Rows)
@@ -132,8 +132,8 @@ namespace Dashboard.Forms
                     dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DimGray;
                     dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
 
-                    dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.Orange; // Background color
-                    dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White; // Foreground color
+                    dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.Orange; 
+                    dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White; 
                 }
             }
         }
@@ -159,7 +159,7 @@ namespace Dashboard.Forms
                 {
                     // User entered an invalid quantity (not an integer)
                     MessageBox.Show("Please enter a valid quantity (a positive whole number).");
-                    continue; // Restart the loop
+                    continue; 
                 }
 
                 if (quantity <= 0)
@@ -172,10 +172,9 @@ namespace Dashboard.Forms
                 {
                     // User entered a quantity greater than the available stock
                     MessageBox.Show("Quantity exceeds available stock. Please enter a smaller quantity.");
-                    continue; // Restart the loop
+                    continue; 
                 }
 
-                // If all constraints are met, calculate subtotal and add the item to the order DataTable
                 string productID = selectedRow["product_id"].ToString();
                 string itemName = selectedRow["product_name"].ToString();
                 string description = selectedRow["description"].ToString();
@@ -209,7 +208,6 @@ namespace Dashboard.Forms
                 // Save the updated pending order data to file
                 SavePendingOrderToFile(pendingOrder);
 
-                // Exit the loop since the item has been successfully added
                 break;
             }
         }
@@ -266,19 +264,19 @@ namespace Dashboard.Forms
 
                     // Set specific widths for columns
 
-                    dataGridView1.Columns["#"].Width = 30; // Width of '#' column
-                    dataGridView1.Columns["product_id"].Width = 70; // Width of 'product_id' column
-                    dataGridView1.Columns["product_name"].Width = 130; // Width of 'product_name' column
-                    dataGridView1.Columns["description"].Width = 290; // Width of 'description' column
-                    dataGridView1.Columns["selling_price"].Width = 70; // Width of 'selling_price' column
-                    dataGridView1.Columns["quantity_in_stock"].Width = 50; // Width of 'quantity_in_stock' column
+                    dataGridView1.Columns["#"].Width = 30; 
+                    dataGridView1.Columns["product_id"].Width = 70; 
+                    dataGridView1.Columns["product_name"].Width = 130; 
+                    dataGridView1.Columns["description"].Width = 290; 
+                    dataGridView1.Columns["selling_price"].Width = 70; 
+                    dataGridView1.Columns["quantity_in_stock"].Width = 50; 
 
-                    dataGridView1.Columns["#"].HeaderText = "#"; // Rename '#' column header
-                    dataGridView1.Columns["product_id"].HeaderText = "Product ID"; // Rename 'product_id' column header
-                    dataGridView1.Columns["product_name"].HeaderText = "Item"; // Rename 'product_name' column header
-                    dataGridView1.Columns["description"].HeaderText = "Description"; // Rename 'description' column header
-                    dataGridView1.Columns["selling_price"].HeaderText = "Price"; // Rename 'selling_price' column header
-                    dataGridView1.Columns["quantity_in_stock"].HeaderText = "Stock"; // Rename 'quantity_in_stock' column header
+                    dataGridView1.Columns["#"].HeaderText = "#"; 
+                    dataGridView1.Columns["product_id"].HeaderText = "Product ID"; 
+                    dataGridView1.Columns["product_name"].HeaderText = "Item"; 
+                    dataGridView1.Columns["description"].HeaderText = "Description"; 
+                    dataGridView1.Columns["selling_price"].HeaderText = "Price"; 
+                    dataGridView1.Columns["quantity_in_stock"].HeaderText = "Stock"; 
 
                     DataGridViewButtonColumn btnAddColumn = (DataGridViewButtonColumn)dataGridView1.Columns["btnAddColumn"];
                     btnAddColumn.DisplayIndex = dataGridView1.Columns.Count - 1;
@@ -286,8 +284,8 @@ namespace Dashboard.Forms
                     dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DimGray;
                     dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
 
-                    dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.Orange; // Background color
-                    dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White; // Foreground color
+                    dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.Orange; 
+                    dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White; 
                 }
             }
         }

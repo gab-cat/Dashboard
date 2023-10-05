@@ -34,7 +34,7 @@ namespace Dashboard.Forms
                 {
                     string query = "SELECT payment_id AS 'Transaction ID', payment_date AS 'Date', payment_amount AS 'Amount', payment_method AS 'Method' " +
                                    "FROM payments " +
-                                   "WHERE customer_id = @customer_id " + // Added space here
+                                   "WHERE customer_id = @customer_id " + 
                                    "ORDER BY payment_date DESC";
 
 
@@ -59,7 +59,6 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access.
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
@@ -125,19 +124,17 @@ namespace Dashboard.Forms
                                             string info = text + text1 + text2 + text3 + text4 + text5;
                                             LoadingScreenManager.ShowLoadingScreen(() =>
                                             {
-                                                // The code inside this block is executed while the loading animation is displayed
                                                 AddMemo memo = new AddMemo(customer_id, employee_name, "Payment Refund", info);
-                                                memo.ShowDialog(); // Show the AddMemo form as a dialog
+                                                memo.ShowDialog(); 
                                             });
 
                                             LoadingScreenManager.ShowLoadingScreen(() =>
                                             {
-                                                // The code inside this block is executed while the loading animation is displayed
                                                 AddMemo memo = new AddMemo(customer_id, employee_name);
-                                                memo.ShowDialog(); // Show the AddMemo form as a dialog
+                                                memo.ShowDialog();
                                             });
 
-                                            LoadPaymentDataForCustomer(customer_id); // Refresh the payment data after refunding.
+                                            LoadPaymentDataForCustomer(customer_id); 
                                         }
                                         else
                                         {
@@ -157,14 +154,10 @@ namespace Dashboard.Forms
                         }
                     }
 
-                    // Commit the transaction if all database operations succeed
                     transaction.Commit();
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access
-                    // You can log or display an error message here
-
                     // Rollback the transaction to ensure data consistency
                     transaction?.Rollback();
 
@@ -185,8 +178,6 @@ namespace Dashboard.Forms
         {
             // Clear any existing data in the DataGridView
             paymentData.DataSource = null;
-
-            // Load and display payment data for the customer
             loadPaymentData(customerId);
         }
 
@@ -197,20 +188,16 @@ namespace Dashboard.Forms
 
         private void button2_Click(object sender, EventArgs e)
         {
-            // Check if any row is selected in the DataGridView
             if (paymentData.SelectedRows.Count > 0)
             {
-                // Get the payment ID from the selected row (assuming it's in the "Transaction ID" column)
                 string transactionId = paymentData.SelectedRows[0].Cells["Transaction ID"].Value.ToString();
-
-                // Get the "Method" value from the selected row (assuming it's in the "Method" column)
                 string method = paymentData.SelectedRows[0].Cells["Method"].Value.ToString();
 
                 // Check if the payment has already been refunded
                 if (method.ToLower() == "refunded")
                 {
                     MessageBox.Show("This payment has already been refunded and cannot be refunded again.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return; // Exit the function
+                    return; 
                 }
 
                 // Ask for confirmation before refunding
@@ -218,7 +205,6 @@ namespace Dashboard.Forms
 
                 if (result == DialogResult.Yes)
                 {
-                    // Call the RefundPayment function with the transaction ID
                     RefundPayment(transactionId);
                 }
             }

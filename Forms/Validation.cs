@@ -47,8 +47,8 @@ namespace Dashboard.Forms
             if (radioEmail.Checked)
             {
 
-                string recipientEmail = email; // Replace with the recipient's email address
-                string subject = "Text Code Validation"; // Replace with your email subject
+                string recipientEmail = email; 
+                string subject = "Text Code Validation"; 
                 string plainTextBody = "Please do not share this with anyone unless a verified contact center employee. Your OTP is " + textcode +
                                         ". Please provide it only to a contact center employee. If you did not request this code, please contact us for your assistance.";
 
@@ -61,7 +61,6 @@ namespace Dashboard.Forms
                 string body = htmlBody;
                 LoadingScreenManager.ShowLoadingScreen(() =>
                 {
-                    // The code inside this block is executed while the loading animation is displayed
                     SendsEmail(recipientEmail, subject, body);
                 });
 
@@ -99,13 +98,12 @@ namespace Dashboard.Forms
                     From = new MailAddress(fromEmail, "Contact Center"),
                     Subject = subject,
                     Body = body,
-                    IsBodyHtml = true, // Set this to true if your body contains HTML
+                    IsBodyHtml = true, 
                 };
 
                 message.To.Add(recipientEmail);
 
                 client.Send(message);
-                // this.Close();
 
             }
             catch (Exception ex)
@@ -156,16 +154,10 @@ namespace Dashboard.Forms
             try
             {
                 // Specify the full path to the ADB executable
-                string adbPath = @"C:\platform-tools\adb.exe"; // Replace with the actual path on your system.
+                string adbPath = @"C:\platform-tools\adb.exe"; 
 
                 // Construct the ADB command
                 string adbCommand = $"shell service call isms 7 i32 0 s16 \"com.android.mms.service\" s16 \"{phoneNumber}\" s16 \"null\" s16 \"'{message}'\" s16 \"null\" s16 \"null\"";
-
-               
-
-
-                // Construct the ADB command to read the message from the text file
-                //string adbCommand = $"shell service call isms 7 i32 0 s16 \"com.android.mms.service\" s16 \"{phoneNumber}\" s16 \"null\" s16 \"$(cat {tempFileName})\" s16 \"null\" s16 \"null\"";
 
                 // Execute the ADB command
                 Process process = new Process();
@@ -201,7 +193,6 @@ namespace Dashboard.Forms
             {
                 LoadingScreenManager.ShowLoadingScreen(() =>
                 {
-                    // The code inside this block is executed while the loading animation is displayed
                     AddMemo newmemo = new AddMemo(customer_id, employee_name, "Validation Sucessful", "Validated via email sent to " + email);
                     newmemo.ShowDialog();
                 });
@@ -210,7 +201,6 @@ namespace Dashboard.Forms
             {
                 LoadingScreenManager.ShowLoadingScreen(() =>
                 {
-                    // The code inside this block is executed while the loading animation is displayed
                     AddMemo newmemo = new AddMemo(customer_id, employee_name, "Validation Sucessful", "Validated via text sent to " + phone_number);
                     newmemo.ShowDialog();
                 });

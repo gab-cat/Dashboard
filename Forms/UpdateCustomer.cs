@@ -39,7 +39,6 @@ namespace Dashboard
             txtPhone.TextChanged += InputField_TextChanged;
             txtEmail.TextChanged += InputField_TextChanged;
 
-            // Initially, disable the "Save" button
             button1.Enabled = false;
 
         }
@@ -48,7 +47,6 @@ namespace Dashboard
         {
             TextBox textBox = (TextBox)sender;
 
-            // Compare the current text with the Tag property to check for changes
             if (textBox.Text != textBox.Tag.ToString())
             {
                 changesMade = true;
@@ -79,19 +77,19 @@ namespace Dashboard
 
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            if (reader.Read()) // Check if customer information was found
+                            if (reader.Read()) 
                             {
                                 // Populate the text boxes with retrieved information
                                 txt1.Text = reader["address"].ToString();
-                                txt1.Tag = txt1.Text; // Set the Tag property to the initial value
+                                txt1.Tag = txt1.Text; 
                                 txtFirstname.Text = reader["first_name"].ToString();
-                                txtFirstname.Tag = txtFirstname.Text; // Set the Tag property to the initial value
+                                txtFirstname.Tag = txtFirstname.Text; 
                                 txtLastname.Text = reader["last_name"].ToString();
-                                txtLastname.Tag = txtLastname.Text; // Set the Tag property to the initial value
+                                txtLastname.Tag = txtLastname.Text; 
                                 txtPhone.Text = reader["contact_phone"].ToString();
-                                txtPhone.Tag = txtPhone.Text; // Set the Tag property to the initial value
+                                txtPhone.Tag = txtPhone.Text; 
                                 txtEmail.Text = reader["contact_email"].ToString();
-                                txtEmail.Tag = txtEmail.Text; // Set the Tag property to the initial value
+                                txtEmail.Tag = txtEmail.Text; 
                             }
                             else
                             {
@@ -130,9 +128,8 @@ namespace Dashboard
 
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            if (reader.Read()) // Check if indicator values were found
+                            if (reader.Read()) 
                             {
-                                // Store the original state of the checkboxes
                                 originalProfessionalChecked = Convert.ToInt32(reader["professional_firm"]) == 1;
                                 originalSmsChecked = Convert.ToInt32(reader["sms"]) == 1;
                                 originalEmailChecked = Convert.ToInt32(reader["email"]) == 1;
@@ -146,8 +143,7 @@ namespace Dashboard
                             }
                             else
                             {
-                                // Handle the case where no indicator values were found (optional)
-                                // You can clear checkboxes or show a message here if needed.
+
                             }
                         }
                     }
@@ -186,34 +182,34 @@ namespace Dashboard
                         checkExistingCommand.Parameters.AddWithValue("@customerId", CustomerId);
                         int existingCustomerCount = Convert.ToInt32(checkExistingCommand.ExecuteScalar());
 
-                        if (existingCustomerCount > 0) // Customer already exists
+                        if (existingCustomerCount > 0) 
                         {
                             // Track changes in customer information
                             List<string> changedFields = new List<string>();
                             StringBuilder memoText = new StringBuilder();
 
                             string updateQuery = "UPDATE customers SET ";
-                            if (address != txt1.Tag.ToString()) // Check if the address has changed
+                            if (address != txt1.Tag.ToString()) 
                             {
                                 updateQuery += "address = @address, ";
                                 changedFields.Add($"Changed Address from '{txt1.Tag.ToString()}' to '{address}'");
                             }
-                            if (first_name != txtFirstname.Tag.ToString()) // Check if the first name has changed
+                            if (first_name != txtFirstname.Tag.ToString()) 
                             {
                                 updateQuery += "first_name = @first_name, ";
                                 changedFields.Add($"Changed First Name from '{txtFirstname.Tag.ToString()}' to '{first_name}'");
                             }
-                            if (last_name != txtLastname.Tag.ToString()) // Check if the last name has changed
+                            if (last_name != txtLastname.Tag.ToString())
                             {
                                 updateQuery += "last_name = @last_name, ";
                                 changedFields.Add($"Changed Last Name from '{txtLastname.Tag.ToString()}' to '{last_name}'");
                             }
-                            if (phone != txtPhone.Tag.ToString()) // Check if the phone has changed
+                            if (phone != txtPhone.Tag.ToString()) 
                             {
                                 updateQuery += "contact_phone = @phone, ";
                                 changedFields.Add($"Changed Phone from '{txtPhone.Tag.ToString()}' to '{phone}'");
                             }
-                            if (email != txtEmail.Tag.ToString()) // Check if the email has changed
+                            if (email != txtEmail.Tag.ToString())
                             {
                                 updateQuery += "contact_email = @email, ";
                                 changedFields.Add($"Changed Email from '{txtEmail.Tag.ToString()}' to '{email}'");
@@ -221,10 +217,7 @@ namespace Dashboard
 
                             if (changedFields.Count > 0)
                             {
-                                // Remove the trailing comma and space from updateQuery
                                 updateQuery = updateQuery.TrimEnd(',', ' ');
-
-                                // Execute the update query
                                 using (MySqlCommand updateCommand = new MySqlCommand(updateQuery + " WHERE customer_id = @customerId", connection))
                                 {
                                     updateCommand.Parameters.AddWithValue("@customerId", CustomerId);
@@ -291,12 +284,11 @@ namespace Dashboard
                 {
                     try
                     {
-                        // Check if the customer already exists in the indicators table
                         string checkExistingQuery = "SELECT indicator_id, professional_firm, sms, email, phone FROM indicators WHERE customer_id = @customerId";
                         using (MySqlCommand checkExistingCommand = new MySqlCommand(checkExistingQuery, connection))
                         {
                             checkExistingCommand.Parameters.AddWithValue("@customerId", CustomerId);
-                            MySqlDataReader reader = checkExistingCommand.ExecuteReader(); // Create the reader here
+                            MySqlDataReader reader = checkExistingCommand.ExecuteReader(); 
 
                             if (reader.Read()) // Customer already exists in indicators table
                             {
@@ -328,7 +320,7 @@ namespace Dashboard
                                     user_text.AppendLine(chkPhone.Checked ? "Phone Preference, checked." : "Phone Preference, unchecked.");
                                 }
 
-                                reader.Close(); // Close the reader after retrieving data
+                                reader.Close(); 
 
                                 // Update the existing row with new indicator values
                                 string updateQuery = "UPDATE indicators SET professional_firm = @professional, sms = @sms, email = @email, phone = @phone " +
@@ -410,7 +402,6 @@ namespace Dashboard
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 updateCustomerInfo();
                 updateIndicators();
             });
@@ -425,7 +416,6 @@ namespace Dashboard
 
         private void chkProfessional_CheckedChanged(object sender, EventArgs e)
         {
-            // Enable the "Save" button when the checkbox selection changes
             if (chkProfessional.Checked != originalProfessionalChecked ||
                 chkSMS.Checked != originalSmsChecked ||
                 chkEmail.Checked != originalEmailChecked ||
@@ -441,7 +431,6 @@ namespace Dashboard
 
         private void chkEmail_CheckedChanged(object sender, EventArgs e)
         {
-            // Enable the "Save" button when the checkbox selection changes
             if (chkProfessional.Checked != originalProfessionalChecked ||
                 chkSMS.Checked != originalSmsChecked ||
                 chkEmail.Checked != originalEmailChecked ||
@@ -457,7 +446,6 @@ namespace Dashboard
 
         private void chkSMS_CheckedChanged(object sender, EventArgs e)
         {
-            // Enable the "Save" button when the checkbox selection changes
             if (chkProfessional.Checked != originalProfessionalChecked ||
                 chkSMS.Checked != originalSmsChecked ||
                 chkEmail.Checked != originalEmailChecked ||
@@ -473,7 +461,6 @@ namespace Dashboard
 
         private void chkPhone_CheckedChanged(object sender, EventArgs e)
         {
-            // Enable the "Save" button when the checkbox selection changes
             if (chkProfessional.Checked != originalProfessionalChecked ||
                 chkSMS.Checked != originalSmsChecked ||
                 chkEmail.Checked != originalEmailChecked ||

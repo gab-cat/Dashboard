@@ -48,20 +48,15 @@ namespace Dashboard.Forms
             string phoneNumber = textBox1.Text;
             string subject = Subject.Text.ToString() + Environment.NewLine;
             string body = textBox3.Text;
-            // string outro = "If you have any questions or need assistance, don't hesitate to reach out. Have a fantastic day!";
-
             string message = subject + body;
 
             try
             {
                 // Specify the full path to the ADB executable
-                string adbPath = @"C:\platform-tools\adb.exe"; // Replace with the actual path on your system.
+                string adbPath = @"C:\platform-tools\adb.exe"; 
 
                 // Construct the ADB command
                 string adbCommand = $"shell service call isms 7 i32 0 s16 \"com.android.mms.service\" s16 \"{phoneNumber}\" s16 \"null\" s16 \"'{message}'\" s16 \"null\" s16 \"null\"";
-
-                // Construct the ADB command to read the message from the text file
-                //string adbCommand = $"shell service call isms 7 i32 0 s16 \"com.android.mms.service\" s16 \"{phoneNumber}\" s16 \"null\" s16 \"$(cat {tempFileName})\" s16 \"null\" s16 \"null\"";
 
                 // Execute the ADB command
                 Process process = new Process();
@@ -78,7 +73,6 @@ namespace Dashboard.Forms
                 {
                     LoadingScreenManager.ShowLoadingScreen(() =>
                     {
-                        // The code inside this block is executed while the loading animation is displayed
                         AddMemo memo = new AddMemo(customer_id, employee_name, "SMS Message", Subject.Text + Environment.NewLine + body);
                         memo.ShowDialog();
                     });

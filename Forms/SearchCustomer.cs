@@ -207,11 +207,10 @@ namespace Dashboard
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Assuming customer_id is in the first column of the DataGridView
             if (e.RowIndex >= 0 && e.ColumnIndex == 0)
             {
                 SelectedCustomerId = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
-                this.DialogResult = DialogResult.OK; // This will close the form when a row is clicked
+                this.DialogResult = DialogResult.OK; 
             }
         }
 
@@ -220,8 +219,6 @@ namespace Dashboard
             if (e.RowIndex >= 0 && e.ColumnIndex == -1)
             {
                 e.Paint(e.CellBounds, DataGridViewPaintParts.All);
-
-                // Create a rectangle for the "button"
                 Rectangle buttonRect = new Rectangle(
                     e.CellBounds.X + e.CellBounds.Width - 22,
                     e.CellBounds.Y + 2,
@@ -229,10 +226,7 @@ namespace Dashboard
                     e.CellBounds.Height - 4
                 );
 
-                // Draw a button-like appearance
                 ControlPaint.DrawButton(e.Graphics, buttonRect, ButtonState.Normal);
-
-                // Draw button text
                 TextRenderer.DrawText(
                     e.Graphics,
                     "Your Button Text",
@@ -250,10 +244,7 @@ namespace Dashboard
         {
             if (e.KeyCode == Keys.Enter)
             {
-                // Call your function here
                 searchCX();
-
-                // Optionally, suppress the Enter key so it doesn't insert a newline
                 e.SuppressKeyPress = true;
             }
         }

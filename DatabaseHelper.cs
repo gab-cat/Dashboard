@@ -25,7 +25,6 @@ namespace Dashboard
             }
             catch (MySqlException ex)
             {
-                // Handle any connection errors here
                 Console.WriteLine("DBHP: An error occurred while opening the database connection: " + ex.Message);
                 connection.Close();
                 connection = null;

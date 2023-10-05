@@ -35,13 +35,8 @@ namespace Dashboard.Forms
 
         private void AddItemToOrder(OrderItem item)
         {
-            // Update the in-memory product data (decrement stock)
             UpdateProductStock(item.ProductID, item.Quantity * -1);
-
-            // Add the item to the order data structure
             orderItems.Add(item);
-
-            // Update the order grid
             UpdateOrderGrid();
         }
 
@@ -67,14 +62,13 @@ namespace Dashboard.Forms
         {
             if (productStockData.ContainsKey(productID))
             {
-                // Update the stock value based on the quantity change
                 productStockData[productID] += quantityChange;
             }
         }
 
         private bool isItemAddingEnabled = true;
         private List<OrderItem> orderItems = new List<OrderItem>();
-        private DataTable orderDataTable; // Add a DataTable for the order
+        private DataTable orderDataTable; 
         private int sale_id;
         private bool isDiscountApplied = false;
 
@@ -100,9 +94,6 @@ namespace Dashboard.Forms
 
         }
 
-
-
-
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
         private extern static void ReleaseCapture();
         [DllImport("user32.DLL", EntryPoint = "SendMessage")]
@@ -116,8 +107,6 @@ namespace Dashboard.Forms
             UpdateProductStock(item.ProductID, item.Quantity * -1);
 
             orderItems.Add(item);
-
-            // Update the order grid
             UpdateOrderGrid();
         }
 
@@ -137,13 +126,13 @@ namespace Dashboard.Forms
             orderGrid.DataSource = orderDataTable;
 
             // Set custom column widths
-            orderGrid.Columns["#"].Width = 25; // Set the width for the "#" column
-            orderGrid.Columns["Product ID"].Width = 65; // Set the width for the "Product ID" column
-            orderGrid.Columns["Item"].Width = 135; // Set the width for the "Item" column
-            orderGrid.Columns["Description"].Width = 245; // Set the width for the "Description" column
-            orderGrid.Columns["Price"].Width = 65; // Set the width for the "Price" column
-            orderGrid.Columns["Quantity"].Width = 70; // Set the width for the "Quantity" column
-            orderGrid.Columns["Subtotal"].Width = 70; // Set the width for the "Subtotal" column
+            orderGrid.Columns["#"].Width = 25; 
+            orderGrid.Columns["Product ID"].Width = 65; 
+            orderGrid.Columns["Item"].Width = 135; 
+            orderGrid.Columns["Description"].Width = 245;
+            orderGrid.Columns["Price"].Width = 65; 
+            orderGrid.Columns["Quantity"].Width = 70; 
+            orderGrid.Columns["Subtotal"].Width = 70; 
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -191,14 +180,9 @@ namespace Dashboard.Forms
                 Subtotal = e.Subtotal
             });
 
-            // Clear the previous selection
             orderGrid.ClearSelection();
-
-            // Update the order grid
             UpdateOrderGrid();
             UpdateTotalOrderAmount();
-
-            // Select the newly added row
             int rowIndex = orderGrid.Rows.Count - 1;
             orderGrid.Rows[rowIndex].Selected = true;
 
@@ -212,9 +196,7 @@ namespace Dashboard.Forms
 
         private void UpdateOrderGrid()
         {
-            // Clear the existing data in the order DataTable
             orderDataTable.Rows.Clear();
-
             // Iterate through the order items and add them to the order DataTable
             int index = 1;
             foreach (OrderItem item in orderItems)
@@ -222,7 +204,6 @@ namespace Dashboard.Forms
                 orderDataTable.Rows.Add(index, item.ProductID, item.ItemName, item.Description, item.Price, item.Quantity, item.Subtotal);
                 index++;
             }
-
             // Calculate and update the total order amount
             UpdateTotalOrderAmount();
         }
@@ -271,25 +252,16 @@ namespace Dashboard.Forms
                 }
 
                 // "X" button in the btnXColumn was clicked
-                // Get the selected row
                 DataGridViewRow selectedRow = orderGrid.Rows[e.RowIndex];
-
-                // Get the product ID of the item to be removed
                 string productIDToRemove = selectedRow.Cells["Product ID"].Value.ToString();
-
-                // Find the item in the orderItems list
                 OrderItem itemToRemove = orderItems.FirstOrDefault(item => item.ProductID == productIDToRemove);
 
                 if (itemToRemove != null)
                 {
-                    // Increment the stock for the product when removing the item
                     UpdateProductStock(itemToRemove.ProductID, itemToRemove.Quantity);
-
-                    // Remove the item from the orderItems list
                     orderItems.Remove(itemToRemove);
                 }
 
-                // Remove the selected row from the DataGridView
                 orderGrid.Rows.Remove(selectedRow);
 
                 // Update the order grid and total order amount
@@ -300,7 +272,6 @@ namespace Dashboard.Forms
                 if (AddItems.pendingOrder.ContainsKey(productIDToRemove))
                 {
                     AddItems.pendingOrder.Remove(productIDToRemove);
-                    // Save the updated pending order data to the JSON file
                     SavePendingOrderToFile(AddItems.pendingOrder);
                 }
             }
@@ -324,19 +295,15 @@ namespace Dashboard.Forms
                                 // Check if a sale_id has been generated
                                 if (sale_id > 0)
                                 {
-                                    // Delete the sale_id row from the sales table
                                     string deleteQuery = "DELETE FROM sales WHERE sale_id = @sale_id";
                                     MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection, transaction);
                                     deleteCommand.Parameters.AddWithValue("@sale_id", sale_id);
                                     deleteCommand.ExecuteNonQuery();
                                 }
-
-                                // Commit the transaction
                                 transaction.Commit();
                             }
                             catch (Exception ex)
                             {
-                                // Handle any exceptions that may occur during the transaction
                                 transaction.Rollback();
                                 MessageBox.Show("An error occurred while canceling the transaction: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
@@ -344,20 +311,19 @@ namespace Dashboard.Forms
                     }
                 }
             }
-                // Close the current POS form
          this.Close();
 
-                // Show the previously hidden Dashboard and FormOrder forms
+         // Show the previously hidden Dashboard and FormOrder forms
          Dashboard dashboardForm = Application.OpenForms["Dashboard"] as Dashboard;
          if (dashboardForm != null)
          {
-            dashboardForm.Show(); // Show the Dashboard form
+            dashboardForm.Show(); 
          }
 
          FormOrder formOrderForm = Application.OpenForms["FormOrder"] as FormOrder;
          if (formOrderForm != null)
          {
-         formOrderForm.Show(); // Show the FormOrder form
+         formOrderForm.Show(); 
           }
             
         }
@@ -371,7 +337,6 @@ namespace Dashboard.Forms
         {
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
-                // Create a new transaction
                 using (MySqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
@@ -386,15 +351,9 @@ namespace Dashboard.Forms
                         new_sale_id = newSaleID;
 
                         sale_id = newSaleID;
-
-                        // Get the current date in the format "YYYYMMDD"
                         string currentDate = DateTime.Now.ToString("yyyyMMdd");
-
-                        // Set the transaction ID in the format "YYYYMMDD + sale_id"
                         string transactionID = currentDate + newSaleID.ToString();
                         transaction_id = transactionID;
-
-                        // Set the transaction ID in your textbox (assuming you have a textbox named "txtTransactionID")
                         txtTransactionID.Text = transactionID;
 
                         // Insert the new sale_id into the sales table
@@ -403,12 +362,10 @@ namespace Dashboard.Forms
                         insertCommand.Parameters.AddWithValue("@sale_id", newSaleID);
                         insertCommand.ExecuteNonQuery();
 
-                        // Commit the transaction
                         transaction.Commit();
                     }
                     catch (Exception ex)
                     {
-                        // Handle any exceptions that may occur during the transaction
                         transaction.Rollback();
                         MessageBox.Show("An error occurred while generating the transaction ID: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -427,13 +384,10 @@ namespace Dashboard.Forms
 
             orderOngoing = true;
 
-            // Clear the pending order data in memory
             AddItems.pendingOrder.Clear();
 
             // Save the empty pending order data to the JSON file
             SavePendingOrderToFile(AddItems.pendingOrder);
-
-            // Enable item adding and show the transaction ID textbox
             isItemAddingEnabled = true;
             btnAddItem.Enabled = true;
             txtTransactionID.Visible = true;
@@ -460,23 +414,19 @@ namespace Dashboard.Forms
             // Prompt the user for password with a password input box
             string password = PromptForPassword("Enter Supervisor's Password:");
 
-            // Check the username and password in your logins table (You need to implement this part)
             bool isAuthenticated = CheckAuthentication(username, password);
 
             if (isAuthenticated)
             {
-                // Get the user's role from the logins table (You need to implement this part)
                 string userRole = GetUserRole(username);
 
                 // Check if the user is an Admin or Manager to apply a discount
                 if (userRole == "Admin" || userRole == "Manager")
                 {
-                    // Prompt the user to enter a discount percentage
                     string discountInput = Interaction.InputBox("Enter discount percentage:", "Discount");
 
                     if (decimal.TryParse(discountInput, out decimal discountPercentage) && discountPercentage >= 0)
                     {
-                        // Check if the discount percentage is valid
                         if (discountPercentage <= 100)
                         {
                             // Calculate the discount amount based on the percentage
@@ -498,7 +448,7 @@ namespace Dashboard.Forms
                             lblTotalAmount.Text = totalAmount.ToString("0.00");
                             txttotal.Text = lblTotalAmount.Text;
 
-                            // Calculate VAT and vatable amount (assuming VAT rate is 12%, you can adjust this rate accordingly)
+                            // Calculate VAT and vatable amount 
                             decimal vatRate = 0.12m; // 12% VAT rate
                             decimal vatableAmount = totalAmount / (1 + vatRate);
                             decimal vatAmount = totalAmount - vatableAmount;
@@ -507,17 +457,12 @@ namespace Dashboard.Forms
                             txtVatable.Text = vatableAmount.ToString("0.00");
                             txtVAT.Text = vatAmount.ToString("0.00");
 
-                            // Disable item adding after applying the discount
                             isItemAddingEnabled = false;
 
-                            // Set the flag to indicate that a discount has been applied
                             isDiscountApplied = true;
 
-                            // Update the order grid and total order amount
-                            // UpdateOrderGrid();
                             ApplyDiscountToOrderItems(discountPercentage);
 
-                            // Display a message indicating that the discount has been applied
                             MessageBox.Show($"Discount of {discountPercentage}% applied successfully.", "Discount", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
@@ -547,7 +492,7 @@ namespace Dashboard.Forms
             {
                 if (row.Cells["Price"] is DataGridViewTextBoxCell priceCell &&
                     row.Cells["Quantity"] is DataGridViewTextBoxCell quantityCell &&
-                    row.Cells["Subtotal"] is DataGridViewTextBoxCell subtotalCell) // Add this line
+                    row.Cells["Subtotal"] is DataGridViewTextBoxCell subtotalCell) 
                 {
                     if (decimal.TryParse(priceCell.Value.ToString(), out decimal originalPrice) &&
                         int.TryParse(quantityCell.Value.ToString(), out int quantity))
@@ -562,8 +507,8 @@ namespace Dashboard.Forms
                             orderItems[rowIndex].Price = discountedPrice;
 
                             decimal subtotal = discountedPrice * quantity;
-                            subtotalCell.Value = subtotal.ToString("0.00"); // Change the text color of the "Subtotal" cell
-                            subtotalCell.Style.ForeColor = Color.Blue; // Change the subtotal text color to blue
+                            subtotalCell.Value = subtotal.ToString("0.00"); 
+                            subtotalCell.Style.ForeColor = Color.Blue; 
 
                             orderItems[rowIndex].Subtotal = subtotal;
                         }
@@ -605,16 +550,13 @@ namespace Dashboard.Forms
         {
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
-                // Query to check username and password in your logins table
                 string query = "SELECT COUNT(*) FROM logins WHERE username = @username AND password = @password";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", password);
 
-                // Execute the query to check authentication
                 int count = Convert.ToInt32(command.ExecuteScalar());
 
-                // Return true if authentication is successful (count is 1), false otherwise
                 return (count == 1);
             }
         }
@@ -623,22 +565,17 @@ namespace Dashboard.Forms
         {
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
-                // Query to get the user's role based on their username
                 string query = "SELECT role FROM logins WHERE username = @username";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@username", username);
 
-                // Execute the query to retrieve the user's role
                 object role = command.ExecuteScalar();
-
-                // Check if a role was found, and return it as a string
                 if (role != null)
                 {
                     return role.ToString();
                 }
                 else
                 {
-                    // Return "Employee" as the default role if not found
                     return "Employee";
                 }
             }
@@ -654,7 +591,7 @@ namespace Dashboard.Forms
                 totalAmount += item.Subtotal;
             }
 
-            // Calculate VAT and vatable amount (assuming VAT rate is 12%, you can adjust this rate accordingly)
+            // Calculate VAT and vatable amount
             decimal vatRate = 0.12m; // 12% VAT rate
             decimal vatableAmount = totalAmount / (1 + vatRate);
             decimal vatAmount = totalAmount - vatableAmount;
@@ -678,33 +615,28 @@ namespace Dashboard.Forms
         {
             if (e.KeyCode == Keys.F1)
             {
-                // Trigger the click event of the btnNewTransaction button
                 btnNewTransaction.PerformClick();
-                e.Handled = true; // Prevent further processing of the F1 key press
+                e.Handled = true; 
             }
             if (e.KeyCode == Keys.F2)
             {
-                // Trigger the click event of the btnNewTransaction button
                 btnAddItem.PerformClick();
-                e.Handled = true; // Prevent further processing of the F1 key press
+                e.Handled = true; 
             }
             if (e.KeyCode == Keys.F3)
             {
-                // Trigger the click event of the btnNewTransaction button
                 btnDiscount.PerformClick();
-                e.Handled = true; // Prevent further processing of the F1 key press
+                e.Handled = true; 
             }
             if (e.KeyCode == Keys.F4)
             {
-                // Trigger the click event of the btnNewTransaction button
                 btnCreateOrder.PerformClick();
-                e.Handled = true; // Prevent further processing of the F1 key press
+                e.Handled = true; 
             }
             if (e.KeyCode == Keys.F5)
             {
-                // Trigger the click event of the btnNewTransaction button
                 BacktoForm.PerformClick();
-                e.Handled = true; // Prevent further processing of the F1 key press
+                e.Handled = true; 
             }
         }
 
@@ -733,7 +665,6 @@ namespace Dashboard.Forms
 
                 LoadingScreenManager.ShowLoadingScreen(() =>
                 {
-                    // The code inside this block is executed while the loading animation is displayed
                     AddMemo memo = new AddMemo(customer_id, employee_name, "Create Order", memotext);
                     memo.ShowDialog();
 
@@ -741,7 +672,6 @@ namespace Dashboard.Forms
                     {
                         string discountmemo = Environment.NewLine + "Manager Discretion: " + supervisor_name + Environment.NewLine + "Applied " + discountPercent + "% discount for Sale ID: " + new_sale_id + Environment.NewLine +
                             "Total discount applied for current sale is ₱ " + discount_amount;
-                            // The code inside this block is executed while the loading animation is displayed
                             AddMemo memo1 = new AddMemo(customer_id, employee_name, "Discount Added", discountmemo);
                             memo1.ShowDialog();
                     }
@@ -783,16 +713,13 @@ namespace Dashboard.Forms
                         
                         insertSaleCommand.Parameters.AddWithValue("@customer_id", customerId);
                         insertSaleCommand.Parameters.AddWithValue("@employee_name", employeeName);
-                        insertSaleCommand.Parameters.AddWithValue("@sale_date", DateTime.Now); // Use the current date
-                        insertSaleCommand.Parameters.AddWithValue("@total_amount", totalAmount); // Use the current date
-                        insertSaleCommand.Parameters.AddWithValue("@payment_status", "Pending"); // Default payment status
+                        insertSaleCommand.Parameters.AddWithValue("@sale_date", DateTime.Now); 
+                        insertSaleCommand.Parameters.AddWithValue("@total_amount", totalAmount); 
+                        insertSaleCommand.Parameters.AddWithValue("@payment_status", "Pending"); 
                         insertSaleCommand.Parameters.AddWithValue("@discount", discount_amount);
                         insertSaleCommand.Parameters.AddWithValue("@sale_id", insertSaleId);
 
                         insertSaleCommand.ExecuteNonQuery();
-
-                        // Retrieve the auto-generated sale_id for the newly created sale
-                        // int saleId = (int)insertSaleCommand.LastInsertedId;
 
                         // Iterate through the order items and insert them into the sale_items table
                         foreach (OrderItem item in orderItems)
@@ -818,16 +745,10 @@ namespace Dashboard.Forms
                             MySqlCommand updateProductStockCommand = new MySqlCommand(updateProductStockQuery, connection, transaction);
                             updateProductStockCommand.Parameters.AddWithValue("@product_id", item.ProductID);
                             updateProductStockCommand.Parameters.AddWithValue("@quantity_sold", item.Quantity);
-
-                            // Execute the update query for product stock
                             updateProductStockCommand.ExecuteNonQuery();
                         }
 
-                        // Commit the transaction
                         transaction.Commit();
-                        
-
-                        // Display a success message to the user
                         MessageBox.Show("Order created successfully.", "Order Created", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         GenerateOrderSummaryPDF(customer_id, transaction_id);
@@ -847,23 +768,17 @@ namespace Dashboard.Forms
 
         private void GenerateOrderSummaryPDF(int customerId, string saleId)
         {
-            // Define your custom margins (left, right, top, bottom)
-            float leftMargin = 20f;    // Adjust the value as needed
-            float rightMargin = 20f;   // Adjust the value as needed
-            float topMargin = 10f;     // Adjust the value as needed
-            float bottomMargin = 10f;  // Adjust the value as needed
-
-            // Create a new document with custom margins
+            float leftMargin = 20f;    
+            float rightMargin = 20f;   
+            float topMargin = 10f;     
+            float bottomMargin = 10f;  
             Document doc = new Document(new iTextSharp.text.Rectangle(PageSize.A4.Rotate().Width / 2, PageSize.A4.Height));
             doc.SetMargins(leftMargin, rightMargin, topMargin, bottomMargin);
 
             try
             {
-                // Set the directory where invoices will be stored
                 string invoiceDirectory = "Invoices";
                 Directory.CreateDirectory(invoiceDirectory); // Create the directory if it doesn't exist
-
-                // Set the file path for the PDF using the transaction ID as the filename
                 string filePath = Path.Combine(invoiceDirectory, $"{customerId}_{saleId}.pdf");
 
                 // Create a FileStream to write the PDF file
@@ -872,38 +787,30 @@ namespace Dashboard.Forms
                     PdfWriter writer = PdfWriter.GetInstance(doc, fs);
                     var boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 9);
                     var normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 9);
-                    // Open the document for writing
+
                     doc.Open();
 
-                    // Create a table cell for the business name with a black background and white text
+                    // Create a table cell for the business name
                     PdfPCell businessNameCell = new PdfPCell(new Phrase("New Bernales Hardware Store", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 24)));
                     businessNameCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                    businessNameCell.BackgroundColor = BaseColor.BLACK; // Set the background color to black
-                    businessNameCell.BorderColor = BaseColor.WHITE; // Set the border color to white
-                    businessNameCell.Padding = 10; // Add padding for better appearance
-                    businessNameCell.VerticalAlignment = Element.ALIGN_MIDDLE; // Center vertically
-
-
+                    businessNameCell.BackgroundColor = BaseColor.BLACK; 
+                    businessNameCell.BorderColor = BaseColor.WHITE; 
+                    businessNameCell.Padding = 10; 
+                    businessNameCell.VerticalAlignment = Element.ALIGN_MIDDLE;
 
                     // Create a table with a single cell and remove its border
                     PdfPTable businessNameTable = new PdfPTable(1);
                     businessNameTable.DefaultCell.Border = PdfPCell.NO_BORDER;
-                    businessNameTable.WidthPercentage = 100; // Set table width to 100% of the page
+                    businessNameTable.WidthPercentage = 100; 
 
-                    // Add the business name cell to the table
                     businessNameTable.AddCell(businessNameCell);
-
-                    // Set the text color to white
                     businessNameCell.Phrase.Font.Color = BaseColor.WHITE;
 
-                    // Add the table to the document
                     doc.Add(businessNameTable);
 
                     // Create a PdfPTable for the contact information
                     PdfPTable contactInfoTable = new PdfPTable(1);
                     contactInfoTable.WidthPercentage = 100;
-
-                    // Create PdfPCell for each line of contact information
                     string[] contactInfoLines = new string[]
                     {
                         "Sagrada, Pili, Camarines Sur 4418",
@@ -919,28 +826,24 @@ namespace Dashboard.Forms
                         cell2.Border = iTextSharp.text.Rectangle.NO_BORDER;
                         contactInfoTable.AddCell(cell2);
                     }
-
-                    // Add the contactInfoTable to the document
                     doc.Add(contactInfoTable);
 
 
-                    // Create a table with one cell
+
                     PdfPTable orderedtable = new PdfPTable(1);
-                    orderedtable.WidthPercentage = 100; // 100% width
+                    orderedtable.WidthPercentage = 100; 
                     orderedtable.SpacingBefore = 12f;
 
-                    // Create a PdfPCell to hold your paragraph
                     PdfPCell cell = new PdfPCell();
-                    cell.Border = PdfPCell.BOTTOM_BORDER; // Bottom border only
+                    cell.Border = PdfPCell.BOTTOM_BORDER; 
 
                     // Create the Paragraph
                     Paragraph orderTitle = new Paragraph("I. ORDER INVOICE FORM", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11));
-                    orderTitle.Alignment = Element.ALIGN_LEFT; // Align the title to the left
+                    orderTitle.Alignment = Element.ALIGN_LEFT; 
                     cell.AddElement(orderTitle);
                     orderedtable.AddCell(cell);
                     doc.Add(orderedtable);
 
-                    //doc.Add(new Chunk(new LineSeparator(1f, 100f, BaseColor.BLACK, Element.ALIGN_CENTER, -1)));
 
                     // Customer Information
                     PdfPTable customerInfoTable = new PdfPTable(2);
@@ -993,15 +896,14 @@ namespace Dashboard.Forms
 
                     // Create a PdfPCell to hold your paragraph
                     cell = new PdfPCell();
-                    cell.Border = PdfPCell.BOTTOM_BORDER; // Bottom border only
+                    cell.Border = PdfPCell.BOTTOM_BORDER; 
 
                     Paragraph cxTitle = new Paragraph("II. CUSTOMER PROFILE", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11));
-                    cxTitle.Alignment = Element.ALIGN_LEFT; // Align the title to the left
+                    cxTitle.Alignment = Element.ALIGN_LEFT;
                     cell.AddElement(cxTitle);
                     cxtable.AddCell(cell);
                     doc.Add(cxtable);
 
-                    // Retrieve customer data based on customer_id (replace with actual data retrieval code)
                     string customerFirstName;
                     string customerLastName;
                     string customerPhone;
@@ -1018,8 +920,6 @@ namespace Dashboard.Forms
                     customerTable.WidthPercentage = 100;
                     customerTable.SetWidths(new float[] { 3f, 7f });
                     customerTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-
-                    // PdfPCell cell;
 
                     // First Name
                     cell = new PdfPCell(new Phrase("First Name            :", boldFont));
@@ -1086,16 +986,16 @@ namespace Dashboard.Forms
 
                     // Create a PdfPCell to hold your paragraph
                     cell = new PdfPCell();
-                    cell.Border = PdfPCell.BOTTOM_BORDER; // Bottom border only
+                    cell.Border = PdfPCell.BOTTOM_BORDER;
 
                     Paragraph purchaseTitle = new Paragraph("III. PURCHASE SUMMARY", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11));
-                    purchaseTitle.Alignment = Element.ALIGN_LEFT; // Align the title to the left
+                    purchaseTitle.Alignment = Element.ALIGN_LEFT; 
                     cell.AddElement(purchaseTitle);
                     purchasetable.AddCell(cell);
                     doc.Add(purchasetable);
 
                     // Table for purchased items
-                    PdfPTable table = new PdfPTable(4); // 5 columns for Quantity, Description, Unit Price, Subtotal, and Discount
+                    PdfPTable table = new PdfPTable(4); 
                     table.WidthPercentage = 100;
                     table.SpacingBefore = 5f;
                     table.SetWidths(new float[] { 1f, 7f, 1.5f, 1.5f });
@@ -1107,47 +1007,43 @@ namespace Dashboard.Forms
                     // Add your order items to the table
                     foreach (OrderItem item in orderItems)
                     {
-                        // Create a cell with the normalFont for text alignment and formatting
                         PdfPCell quantityCell = new PdfPCell(new Phrase(item.Quantity.ToString(), normalFont));
                         quantityCell.HorizontalAlignment = Element.ALIGN_CENTER;
-                        quantityCell.VerticalAlignment = Element.ALIGN_MIDDLE; // Add this line
+                        quantityCell.VerticalAlignment = Element.ALIGN_MIDDLE; 
                         table.AddCell(quantityCell);
 
                         PdfPCell descriptionCell = new PdfPCell(new Phrase(item.ItemName, normalFont));
                         descriptionCell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        descriptionCell.VerticalAlignment = Element.ALIGN_MIDDLE; // Add this line
+                        descriptionCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                         table.AddCell(descriptionCell);
 
                         // Format price and subtotal using normalFont
                         PdfPCell priceCell = new PdfPCell(new Phrase(item.Price.ToString("C", new CultureInfo("en-PH")), normalFont));
                         priceCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        priceCell.VerticalAlignment = Element.ALIGN_MIDDLE; // Add this line
+                        priceCell.VerticalAlignment = Element.ALIGN_MIDDLE; 
                         table.AddCell(priceCell);
 
                         PdfPCell subtotalCell = new PdfPCell(new Phrase(item.Subtotal.ToString("C", new CultureInfo("en-PH")), normalFont));
                         subtotalCell.HorizontalAlignment = Element.ALIGN_RIGHT;
-                        subtotalCell.VerticalAlignment = Element.ALIGN_MIDDLE; // Add this line
+                        subtotalCell.VerticalAlignment = Element.ALIGN_MIDDLE; 
                         table.AddCell(subtotalCell);
                     }
 
                     table.SpacingAfter = 10f;
-                    // Add the table to the document
                     doc.Add(table);
 
                     // Total Amount
                     decimal amountAfterDiscount = total_amount - discount_amount;
-                    decimal vatRateTotal = 0.12m; // Assuming a 12% VAT rate for the total amount
+                    decimal vatRateTotal = 0.12m; 
                     decimal vatAmountTotal = amountAfterDiscount * vatRateTotal;
                     decimal vatableAmountTotal = amountAfterDiscount - vatAmountTotal;
-
-                    // Use a different font that supports the peso sign (e.g., Arial)
                     var pesoFont = FontFactory.GetFont("Calibri", 10);
 
 
                     // Create a table for the total amount, discount, amount after discount, vatable amount, and VAT amount
-                    PdfPTable summaryTable = new PdfPTable(3); // Use 3 columns
+                    PdfPTable summaryTable = new PdfPTable(3); 
                     summaryTable.WidthPercentage = 100;
-                    summaryTable.SetWidths(new float[] { 8.2f, 0.3f, 1.5f }); // Adjust column widths as needed
+                    summaryTable.SetWidths(new float[] { 8.2f, 0.3f, 1.5f }); 
                     summaryTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
 
                     if (isDiscountApplied)
@@ -1159,7 +1055,7 @@ namespace Dashboard.Forms
                         summaryTable.AddCell(cell);
 
                         // Peso sign
-                        cell = new PdfPCell(new Phrase("P", pesoFont)); // Use Unicode character for ₱
+                        cell = new PdfPCell(new Phrase("P", pesoFont)); 
                         cell.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
                         summaryTable.AddCell(cell);
@@ -1177,7 +1073,7 @@ namespace Dashboard.Forms
                         summaryTable.AddCell(cell);
 
                         // Peso sign
-                        cell = new PdfPCell(new Phrase("P", pesoFont)); // Use Unicode character for ₱
+                        cell = new PdfPCell(new Phrase("P", pesoFont));
                         cell.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
                         summaryTable.AddCell(cell);
@@ -1191,7 +1087,7 @@ namespace Dashboard.Forms
 
 
 
-                    var redFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 9, BaseColor.RED); // Create a red font
+                    var redFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 9, BaseColor.RED); 
 
                     // Amount After Discount
                     cell = new PdfPCell(new Phrase("Total Amount Due  :", redFont));
@@ -1200,13 +1096,13 @@ namespace Dashboard.Forms
                     summaryTable.AddCell(cell);
 
                     // Peso sign
-                    cell = new PdfPCell(new Phrase("P", redFont)); // Use Unicode character for ₱
+                    cell = new PdfPCell(new Phrase("P", redFont)); 
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
                     cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
                     summaryTable.AddCell(cell);
 
                     // Amount After Discount Value
-                    cell = new PdfPCell(new Phrase(amountAfterDiscount.ToString("0.00"), redFont)); // Use the red font
+                    cell = new PdfPCell(new Phrase(amountAfterDiscount.ToString("0.00"), redFont)); 
                     cell.HorizontalAlignment = Element.ALIGN_RIGHT;
                     cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
                     summaryTable.AddCell(cell);
@@ -1221,7 +1117,7 @@ namespace Dashboard.Forms
                     summaryTable.AddCell(cell);
 
                     // Peso sign
-                    cell = new PdfPCell(new Phrase("P", pesoFont)); // Use Unicode character for ₱
+                    cell = new PdfPCell(new Phrase("P", pesoFont)); 
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
                     cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
                     summaryTable.AddCell(cell);
@@ -1239,7 +1135,7 @@ namespace Dashboard.Forms
                     summaryTable.AddCell(cell);
 
                     // Peso sign
-                    cell = new PdfPCell(new Phrase("P", pesoFont)); // Use Unicode character for ₱
+                    cell = new PdfPCell(new Phrase("P", pesoFont)); 
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
                     cell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
                     summaryTable.AddCell(cell);
@@ -1274,15 +1170,15 @@ namespace Dashboard.Forms
 
                     // Create a table with one cell
                     PdfPTable confirmation = new PdfPTable(1);
-                    confirmation.WidthPercentage = 100; // 100% width
+                    confirmation.WidthPercentage = 100; 
                     confirmation.SpacingAfter = 10f;
 
                     // Create a PdfPCell to hold your paragraph
                     cell = new PdfPCell();
-                    cell.Border = PdfPCell.BOTTOM_BORDER; // Bottom border only
+                    cell.Border = PdfPCell.BOTTOM_BORDER; 
 
                     Paragraph confirmationTitle = new Paragraph("IV. CONFIRMATION", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 11));
-                    confirmationTitle.Alignment = Element.ALIGN_LEFT; // Align the title to the left
+                    confirmationTitle.Alignment = Element.ALIGN_LEFT; 
                     cell.AddElement(confirmationTitle);
                     confirmation.AddCell(cell);
                     doc.Add(confirmation);
@@ -1333,16 +1229,16 @@ namespace Dashboard.Forms
                     PdfPTable receivedByTable = new PdfPTable(1);
                     receivedByTable.DefaultCell.Border = PdfPCell.NO_BORDER;
 
-                    // Add empty lines for "Received by" (two lines)
+                    // Add empty lines for "Received by" 
                     cell = new PdfPCell(new Phrase("\n ", normalFont));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                    cell.Border = PdfPCell.BOTTOM_BORDER; // Only the bottom border
+                    cell.Border = PdfPCell.BOTTOM_BORDER; 
                     receivedByTable.AddCell(cell);
 
-                    // Add empty lines for "Received by" (two lines)
+                    // Add empty lines for "Received by" 
                     cell = new PdfPCell(new Phrase(" ", normalFont));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                    cell.Border = PdfPCell.BOTTOM_BORDER; // Only the bottom border
+                    cell.Border = PdfPCell.BOTTOM_BORDER; 
                     receivedByTable.AddCell(cell);
 
                     // Add the nested table to the "Processed by" section
@@ -1357,14 +1253,14 @@ namespace Dashboard.Forms
 
                     // Create a table with one cell
                     PdfPTable reminderTable = new PdfPTable(1);
-                    reminderTable.WidthPercentage = 100; // 100% width
+                    reminderTable.WidthPercentage = 100; 
 
                     // Create a PdfPCell to hold your paragraph
                     cell = new PdfPCell();
-                    cell.Border = PdfPCell.BOTTOM_BORDER; // Bottom border only
+                    cell.Border = PdfPCell.BOTTOM_BORDER; 
 
                     Paragraph reminderTitle = new Paragraph("V. REMINDERS", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
-                    reminderTitle.Alignment = Element.ALIGN_LEFT; // Align the title to the left
+                    reminderTitle.Alignment = Element.ALIGN_LEFT; 
                     cell.AddElement(reminderTitle);
                     reminderTable.AddCell(cell);
                     doc.Add(reminderTable);
@@ -1444,16 +1340,12 @@ namespace Dashboard.Forms
                             }
                             else
                             {
-                                // Handle the case where the customer with the specified ID was not found.
-                                // You can display an error message or perform other actions.
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access.
-                    // You can display an error message or perform other error-handling actions.
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally

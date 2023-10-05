@@ -35,7 +35,6 @@ namespace Dashboard.Forms
         public FormCollections(string employee_name, string role)
         {
             InitializeComponent();
-            // DisplayCustomers();
             loadIndicators(customerId);
             txtSearchTerm.Focus();
 
@@ -55,7 +54,6 @@ namespace Dashboard.Forms
             else { chkPastDue.Checked = false; }
 
             ConfigureListView();
-
 
         }
         private void LoadTheme()
@@ -293,11 +291,10 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access
-                    // You can log or display an error message here
+
                 }
 
-                return false; // Default to false if there's an issue or no matching sale
+                return false; 
             }
         }
         private decimal GetTotalPastDueAmount(int customerId)
@@ -308,7 +305,6 @@ namespace Dashboard.Forms
             {
                 try
                 {
-                    // Query to get all past due sales for the given customer
                     string query = "SELECT total_amount " +
                                    "FROM sales " +
                                    "WHERE customer_id = @customer_id " +
@@ -333,8 +329,7 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access
-                    // You can log or display an error message here
+
                 }
             }
 
@@ -345,18 +340,12 @@ namespace Dashboard.Forms
         {
             if (chkPastDue.Checked)
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (unchecked)
                 chkPastDue.Checked = false;
             }
             else
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (checked)
                 chkPastDue.Checked = true;
             }
         }
@@ -398,7 +387,6 @@ namespace Dashboard.Forms
                             }
                             else
                             {
-                                // Handle the case where no data is found
                                 MessageBox.Show("No data found for the customer.", "No Data", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                         }
@@ -406,8 +394,7 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access
-                    // MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                 }
                 finally
                 {
@@ -445,8 +432,7 @@ namespace Dashboard.Forms
                             }
                             else
                             {
-                                // Handle the case where no indicator values were found (optional)
-                                // You can clear checkboxes or show a message here if needed.
+
                             }
 
                             if (IsPastDue(customerId))
@@ -483,19 +469,17 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 PaymentHistory payment = new PaymentHistory(customerId, employee_name);
-                payment.Show(); // Show the AddMemo form as a dialog
+                payment.Show(); 
             });
         }
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
-            {
-                // The code inside this block is executed while the loading animation is displayed
+            { 
                 UpdateCustomer update = new UpdateCustomer(customerId, employee_name);
-                update.Show(); // Show the AddMemo form as a dialog
+                update.Show(); 
             });
         }
 
@@ -512,9 +496,8 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 AddMemo addmemo = new AddMemo(customerId, employee_name);
-                addmemo.Show(); // Show the AddMemo form as a dialog
+                addmemo.Show(); 
             });
         }
 
@@ -539,10 +522,6 @@ namespace Dashboard.Forms
 
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            // Create lists to store sale IDs and total amounts
-                            // List<int> saleIds = new List<int>();
-                            
-
                             while (reader.Read())
                             {
                                 int saleId = reader.GetInt32("sale_id");
@@ -624,12 +603,10 @@ namespace Dashboard.Forms
                 total_amount_due = totalAmountDue;
                 change = changeAmount;
 
-                // Update the txtChange TextBox with the calculated change amount
                 txtChange.Text = "₱ " + changeAmount.ToString("0.00");
             }
             else
             {
-                // Handle the case where the entered text is not a valid decimal value
                 txtChange.Text = "₱ 0.00"; // Display 0.00 as the change
             }
         }
@@ -679,7 +656,6 @@ namespace Dashboard.Forms
 
                     LoadingScreenManager.ShowLoadingScreen(() =>
                     {
-                        // The code inside this block is executed while the loading animation is displayed
                         AddMemo memo = new AddMemo(customerId, employee_name, "Make Payment", "Payment via " + paymentMethod + " of " + txtCashCredit.Text + " is successfully posted.");
                         memo.Show();
                     });
@@ -690,7 +666,6 @@ namespace Dashboard.Forms
                         memo1.Show();
                     }
 
-                    // You may want to update the UI or show a success message here
                     MessageBox.Show("Payment successfully processed.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     btnSubmitPayment.Enabled = false;
@@ -711,7 +686,6 @@ namespace Dashboard.Forms
             {
                 try
                 {
-                    // Start a transaction to ensure data consistency
                     using (MySqlTransaction transaction = connection.BeginTransaction())
                     {
                         // Step 1: Update sale status to "Paid"
@@ -744,18 +718,12 @@ namespace Dashboard.Forms
 
                             insertCommand.ExecuteNonQuery();
                         }
-
-                        // Commit the transaction to save changes
                         transaction.Commit();
-
-                        
                         GenerateReceiptPDF(customerId, txtPaymentID.Text, txtName.Text, saleId.ToString(), DateTime.Now, paymentAmount, paymentMethod, txtCashCredit.Text, txtChange.Text, employee_name);
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access
-                    // You can log or display an error message here
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -763,7 +731,7 @@ namespace Dashboard.Forms
 
         private void cboxPaymentMethod_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cboxPaymentMethod.SelectedIndex >= 1) // Check if a payment method other than cash is selected
+            if (cboxPaymentMethod.SelectedIndex >= 1) 
             {
                 // Set txtCashCredit as read-only
                 txtCashCredit.ReadOnly = true;
@@ -776,13 +744,11 @@ namespace Dashboard.Forms
                 }
                 else
                 {
-                    // Handle the case where there's no selected sale ID or totalAmounts is not available
                     txtCashCredit.Text = "₱ 0.00";
                 }
             }
             else
             {
-                // If cash is selected, allow user input and clear the text box
                 txtCashCredit.ReadOnly = false;
                 txtCashCredit.Clear();
             }
@@ -811,11 +777,10 @@ namespace Dashboard.Forms
             decimal vatableAmount = dueAmount / (1 + vatRate);
             decimal vatAmount = dueAmount - vatableAmount;
 
-            // Define your custom margins (left, right, top, bottom)
-            float leftMargin = 10f;     // Adjust the value as needed
-            float rightMargin = 10f;    // Adjust the value as needed
-            float topMargin = 5f;      // Adjust the value as needed
-            float bottomMargin = 10f;   // Adjust the value as needed
+            float leftMargin = 10f;     
+            float rightMargin = 10f;    
+            float topMargin = 5f;      
+            float bottomMargin = 10f;   
 
             // Create a new document with custom margins
             Document doc = new Document(new iTextSharp.text.Rectangle(PageSize.A4.Width / 2, PageSize.A4.Height / 4));
@@ -825,9 +790,7 @@ namespace Dashboard.Forms
             {
                 // Set the directory where receipts will be stored
                 string receiptDirectory = "Receipts";
-                Directory.CreateDirectory(receiptDirectory); // Create the directory if it doesn't exist
-
-                // Set the file path for the PDF using the naming convention (customer_id)_(payment_id).pdf
+                Directory.CreateDirectory(receiptDirectory); 
                 string filePath = Path.Combine(receiptDirectory, $"{customerId}_{paymentId}.pdf");
 
                 // Create a FileStream to write the PDF file
@@ -837,7 +800,6 @@ namespace Dashboard.Forms
                     var normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
                     var boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
 
-                    // Open the document for writing
                     doc.Open();
 
                     // Receipt Header
@@ -878,7 +840,7 @@ namespace Dashboard.Forms
                     // Payment Details
                     PdfPTable paymentDetailsTable = new PdfPTable(2);
                     paymentDetailsTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                    paymentDetailsTable.SpacingBefore = 5f; // Add spacing before the table
+                    paymentDetailsTable.SpacingBefore = 5f; 
                     paymentDetailsTable.WidthPercentage = 100;
                     paymentDetailsTable.SetWidths(new float[] { 4f, 6f });
 
@@ -904,24 +866,20 @@ namespace Dashboard.Forms
 
                     doc.Add(paymentDetailsTable);
 
-                    // Employee Name
                     // Create a table for employee information
                     PdfPTable employeeTable = new PdfPTable(2);
                     employeeTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                     employeeTable.WidthPercentage = 100;
 
-                    // Add "Processed by" in the first cell
                     employeeTable.AddCell(new Phrase("Processed by: ", boldFont));
 
-                    // Create a cell for the employee name with a bottom border
                     PdfPCell employeeNameCell = new PdfPCell(new Phrase(employeeName, normalFont));
                     employeeNameCell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
-                    employeeNameCell.Colspan = 2; // Span both columns
+                    employeeNameCell.Colspan = 2;
                     employeeTable.AddCell(employeeNameCell);
 
                     doc.Add(employeeTable);
 
-                    // Close the document
                     doc.Close();
 
                     // Display the PDF in a print preview dialog
@@ -938,15 +896,13 @@ namespace Dashboard.Forms
 
         private void txtCashCredit_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Check if the input is not a digit and not a period
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != '.')
             {
-                e.Handled = true; // Handled the event, no processing for this character
+                e.Handled = true; 
             }
-            // Check if it's a period, and if it is, check if there's already one in the TextBox
             else if (e.KeyChar == '.' && txtCashCredit.Text.Contains("."))
             {
-                e.Handled = true; // If there's already a period, handle the event so another one isn't written
+                e.Handled = true; 
             }
         }
 
@@ -954,8 +910,6 @@ namespace Dashboard.Forms
         {
             // Set the view of the ListView to Details
             listInvoice.View = System.Windows.Forms.View.Details;
-
-            // Define columns for the ListView
             listInvoice.Columns.Add("File Name", 200); // Column 1: File Name
             listInvoice.Columns.Add("Date Created", 150); // Column 2: Date Created
 
@@ -970,46 +924,32 @@ namespace Dashboard.Forms
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
             string directoryPath = (selectedType == "Invoices") ? Path.Combine(baseDirectory, "Invoices") : Path.Combine(baseDirectory, "Receipts");
 
-            // Check if the directory exists
+
             if (Directory.Exists(directoryPath))
             {
-                // Get a list of PDF files in the directory
                 string[] pdfFiles = Directory.GetFiles(directoryPath, "*.pdf");
-
-                // Filter PDF files for the specified customer ID
                 var customerPdfFiles = pdfFiles
                     .Where(pdfFile => Path.GetFileName(pdfFile).StartsWith($"{customerId}_"));
 
                 // Iterate through each PDF file for the customer and add it to the ListView
                 foreach (string pdfFile in customerPdfFiles)
                 {
-                    // Get the file name without the directory path
                     string fileName = Path.GetFileName(pdfFile);
-
-                    // Get the creation date of the file
                     DateTime fileCreationDate = File.GetCreationTime(pdfFile);
-
-                    // Create a ListViewItem with the file name and creation date
                     ListViewItem item = new ListViewItem(new string[] { fileName, fileCreationDate.ToString("yyyy-MM-dd HH:mm:ss") });
-
-                    // Add the ListViewItem to the ListView
                     listInvoice.Items.Add(item);
                 }
             }
             else
             {
-                // Handle the case where the directory doesn't exist
                 MessageBox.Show($"The {selectedType} directory does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             // Get the selected type from the ComboBox
             string selectedType = comboBox1.SelectedItem.ToString();
-
-            // Populate the ListView based on the selected customer ID and type
             PopulateListViewForCustomer(customerId, selectedType);
         }
 
@@ -1029,10 +969,8 @@ namespace Dashboard.Forms
                 // Construct the full file path
                 string filePath = Path.Combine(directoryPath, fileName);
 
-                // Check if the file exists before opening it
                 if (File.Exists(filePath))
                 {
-                    // Open the file using the default associated program
                     System.Diagnostics.Process.Start(filePath);
                 }
                 else
@@ -1060,32 +998,24 @@ namespace Dashboard.Forms
 
                     // Construct the full file path
                     string filePath = Path.Combine(directoryPath, fileName);
-
-                    // Check if the file exists before proceeding
                     if (File.Exists(filePath))
                     {
-                        // Get the recipient's email address (replace with your logic to fetch the email)
-                        string recipientEmail = txtEmail.Text; // Replace with your logic to fetch the recipient's email
-
-                        // Email subject and body
+                        string recipientEmail = txtEmail.Text; 
                         string subject = "Invoice Attached";
                         string plainTextBody = "Please find the attached invoice.";
 
                         try
                         {
-                            // Create a new MailMessage
                             MailMessage message = new MailMessage
                             {
                                 From = new MailAddress(fromEmail, "Contact Center"),
                                 Subject = subject,
                                 Body = plainTextBody,
-                                IsBodyHtml = false, // Set to false for plain text body
+                                IsBodyHtml = false, 
                             };
 
-                            // Add recipient's email address
                             message.To.Add(recipientEmail);
 
-                            // Attach the invoice PDF file
                             Attachment attachment = new Attachment(filePath);
                             message.Attachments.Add(attachment);
 
@@ -1132,28 +1062,23 @@ namespace Dashboard.Forms
 
         private void btnNotifyEmail_Click(object sender, EventArgs e)
         {
-            // Check if a customer is selected in your CustomerGrid
             if (CustomerGrid.SelectedRows.Count > 0)
             {
-                // Get the selected customer's ID (assuming your DataGridView is bound to a data source)
                 int selectedCustomerId = customerId;
                 string pastDue = lblTotalPastDue.Text;
 
                 string fromEmail = "gabriel.catimbang30@gmail.com";
                 string fromPassword = "dzfh ejih ihxr vpdd";
 
-                // Retrieve the customer's email address based on the selectedCustomerId (replace with your logic)
                 string recipientEmail = txtEmail.Text;
 
                 if (!string.IsNullOrEmpty(recipientEmail))
                 {
-                    // Compose the email subject and body with the past due amount information
                     string subject = "Past Due Amount Notification";
                     string body = $"Dear Customer,\n\nThis is a reminder that you have a past due amount of {pastDue}. Please make the payment at your earliest convenience.\n\nSincerely,\nCollections Department - New Bernales Hardware Store";
 
                     try
                     {
-                        // Create a new MailMessage
                         MailMessage message = new MailMessage
                         {
                             From = new MailAddress(fromEmail, "Contact Center"),
@@ -1162,10 +1087,8 @@ namespace Dashboard.Forms
                             IsBodyHtml = false, // Set to false for plain text body
                         };
 
-                        // Add recipient's email address
                         message.To.Add(recipientEmail);
 
-                        // Create and configure the SMTP client
                         SmtpClient client = new SmtpClient("smtp.gmail.com")
                         {
                             Port = 587,
@@ -1178,7 +1101,6 @@ namespace Dashboard.Forms
 
                         LoadingScreenManager.ShowLoadingScreen(() =>
                         {
-                            // The code inside this block is executed while the loading animation is displayed
                             AddMemo newmemo = new AddMemo(customerId, employee_name, "Past Due Payment Notification", "Notified CX of past due amount via email." + Environment.NewLine + body);
                             newmemo.ShowDialog();
                         });

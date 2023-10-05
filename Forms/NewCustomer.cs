@@ -48,7 +48,7 @@ namespace Dashboard
 
                         if (customerId > 0)
                         {
-                            string joinDate = DateTime.Now.ToString("yyyy-MM-dd"); // Format the join_date as desired
+                            string joinDate = DateTime.Now.ToString("yyyy-MM-dd"); 
 
                             string confirmationMessage = $"New Customer Added.{Environment.NewLine}{Environment.NewLine}" +
                                                          $"Customer ID: {customerId}{Environment.NewLine}" +
@@ -97,7 +97,6 @@ namespace Dashboard
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 addCustomer();
             });
 

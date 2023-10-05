@@ -86,22 +86,18 @@ namespace Dashboard.Forms
                                 }
                                 else
                                 {
-                                    // Handle the case where join_date is NULL in the database
-                                    join_date = "N/A"; // or any other appropriate default value
+                                    join_date = "N/A"; 
                                 }
                             }
                             else
                             {
-                                // Handle the case where the customer with the specified ID was not found.
-                                // You can display an error message or perform other actions.
+
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access.
-                    // You can display an error message or perform other error-handling actions.
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
@@ -113,10 +109,6 @@ namespace Dashboard.Forms
                 }
             }
 
-
- 
-
-            // Set UI elements here, outside the try-catch-finally block
             label2.Text = first_name + " " + last_name;
             label1.Text = "Customer ID    : " + customerId.ToString();
             textBox2.Text = contact_phone;
@@ -146,7 +138,7 @@ namespace Dashboard.Forms
 
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            if (reader.Read()) // Check if indicator values were found
+                            if (reader.Read()) 
                             {
                                 // Check checkboxes based on indicator values (1 or 0)
                                 chkProfessional.Checked = Convert.ToInt32(reader["professional_firm"]) == 1;
@@ -156,17 +148,16 @@ namespace Dashboard.Forms
                             }
                             else
                             {
-                                // Handle the case where no indicator values were found (optional)
-                                // You can clear checkboxes or show a message here if needed.
+
                             }
 
                             if (IsPastDue(customerId))
                             {
-                                chkPastDue.Checked = true; // Check the checkbox if past due
+                                chkPastDue.Checked = true; 
                             }
                             else
                             {
-                                chkPastDue.Checked = false; // Uncheck the checkbox if not past due
+                                chkPastDue.Checked = false; 
                             }
                         }
                     }
@@ -312,7 +303,6 @@ namespace Dashboard.Forms
                 }
                 catch (MySqlException ex)
                 {
-                    // Handle any exceptions here, e.g., connection errors.
                     MessageBox.Show("An error occurred: " + ex.Message);
                 }
                 finally
@@ -327,10 +317,8 @@ namespace Dashboard.Forms
 
         private void dataGridViewMemos_SelectionChanged(object sender, EventArgs e)
         {
-            // Display the selected memo's text in the txtMemo TextBox.
             if (dataGridViewMemos.SelectedRows.Count > 0)
             {
-                // Check if the Tag property is not null before accessing it.
                 object selectedMemoTag = dataGridViewMemos.SelectedRows[0].Tag;
                 if (selectedMemoTag != null)
                 {
@@ -339,7 +327,6 @@ namespace Dashboard.Forms
                 }
                 else
                 {
-                    // Handle the case where the Tag property is null (no memo text associated).
                     txtMemo.Text = "No memo text available for this row.";
                 }
             }
@@ -382,7 +369,6 @@ namespace Dashboard.Forms
                             }
                             else
                             {
-                                // Handle the case where no data is found
                                 MessageBox.Show("No data found for the customer.", "No Data", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                         }
@@ -390,8 +376,7 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access
-                    // MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                 }
                 finally
                 {
@@ -410,9 +395,8 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 AddMemo addmemo = new AddMemo(CustomerId, username);
-                addmemo.Show(); // Show the AddMemo form as a dialog
+                addmemo.Show(); 
             });
         }
 
@@ -420,9 +404,8 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 UpdateCustomer update = new UpdateCustomer(CustomerId, username);
-                update.Show(); // Show the AddMemo form as a dialog
+                update.Show(); 
             });
         }
 
@@ -430,9 +413,8 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 SendEmail sendEmail = new SendEmail(contact_email, username, CustomerId);
-                sendEmail.Show(); // Show the AddMemo form as a dialog
+                sendEmail.Show(); 
             });
         }
 
@@ -440,7 +422,6 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 SendSMS smssent = new SendSMS(contact_phone, username, customerId);
                 smssent.Show();
             });
@@ -481,17 +462,16 @@ namespace Dashboard.Forms
                             salesData.Columns["Total"].DefaultCellStyle.Format = "C2";
                             salesData.Columns["Total"].DefaultCellStyle.FormatProvider = CultureInfo.GetCultureInfo("en-PH");
 
-                            salesData.Columns["Date"].Width = 70; // Adjust the width as needed
-                            salesData.Columns["Sales ID"].Width = 50; // Adjust the width as needed
-                            salesData.Columns["Employee"].Width = 150; // Adjust the width as needed
-                            salesData.Columns["Total"].Width = 100; // Adjust the width as needed
-                            salesData.Columns["Status"].Width = 100; // Adjust the width as needed
+                            salesData.Columns["Date"].Width = 70; 
+                            salesData.Columns["Sales ID"].Width = 50; 
+                            salesData.Columns["Employee"].Width = 150; 
+                            salesData.Columns["Total"].Width = 100; 
+                            salesData.Columns["Status"].Width = 100; 
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access.
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
@@ -511,28 +491,20 @@ namespace Dashboard.Forms
             // Check if a row is selected in the DataGridView
             if (salesData.SelectedRows.Count > 0)
             {
-                // Get the selected row
                 DataGridViewRow selectedRow = salesData.SelectedRows[0];
-
-                // Assuming the status is in a column named "Status" (adjust this according to your actual column name)
                 string status = selectedRow.Cells["Status"].Value.ToString();
 
                 // Check if the status is already "Cancelled" or "Completed"
                 if (status == "Cancelled" || status == "Completed")
                 {
-                    // Inform the user that the order cannot be cancelled
                     MessageBox.Show("This order is already Cancelled or Completed and cannot be cancelled again.", "Order Cancellation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
-                    // Display a confirmation dialog
                     DialogResult result = MessageBox.Show("Are you sure you want to cancel this order?", "Confirm Cancellation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (result == DialogResult.Yes)
                     {
-                        // User confirmed the cancellation
-
-                        // Assuming the sale_id is in a column named "ID" (adjust this according to your actual column name)
                         int saleId = Convert.ToInt32(selectedRow.Cells["Sales ID"].Value);
                         
 
@@ -566,7 +538,6 @@ namespace Dashboard.Forms
                             MySqlCommand command = new MySqlCommand(updateQuery, connection);
                             command.Parameters.AddWithValue("@saleId", saleId);
 
-                            // Execute the SQL command
                             command.ExecuteNonQuery();
                         }
 
@@ -578,7 +549,6 @@ namespace Dashboard.Forms
                             MySqlCommand deleteItemsCommand = new MySqlCommand(deleteItemsQuery, connection);
                             deleteItemsCommand.Parameters.AddWithValue("@saleId", saleId);
 
-                            // Execute the SQL command to delete the rows
                             deleteItemsCommand.ExecuteNonQuery();
                         }
 
@@ -596,7 +566,6 @@ namespace Dashboard.Forms
                                 updateStockCommand.Parameters.AddWithValue("@quantitySold", quantitySold);
                                 updateStockCommand.Parameters.AddWithValue("@productId", productId);
 
-                                // Execute the SQL command to return the stock
                                 updateStockCommand.ExecuteNonQuery();
                             }
                         }
@@ -604,7 +573,6 @@ namespace Dashboard.Forms
                         string memo_text = Environment.NewLine + "Order successfully cancelled for Sale ID " + saleId + Environment.NewLine + "Cancellation processed by " + username;
                         LoadingScreenManager.ShowLoadingScreen(() =>
                         {
-                            // The code inside this block is executed while the loading animation is displayed
                             AddMemo memo = new AddMemo(customerId, username, "Order Cancellation", memo_text);
                             memo.Show();
                         });
@@ -615,7 +583,6 @@ namespace Dashboard.Forms
             }
             else
             {
-                // Inform the user to select a row before cancelling the order
                 MessageBox.Show("Please select an order to cancel.", "Order Cancellation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
@@ -657,17 +624,16 @@ namespace Dashboard.Forms
                             saleItemsGrid.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
                             saleItemsGrid.Columns["Subtotal"].DefaultCellStyle.FormatProvider = CultureInfo.GetCultureInfo("en-PH");
 
-                            saleItemsGrid.Columns["Qty"].Width = 40; // Adjust the width as needed
-                            saleItemsGrid.Columns["ID"].Width = 40; // Adjust the width as needed
-                            saleItemsGrid.Columns["Item"].Width = 250; // Adjust the width as needed
-                            saleItemsGrid.Columns["Unit Price"].Width = 100; // Adjust the width as needed
-                            saleItemsGrid.Columns["Subtotal"].Width = 100; // Adjust the width as needed
+                            saleItemsGrid.Columns["Qty"].Width = 40; 
+                            saleItemsGrid.Columns["ID"].Width = 40;
+                            saleItemsGrid.Columns["Item"].Width = 250; 
+                            saleItemsGrid.Columns["Unit Price"].Width = 100; 
+                            saleItemsGrid.Columns["Subtotal"].Width = 100; 
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access.
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
@@ -682,13 +648,10 @@ namespace Dashboard.Forms
 
         private void salesData_SelectionChanged(object sender, EventArgs e)
         {
-            // Check if a row is selected
             if (salesData.SelectedRows.Count > 0)
             {
-                // Get the selected sales_id from the first selected row
                 int selectedSalesId = Convert.ToInt32(salesData.SelectedRows[0].Cells["Sales ID"].Value);
                 double totalAmount = Convert.ToSingle(salesData.SelectedRows[0].Cells["Total"].Value);
-                // Load sale items associated with the selected sales_id
                 LoadSaleItemsForSale(selectedSalesId);
                 totalAmounts(totalAmount);
             }
@@ -696,12 +659,12 @@ namespace Dashboard.Forms
 
         private void totalAmounts(double totalAmount)
         {
-            grossAmount.Text = "₱ " + totalAmount.ToString("N2"); // Format as currency with two decimal places
+            grossAmount.Text = "₱ " + totalAmount.ToString("N2"); 
             double vatable_amount = totalAmount / 1.12;
             double vat_amount = vatable_amount * 0.12;
 
-            vatableAmount.Text = "₱ " + vatable_amount.ToString("N2"); // Format as currency with two decimal places
-            VAT.Text = "₱ " +  vat_amount.ToString("N2"); // Format as currency with two decimal places
+            vatableAmount.Text = "₱ " + vatable_amount.ToString("N2"); 
+            VAT.Text = "₱ " +  vat_amount.ToString("N2"); 
         }
 
         private void button6_Click(object sender, EventArgs e)
@@ -714,9 +677,8 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
                 PaymentHistory payment = new PaymentHistory(CustomerId, username);
-                payment.Show(); // Show the AddMemo form as a dialog
+                payment.Show(); 
             });
         }
 
@@ -732,13 +694,13 @@ namespace Dashboard.Forms
             Dashboard dashboardForm = Application.OpenForms["Dashboard"] as Dashboard;
             if (dashboardForm != null)
             {
-                dashboardForm.Hide(); // Close the Dashboard form
+                dashboardForm.Hide(); 
             }
 
             FormOrder formOrderForm = Application.OpenForms["FormOrder"] as FormOrder;
             if (formOrderForm != null)
             {
-                formOrderForm.Hide(); // Close the FormOrder form
+                formOrderForm.Hide(); 
             }
 
             // Show the POS form
@@ -756,8 +718,7 @@ namespace Dashboard.Forms
 
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                // The code inside this block is executed while the loading animation is displayed
-                loadCustomerProfile(); // Show the AddMemo form as a dialog
+                loadCustomerProfile(); 
             });
 
         }
@@ -796,11 +757,10 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions that may occur during database access
-                    // You can log or display an error message here
+
                 }
 
-                return false; // Default to false if there's an issue or no matching sale
+                return false; 
             }
         }
 
@@ -808,18 +768,12 @@ namespace Dashboard.Forms
         {
             if (chkPastDue.Checked)
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (unchecked)
                 chkPastDue.Checked = false;
             }
             else
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (checked)
                 chkPastDue.Checked = true;
             }
         }
@@ -828,18 +782,12 @@ namespace Dashboard.Forms
         {
             if (chkProfessional.Checked)
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (unchecked)
                 chkProfessional.Checked = false;
             }
             else
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (checked)
                 chkProfessional.Checked = true;
             }
         }
@@ -848,18 +796,12 @@ namespace Dashboard.Forms
         {
             if (chkSMS.Checked)
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (unchecked)
                 chkSMS.Checked = false;
             }
             else
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (checked)
                 chkSMS.Checked = true;
             }
         }
@@ -868,18 +810,12 @@ namespace Dashboard.Forms
         {
             if (chkEmail.Checked)
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (unchecked)
                 chkEmail.Checked = false;
             }
             else
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (checked)
                 chkEmail.Checked = true;
             }
         }
@@ -888,18 +824,12 @@ namespace Dashboard.Forms
         {
             if (chkPhone.Checked)
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (unchecked)
                 chkPhone.Checked = false;
             }
             else
             {
-                // Display a message box to inform the user
                 MessageBox.Show("Changing the indicator here is not allowed. Update the profile instead.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                // Return the check state to the original state (checked)
                 chkPhone.Checked = true;
             }
         }

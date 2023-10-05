@@ -18,16 +18,14 @@ namespace Dashboard
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
 
         private static extern IntPtr CreateRoundRectRgn
- (
-      int nLeftRect,
-      int nTopRect,
-      int nRightRect,
-      int nBottomRect,
-      int nWidthEllipse,
-     int nHeightEllipse
-
-  );
-
+                                                         (
+                                                              int nLeftRect,
+                                                              int nTopRect,
+                                                              int nRightRect,
+                                                              int nBottomRect,
+                                                              int nWidthEllipse,
+                                                              int nHeightEllipse
+                                                          );
 
         Color color = Color.FromArgb(9, 19, 31);
         Color inactive = Color.FromArgb(27, 55, 90);
@@ -45,7 +43,6 @@ namespace Dashboard
             textBoxPassword.Enabled = true;
             textBoxPassword.BackColor = color;
 
-            // Initialize the MySqlConnection here
             connection = DatabaseHelper.GetOpenConnection();
         }
 
@@ -130,7 +127,6 @@ namespace Dashboard
             {
                 if (connection == null)
                 {
-                    // Handle the case where a connection couldn't be established
                     return false;
                 }
 
@@ -146,11 +142,10 @@ namespace Dashboard
             }
             catch (Exception ex)
             {
-                // Log the exception message
                 Console.WriteLine("Error: " + ex.Message);
                 incorrect.Visible = true;
                 incorrect.Text = "Server cannot be reached. \nPlease check your connection and restart the app.";
-                return false; // Return false for a failed login attempt
+                return false; 
             }
         }
 
@@ -185,7 +180,6 @@ namespace Dashboard
                 {
                     if (connection == null)
                     {
-                        // Handle the case where a connection couldn't be established
                         return (firstName, lastName, role);
                     }
 
@@ -194,7 +188,6 @@ namespace Dashboard
                     MySqlCommand command = new MySqlCommand(query, connection);
                     command.Parameters.AddWithValue("@username", username);
 
-                    // Execute the query and retrieve the user details
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -207,7 +200,6 @@ namespace Dashboard
                 }
                 catch (Exception ex)
                 {
-                    // Handle any exceptions (e.g., log or show an error message)
                     Console.WriteLine("Error: " + ex.Message);
                 }
 
@@ -222,8 +214,6 @@ namespace Dashboard
                 button1.PerformClick();
             }
         }
- 
-        
 
         private void close_Click(object sender, EventArgs e)
         {

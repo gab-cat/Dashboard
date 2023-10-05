@@ -16,15 +16,14 @@ namespace Dashboard
         [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
 
         private static extern IntPtr CreateRoundRectRgn
-(
-int nLeftRect,
-int nTopRect,
-int nRightRect,
-int nBottomRect,
-int nWidthEllipse,
-int nHeightEllipse
-
-);
+                                                        (
+                                                        int nLeftRect,
+                                                        int nTopRect,
+                                                        int nRightRect,
+                                                        int nBottomRect,
+                                                        int nWidthEllipse,
+                                                        int nHeightEllipse
+                                                        );
 
         private string firstName;
         public LoadingForm()
