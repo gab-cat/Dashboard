@@ -10,7 +10,7 @@ namespace Dashboard
 {
     public static class DatabaseHelper
     {
-        private static string connectionString = "datasource=sql12.freesqldatabase.com;port=3306;username=sql12647212;password=31a2n6pHbR;database=sql12647212;";
+        private static string connectionString = "datasource= ;port= ;username= ;password= ;database= ;";
 
         public static MySqlConnection GetOpenConnection()
         {
