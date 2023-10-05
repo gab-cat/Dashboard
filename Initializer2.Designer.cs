@@ -134,6 +134,7 @@
             this.guna2HtmlLabel1.Size = new System.Drawing.Size(112, 62);
             this.guna2HtmlLabel1.TabIndex = 7;
             this.guna2HtmlLabel1.Text = "MAX";
+            this.guna2HtmlLabel1.UseWaitCursor = true;
             // 
             // Initializer2
             // 
@@ -152,7 +153,6 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Initializer2";
-            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
