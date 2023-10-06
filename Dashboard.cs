@@ -38,6 +38,7 @@ namespace Dashboard
         public string username;
         public int customer_id;
         private string role;
+        private MySqlConnection connection = DatabaseHelper.GetOpenConnection();
         public Dashboard(string firstName, string lastName, string role)
         {
             
@@ -515,7 +516,7 @@ namespace Dashboard
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                OpenChildForm(new Forms.FormCollections(username, role), sender);
+                OpenChildForm(new Forms.FormCollections(username, role, connection), sender);
                     lblTitle.Text = "Collections";
                     btnOrder.Enabled = false;
                     btnInventory.Enabled = false;

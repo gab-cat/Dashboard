@@ -28,9 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -73,13 +70,11 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.CustomerGrid = new Guna.UI.WinForms.GunaDataGridView();
-            this.PaymentArrGrid = new Guna.UI.WinForms.GunaDataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.btnEmailPDF = new System.Windows.Forms.Button();
             this.listInvoice = new System.Windows.Forms.ListView();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.btnCreatePA = new System.Windows.Forms.Button();
             this.guna2GroupBox2 = new Guna.UI2.WinForms.Guna2GroupBox();
             this.txtBalance = new System.Windows.Forms.TextBox();
             this.txtPayments = new System.Windows.Forms.TextBox();
@@ -96,13 +91,12 @@
             this.btnAddMemo = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnPaymentHistory = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.gunaGroupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CustomerGrid)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PaymentArrGrid)).BeginInit();
             this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.guna2GroupBox2.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.SuspendLayout();
@@ -113,6 +107,7 @@
             this.gunaGroupBox1.BaseColor = System.Drawing.Color.White;
             this.gunaGroupBox1.BorderColor = System.Drawing.Color.DimGray;
             this.gunaGroupBox1.BorderSize = 1;
+            this.gunaGroupBox1.Controls.Add(this.button1);
             this.gunaGroupBox1.Controls.Add(this.groupBox2);
             this.gunaGroupBox1.Controls.Add(this.groupBox1);
             this.gunaGroupBox1.Controls.Add(this.label7);
@@ -473,6 +468,7 @@
             this.btnNotifySMS.TabIndex = 51;
             this.btnNotifySMS.Text = "Notify SMS";
             this.btnNotifySMS.UseVisualStyleBackColor = true;
+            this.btnNotifySMS.Click += new System.EventHandler(this.btnNotifySMS_Click);
             // 
             // chkPastDue
             // 
@@ -494,7 +490,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Outfit Thin", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.Black;
-            this.label7.Location = new System.Drawing.Point(227, 43);
+            this.label7.Location = new System.Drawing.Point(195, 43);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(107, 20);
             this.label7.TabIndex = 23;
@@ -505,7 +501,7 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Outfit Thin", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.Black;
-            this.label6.Location = new System.Drawing.Point(21, 43);
+            this.label6.Location = new System.Drawing.Point(11, 43);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(75, 20);
             this.label6.TabIndex = 22;
@@ -519,9 +515,9 @@
             this.txtSearchTerm.Cursor = System.Windows.Forms.Cursors.Default;
             this.txtSearchTerm.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSearchTerm.ForeColor = System.Drawing.Color.Black;
-            this.txtSearchTerm.Location = new System.Drawing.Point(334, 41);
+            this.txtSearchTerm.Location = new System.Drawing.Point(302, 42);
             this.txtSearchTerm.Name = "txtSearchTerm";
-            this.txtSearchTerm.Size = new System.Drawing.Size(197, 26);
+            this.txtSearchTerm.Size = new System.Drawing.Size(142, 26);
             this.txtSearchTerm.TabIndex = 21;
             this.txtSearchTerm.TabStop = false;
             this.txtSearchTerm.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchTerm_KeyDown);
@@ -538,9 +534,9 @@
             "Phone Number",
             "Email Address",
             "Address"});
-            this.cboxFilter.Location = new System.Drawing.Point(100, 40);
+            this.cboxFilter.Location = new System.Drawing.Point(86, 41);
             this.cboxFilter.Name = "cboxFilter";
-            this.cboxFilter.Size = new System.Drawing.Size(121, 26);
+            this.cboxFilter.Size = new System.Drawing.Size(106, 26);
             this.cboxFilter.TabIndex = 20;
             // 
             // txtName
@@ -655,34 +651,34 @@
             this.CustomerGrid.AllowUserToDeleteRows = false;
             this.CustomerGrid.AllowUserToResizeColumns = false;
             this.CustomerGrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Info;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
-            this.CustomerGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Info;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
+            this.CustomerGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.CustomerGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.CustomerGrid.BackgroundColor = System.Drawing.Color.Gainsboro;
             this.CustomerGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.CustomerGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.CustomerGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.CustomerGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.CustomerGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.CustomerGrid.ColumnHeadersHeight = 25;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Info;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.CustomerGrid.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Info;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.CustomerGrid.DefaultCellStyle = dataGridViewCellStyle6;
             this.CustomerGrid.EnableHeadersVisualStyles = false;
             this.CustomerGrid.GridColor = System.Drawing.Color.Silver;
             this.CustomerGrid.Location = new System.Drawing.Point(16, 73);
@@ -716,73 +712,6 @@
             this.CustomerGrid.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.SystemColors.Info;
             this.CustomerGrid.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.Black;
             this.CustomerGrid.SelectionChanged += new System.EventHandler(this.CustomerGrid_SelectionChanged);
-            // 
-            // PaymentArrGrid
-            // 
-            this.PaymentArrGrid.AllowUserToAddRows = false;
-            this.PaymentArrGrid.AllowUserToDeleteRows = false;
-            this.PaymentArrGrid.AllowUserToResizeColumns = false;
-            this.PaymentArrGrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Calibri", 9.75F);
-            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Info;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
-            this.PaymentArrGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
-            this.PaymentArrGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.PaymentArrGrid.BackgroundColor = System.Drawing.Color.Gainsboro;
-            this.PaymentArrGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PaymentArrGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.PaymentArrGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.PaymentArrGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
-            this.PaymentArrGrid.ColumnHeadersHeight = 25;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Info;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.PaymentArrGrid.DefaultCellStyle = dataGridViewCellStyle6;
-            this.PaymentArrGrid.EnableHeadersVisualStyles = false;
-            this.PaymentArrGrid.GridColor = System.Drawing.Color.Silver;
-            this.PaymentArrGrid.Location = new System.Drawing.Point(6, 22);
-            this.PaymentArrGrid.Name = "PaymentArrGrid";
-            this.PaymentArrGrid.ReadOnly = true;
-            this.PaymentArrGrid.RowHeadersVisible = false;
-            this.PaymentArrGrid.RowTemplate.Height = 20;
-            this.PaymentArrGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.PaymentArrGrid.Size = new System.Drawing.Size(330, 143);
-            this.PaymentArrGrid.TabIndex = 0;
-            this.PaymentArrGrid.Theme = Guna.UI.WinForms.GunaDataGridViewPresetThemes.Guna;
-            this.PaymentArrGrid.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
-            this.PaymentArrGrid.ThemeStyle.AlternatingRowsStyle.Font = new System.Drawing.Font("Calibri", 9.75F);
-            this.PaymentArrGrid.ThemeStyle.AlternatingRowsStyle.ForeColor = System.Drawing.Color.Black;
-            this.PaymentArrGrid.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = System.Drawing.SystemColors.Info;
-            this.PaymentArrGrid.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = System.Drawing.Color.Black;
-            this.PaymentArrGrid.ThemeStyle.BackColor = System.Drawing.Color.Gainsboro;
-            this.PaymentArrGrid.ThemeStyle.GridColor = System.Drawing.Color.Silver;
-            this.PaymentArrGrid.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            this.PaymentArrGrid.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.PaymentArrGrid.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PaymentArrGrid.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.White;
-            this.PaymentArrGrid.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            this.PaymentArrGrid.ThemeStyle.HeaderStyle.Height = 25;
-            this.PaymentArrGrid.ThemeStyle.ReadOnly = true;
-            this.PaymentArrGrid.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.White;
-            this.PaymentArrGrid.ThemeStyle.RowsStyle.BorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.PaymentArrGrid.ThemeStyle.RowsStyle.Font = new System.Drawing.Font("Calibri", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PaymentArrGrid.ThemeStyle.RowsStyle.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.PaymentArrGrid.ThemeStyle.RowsStyle.Height = 20;
-            this.PaymentArrGrid.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.SystemColors.Info;
-            this.PaymentArrGrid.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.Black;
             // 
             // groupBox3
             // 
@@ -818,7 +747,7 @@
             this.btnEmailPDF.Name = "btnEmailPDF";
             this.btnEmailPDF.Size = new System.Drawing.Size(126, 23);
             this.btnEmailPDF.TabIndex = 51;
-            this.btnEmailPDF.Text = "Email Invoice";
+            this.btnEmailPDF.Text = "Email PDF copy";
             this.btnEmailPDF.UseVisualStyleBackColor = true;
             this.btnEmailPDF.Click += new System.EventHandler(this.btnEmailPDF_Click);
             // 
@@ -836,26 +765,12 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.btnCreatePA);
-            this.groupBox4.Controls.Add(this.PaymentArrGrid);
             this.groupBox4.Location = new System.Drawing.Point(572, 12);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(344, 200);
             this.groupBox4.TabIndex = 51;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Payment Arrangement History";
-            // 
-            // btnCreatePA
-            // 
-            this.btnCreatePA.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCreatePA.ForeColor = System.Drawing.Color.Black;
-            this.btnCreatePA.Location = new System.Drawing.Point(212, 171);
-            this.btnCreatePA.Name = "btnCreatePA";
-            this.btnCreatePA.Size = new System.Drawing.Size(126, 23);
-            this.btnCreatePA.TabIndex = 50;
-            this.btnCreatePA.Text = "Create Payment Arr.";
-            this.btnCreatePA.UseVisualStyleBackColor = true;
-            this.btnCreatePA.Click += new System.EventHandler(this.button1_Click);
+            this.groupBox4.Text = "Search Payment";
             // 
             // guna2GroupBox2
             // 
@@ -1055,6 +970,20 @@
             this.btnPaymentHistory.UseVisualStyleBackColor = true;
             this.btnPaymentHistory.Click += new System.EventHandler(this.button7_Click);
             // 
+            // button1
+            // 
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.Black;
+            this.button1.Location = new System.Drawing.Point(451, 41);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(81, 27);
+            this.button1.TabIndex = 54;
+            this.button1.Text = "Search";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // FormCollections
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1080,9 +1009,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CustomerGrid)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.PaymentArrGrid)).EndInit();
             this.groupBox3.ResumeLayout(false);
-            this.groupBox4.ResumeLayout(false);
             this.guna2GroupBox2.ResumeLayout(false);
             this.guna2GroupBox2.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -1125,7 +1052,6 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox txtChange;
         private System.Windows.Forms.ComboBox cboxPaymentMethod;
-        private Guna.UI.WinForms.GunaDataGridView PaymentArrGrid;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ComboBox cboxSaleID;
         private System.Windows.Forms.Button btnEmailPDF;
@@ -1136,7 +1062,6 @@
         private System.Windows.Forms.Button btnNotifySMS;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button btnCreatePA;
         private Guna.UI2.WinForms.Guna2GroupBox guna2GroupBox2;
         private System.Windows.Forms.TextBox txtBalance;
         private System.Windows.Forms.TextBox txtPayments;
@@ -1153,5 +1078,6 @@
         private System.Windows.Forms.Button btnAddMemo;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnPaymentHistory;
+        private System.Windows.Forms.Button button1;
     }
 }

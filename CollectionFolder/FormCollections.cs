@@ -19,6 +19,7 @@ using PdfiumViewer;
 using System.Net.Mail;
 using System.Net;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using System.Diagnostics;
 
 namespace Dashboard.Forms
 {
@@ -31,9 +32,10 @@ namespace Dashboard.Forms
         private decimal total_amount_due;
         private decimal change;
         List<int> saleIds = new List<int>();
+        private MySqlConnection connection = DatabaseHelper.GetOpenConnection() as MySqlConnection;
 
 
-        public FormCollections(string employee_name, string role)
+        public FormCollections(string employee_name, string role, MySqlConnection connection)
         {
             InitializeComponent();
             loadIndicators(customerId);
@@ -41,6 +43,8 @@ namespace Dashboard.Forms
 
             this.employee_name = employee_name;
             this.role = role;
+            this.connection = connection;
+
             txtEmployee.Text = employee_name;
             txtPaymentDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
 
@@ -75,8 +79,6 @@ namespace Dashboard.Forms
 
             btnAddMemo.BackColor = ThemeColor.SecondaryColor;
             btnAddMemo.ForeColor = Color.White;
-            btnCreatePA.BackColor = ThemeColor.SecondaryColor;
-            btnCreatePA.ForeColor = Color.White;
             btnPaymentHistory.BackColor = ThemeColor.SecondaryColor;
             btnPaymentHistory.ForeColor = Color.White;
             btnUpdate.ForeColor = Color.White;
@@ -89,12 +91,6 @@ namespace Dashboard.Forms
             btnNewPayment.ForeColor = Color.White;
             btnEmailPDF.BackColor = ThemeColor.SecondaryColor;
             btnEmailPDF.ForeColor = Color.White;
-
-            PaymentArrGrid.ColumnHeadersDefaultCellStyle.BackColor = ThemeColor.SecondaryColor;
-            PaymentArrGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            PaymentArrGrid.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
-            PaymentArrGrid.ColumnHeadersDefaultCellStyle.SelectionBackColor = ThemeColor.SecondaryColor;
-            PaymentArrGrid.ThemeStyle.HeaderStyle.BackColor = ThemeColor.SecondaryColor;
 
         }
 
@@ -196,6 +192,8 @@ namespace Dashboard.Forms
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
+
+
 
         }
 
@@ -300,6 +298,13 @@ namespace Dashboard.Forms
                 {
 
                 }
+                finally
+                {
+                    if (connection != null)
+                    {
+                        connection.Close();
+                    }
+                }
 
                 return false; 
             }
@@ -337,6 +342,13 @@ namespace Dashboard.Forms
                 catch (Exception ex)
                 {
 
+                }
+                finally
+                {
+                    if (connection != null)
+                    {
+                        connection.Close();
+                    }
                 }
             }
 
@@ -513,6 +525,7 @@ namespace Dashboard.Forms
         {
             saleIds.Clear();
             totalAmounts.Clear();
+            cboxSaleID.DataSource = null;
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
                 try
@@ -556,6 +569,13 @@ namespace Dashboard.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    if (connection != null)
+                    {
+                        connection.Close();
+                    }
                 }
             }
         }
@@ -675,6 +695,7 @@ namespace Dashboard.Forms
                     }
 
                     SendPaymentConfirmationEmail(customerId, txtEmail.Text, paymentAmount, paymentMethod);
+                    SendPaymentConfirmation();
 
                     btnSubmitPayment.Enabled = false;
                 }
@@ -733,6 +754,13 @@ namespace Dashboard.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    if (connection != null)
+                    {
+                        connection.Close();
+                    }
                 }
             }
         }
@@ -818,8 +846,9 @@ namespace Dashboard.Forms
 
                     // Create a table for customer information
                     PdfPTable customerInfoTable = new PdfPTable(2);
-                    customerInfoTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                    customerInfoTable.DefaultCell.Border = iTextSharp.text.Rectangle.BOX;
                     customerInfoTable.WidthPercentage = 100;
+                    customerInfoTable.SpacingBefore = 10f;
                     customerInfoTable.SetWidths(new float[] { 4f, 6f });
 
                     customerInfoTable.AddCell(new Phrase("Payment ID:", boldFont));
@@ -847,8 +876,9 @@ namespace Dashboard.Forms
 
                     // Payment Details
                     PdfPTable paymentDetailsTable = new PdfPTable(2);
-                    paymentDetailsTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
-                    paymentDetailsTable.SpacingBefore = 5f; 
+                    paymentDetailsTable.DefaultCell.Border = iTextSharp.text.Rectangle.BOX;
+                    paymentDetailsTable.SpacingBefore = 5f;
+                    paymentDetailsTable.SpacingAfter = 5f;
                     paymentDetailsTable.WidthPercentage = 100;
                     paymentDetailsTable.SetWidths(new float[] { 4f, 6f });
 
@@ -861,7 +891,7 @@ namespace Dashboard.Forms
                         paymentDetailsTable.AddCell(new Phrase($"{cashCreditAmount}", boldFont));
 
                         paymentDetailsTable.AddCell(new Phrase("Change:", boldFont));
-                        paymentDetailsTable.AddCell(new Phrase($"{change}", boldFont));
+                        paymentDetailsTable.AddCell(new Phrase(change, boldFont));
                     }
                     else
                     {
@@ -878,6 +908,7 @@ namespace Dashboard.Forms
                     PdfPTable employeeTable = new PdfPTable(2);
                     employeeTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                     employeeTable.WidthPercentage = 100;
+                    paymentDetailsTable.SetWidths(new float[] { 4f, 6f });
 
                     employeeTable.AddCell(new Phrase("Processed by: ", boldFont));
 
@@ -1166,6 +1197,71 @@ namespace Dashboard.Forms
             {
                 MessageBox.Show("An error occurred while sending the email: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void SendTextMessage(string phoneNumber, string message)
+        {
+            try
+            {
+                // Specify the full path to the ADB executable
+                string adbPath = Path.Combine(Application.StartupPath, "platform-tools", "adb.exe");
+
+                // Construct the ADB command
+                string adbCommand = $"shell service call isms 7 i32 0 s16 \"com.android.mms.service\" s16 \"{phoneNumber}\" s16 \"null\" s16 \"'{message}'\" s16 \"null\" s16 \"null\"";
+
+                // Execute the ADB command
+                Process process = new Process();
+                process.StartInfo.FileName = adbPath;
+                process.StartInfo.Arguments = adbCommand;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.Start();
+                process.WaitForExit();
+
+                // Check the exit code to determine if the message was sent successfully
+                int exitCode = process.ExitCode;
+                if (exitCode == 0)
+                {
+                    MessageBox.Show("SMS sent successfully.");
+                }
+                else
+                {
+                    MessageBox.Show("Failed to send SMS. Please check your ADB setup and permissions.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SendPastDueNotification()
+        {
+            string phoneNumber = txtPhone.Text;
+            string body = $"Mr./Ms. {txtName.Text}. This is a reminder that you have a past due amount of {lblTotalPastDue.Text}. Please make the payment at your earliest convenience.";
+
+            SendTextMessage(phoneNumber, body);
+        }
+
+        private void SendPaymentConfirmation()
+        {
+            string phoneNumber = txtPhone.Text;
+            string body = $"Mr./Ms. {txtName.Text}, your payment of {txtAmountDue.Text} via {cboxPaymentMethod.Text} is posted. Thank you for your prompt payment.";
+
+            SendTextMessage(phoneNumber, body);
+        }
+
+        private void btnNotifySMS_Click(object sender, EventArgs e)
+        {
+            SendPastDueNotification();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            LoadingScreenManager.ShowLoadingScreen(() =>
+            {
+                searchCX();
+            });
         }
     }
 }
