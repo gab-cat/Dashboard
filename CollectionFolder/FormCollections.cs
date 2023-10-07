@@ -1355,5 +1355,17 @@ namespace Dashboard.Forms
 
             }
         }
+
+        private void txtPaymentSearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+            else if (e.KeyChar == '.' && txtPaymentSearch.Text.Contains("."))
+            {
+                e.Handled = true;
+            }
+        }
     }
 }

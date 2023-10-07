@@ -527,8 +527,15 @@ namespace Dashboard
 
         private void btnInventory_Click(object sender, EventArgs e)
         {
-            //OpenChildForm(new Forms.FormOrder(), sender);
-            lblTitle.Text = "Inventory";
+            LoadingScreenManager.ShowLoadingScreen(() =>
+            {
+                OpenChildForm(new Forms.FormInventory(username, role), sender);
+                lblTitle.Text = "Inventory";
+                btnOrder.Enabled = false;
+                btnPay.Enabled = false;
+                btnReport.Enabled = false;
+                btnMaintenance.Enabled = false;
+            });
         }
 
         private void btnReport_Click(object sender, EventArgs e)

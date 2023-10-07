@@ -180,15 +180,15 @@
             // 
             // incorrect
             // 
-            this.incorrect.AutoSize = true;
             this.incorrect.BackColor = System.Drawing.Color.Transparent;
             this.incorrect.Font = new System.Drawing.Font("Calibri Light", 11F, System.Drawing.FontStyle.Italic);
             this.incorrect.ForeColor = System.Drawing.Color.Red;
-            this.incorrect.Location = new System.Drawing.Point(132, 334);
+            this.incorrect.Location = new System.Drawing.Point(12, 334);
             this.incorrect.Name = "incorrect";
-            this.incorrect.Size = new System.Drawing.Size(330, 18);
+            this.incorrect.Size = new System.Drawing.Size(556, 18);
             this.incorrect.TabIndex = 6;
             this.incorrect.Text = "Your entered credentials is incorrect. Please try again.";
+            this.incorrect.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.incorrect.Visible = false;
             // 
             // label4

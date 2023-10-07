@@ -144,10 +144,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CollectionFolder\FormInventory.cs">
+    <Compile Include="InventoryFolder\FormInventory.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CollectionFolder\FormInventory.Designer.cs">
+    <Compile Include="InventoryFolder\FormInventory.Designer.cs">
       <DependentUpon>FormInventory.cs</DependentUpon>
     </Compile>
     <Compile Include="CollectionFolder\PaymentArrangement.cs">
@@ -268,7 +268,7 @@
       <DependentUpon>SearchCustomer.cs</DependentUpon>
     </Compile>
     <Compile Include="ThemeColor.cs" />
-    <EmbeddedResource Include="CollectionFolder\FormInventory.resx">
+    <EmbeddedResource Include="InventoryFolder\FormInventory.resx">
       <DependentUpon>FormInventory.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CollectionFolder\PaymentArrangement.resx">
