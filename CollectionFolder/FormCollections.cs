@@ -32,31 +32,21 @@ namespace Dashboard.Forms
         private decimal total_amount_due;
         private decimal change;
         List<int> saleIds = new List<int>();
-        private MySqlConnection connection = DatabaseHelper.GetOpenConnection() as MySqlConnection;
 
 
-        public FormCollections(string employee_name, string role, MySqlConnection connection)
+        public FormCollections(string employee_name, string role)
         {
             InitializeComponent();
-            loadIndicators(customerId);
+            // loadIndicators(customerId);
             txtSearchTerm.Focus();
 
             this.employee_name = employee_name;
             this.role = role;
-            this.connection = connection;
 
             txtEmployee.Text = employee_name;
             txtPaymentDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
 
             cboxFilter.SelectedIndex = 0;
-
-            if (IsPastDue(customerId))
-            {
-                chkPastDue.Checked = true;
-                decimal totalPastDueAmount = GetTotalPastDueAmount(customerId);
-                lblTotalPastDue.Text = "₱ " + totalPastDueAmount.ToString("0.00"); // Convert decimal to string with formatting
-            }
-            else { chkPastDue.Checked = false; }
 
             ConfigureListView();
 
@@ -76,6 +66,10 @@ namespace Dashboard.Forms
             btnNotifySMS.ForeColor = Color.White;
             btnNotifyEmail.BackColor = ThemeColor.SecondaryColor;
             btnNotifyEmail.ForeColor = Color.White;
+            button1.ForeColor = Color.White;
+            button1.BackColor = ThemeColor.SecondaryColor;
+            button2.ForeColor = Color.White;
+            button2.BackColor = ThemeColor.SecondaryColor;
 
             btnAddMemo.BackColor = ThemeColor.SecondaryColor;
             btnAddMemo.ForeColor = Color.White;
@@ -120,8 +114,6 @@ namespace Dashboard.Forms
 
         private void searchCX()
         {
-            saleIds.Clear();
-            totalAmounts.Clear();
             try
             {
                 using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
@@ -184,9 +176,7 @@ namespace Dashboard.Forms
                         }
                     }
                 }
-
                 ConfigureDataGridViewColumns();
-                LoadSaleIDsAndAmountDue(customerId);
             }
             catch (Exception ex)
             {
@@ -215,8 +205,6 @@ namespace Dashboard.Forms
         {
             if (CustomerGrid.SelectedRows.Count > 0)
             {
-                saleIds.Clear();
-                totalAmounts.Clear();
                 DataGridViewRow selectedRow = CustomerGrid.SelectedRows[0];
 
                 // Get the data from the selected row
@@ -305,6 +293,7 @@ namespace Dashboard.Forms
                         connection.Close();
                     }
                 }
+
 
                 return false; 
             }
@@ -835,41 +824,47 @@ namespace Dashboard.Forms
                     PdfWriter writer = PdfWriter.GetInstance(doc, fs);
                     var normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
                     var boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+                    var redFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10, BaseColor.RED);
 
                     doc.Open();
 
                     // Receipt Header
-                    Paragraph header = new Paragraph("New Bernales Hardware Store", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
+                    Paragraph header = new Paragraph("NEW BERNALES HARDWARE STORE", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
                     header.Alignment = Element.ALIGN_CENTER;
                     doc.Add(header);
                     
 
                     // Create a table for customer information
                     PdfPTable customerInfoTable = new PdfPTable(2);
-                    customerInfoTable.DefaultCell.Border = iTextSharp.text.Rectangle.BOX;
+                    customerInfoTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
                     customerInfoTable.WidthPercentage = 100;
                     customerInfoTable.SpacingBefore = 10f;
                     customerInfoTable.SetWidths(new float[] { 4f, 6f });
 
-                    customerInfoTable.AddCell(new Phrase("Payment ID:", boldFont));
-                    customerInfoTable.AddCell(new Phrase(paymentId, boldFont));
+                    // Create a PdfPCell with a top border
+                    PdfPCell topBorderCell = new PdfPCell(new Phrase("Payment ID           :", redFont));
+                    topBorderCell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+                    customerInfoTable.AddCell(topBorderCell);
+                    PdfPCell paymentIdCell = new PdfPCell(new Phrase(paymentId, redFont));
+                    paymentIdCell.Border = iTextSharp.text.Rectangle.TOP_BORDER;
+                    customerInfoTable.AddCell(paymentIdCell);
 
-                    customerInfoTable.AddCell(new Phrase("Customer Name:", boldFont));
+                    customerInfoTable.AddCell(new Phrase("Customer Name   :", boldFont));
                     customerInfoTable.AddCell(new Phrase(customerName, normalFont));
 
-                    customerInfoTable.AddCell(new Phrase("Sale ID:", boldFont));
+                    customerInfoTable.AddCell(new Phrase("Sale ID                   :", boldFont));
                     customerInfoTable.AddCell(new Phrase(saleId, normalFont));
 
-                    customerInfoTable.AddCell(new Phrase("Payment Date:", boldFont));
+                    customerInfoTable.AddCell(new Phrase("Payment Date       :", boldFont));
                     customerInfoTable.AddCell(new Phrase(paymentDate.ToString("yyyy-MM-dd"), normalFont));
 
-                    customerInfoTable.AddCell(new Phrase("Due Amount:", boldFont));
-                    customerInfoTable.AddCell(new Phrase($"{dueAmount.ToString("0.00")}", boldFont));
+                    customerInfoTable.AddCell(new Phrase("Due Amount         :", redFont));
+                    customerInfoTable.AddCell(new Phrase($"{dueAmount.ToString("0.00")}", redFont));
 
-                    customerInfoTable.AddCell(new Phrase("Vatable Amount:", boldFont));
+                    customerInfoTable.AddCell(new Phrase("Vatable Amount   :", boldFont));
                     customerInfoTable.AddCell(new Phrase($"{vatableAmount.ToString("0.00")}", normalFont));
 
-                    customerInfoTable.AddCell(new Phrase("VAT Amount:", boldFont));
+                    customerInfoTable.AddCell(new Phrase("VAT Amount         :", boldFont));
                     customerInfoTable.AddCell(new Phrase($"{vatAmount.ToString("0.00")}", normalFont));
 
                     doc.Add(customerInfoTable);
@@ -884,21 +879,21 @@ namespace Dashboard.Forms
 
                     if (paymentMethod == "Cash")
                     {
-                        paymentDetailsTable.AddCell(new Phrase("Pay Method:", boldFont));
+                        paymentDetailsTable.AddCell(new Phrase("Pay Method", boldFont));
                         paymentDetailsTable.AddCell(new Phrase(paymentMethod, normalFont));
 
-                        paymentDetailsTable.AddCell(new Phrase("Cash Amount:", boldFont));
+                        paymentDetailsTable.AddCell(new Phrase("Cash Amount", boldFont));
                         paymentDetailsTable.AddCell(new Phrase($"{cashCreditAmount}", boldFont));
 
-                        paymentDetailsTable.AddCell(new Phrase("Change:", boldFont));
+                        paymentDetailsTable.AddCell(new Phrase("Change", boldFont));
                         paymentDetailsTable.AddCell(new Phrase(change, boldFont));
                     }
                     else
                     {
-                        paymentDetailsTable.AddCell(new Phrase("Payment Method:", boldFont));
+                        paymentDetailsTable.AddCell(new Phrase("Payment Method", boldFont));
                         paymentDetailsTable.AddCell(new Phrase(paymentMethod, normalFont));
 
-                        paymentDetailsTable.AddCell(new Phrase("Credit Amount:", boldFont));
+                        paymentDetailsTable.AddCell(new Phrase("Credit Amount", boldFont));
                         paymentDetailsTable.AddCell(new Phrase($"{cashCreditAmount}", normalFont));
                     }
 
@@ -907,13 +902,18 @@ namespace Dashboard.Forms
                     // Create a table for employee information
                     PdfPTable employeeTable = new PdfPTable(2);
                     employeeTable.DefaultCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                    employeeTable.HorizontalAlignment = Element.ALIGN_RIGHT;
                     employeeTable.WidthPercentage = 100;
                     paymentDetailsTable.SetWidths(new float[] { 4f, 6f });
 
-                    employeeTable.AddCell(new Phrase("Processed by: ", boldFont));
+                    PdfPCell employeeCell = new PdfPCell(new Phrase("Processed by:", boldFont));
+                    employeeCell.HorizontalAlignment = Element.ALIGN_RIGHT;
+                    employeeCell.Border = iTextSharp.text.Rectangle.NO_BORDER;
+                    employeeTable.AddCell(employeeCell);
 
                     PdfPCell employeeNameCell = new PdfPCell(new Phrase(employeeName, normalFont));
                     employeeNameCell.Border = iTextSharp.text.Rectangle.BOTTOM_BORDER;
+                    employeeNameCell.HorizontalAlignment = Element.ALIGN_CENTER;
                     employeeNameCell.Colspan = 2;
                     employeeTable.AddCell(employeeNameCell);
 
@@ -1262,6 +1262,98 @@ namespace Dashboard.Forms
             {
                 searchCX();
             });
+        }
+
+        private void FormCollections_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+        }
+
+        private void GetPaymentInfo(string paymentId)
+        {
+            // Define your SQL query to fetch payment information and customer name
+            string query = @"
+        SELECT p.customer_id, p.sales_id, p.payment_date, p.payment_amount, p.payment_method, 
+               CONCAT(c.first_name, ' ', c.last_name) AS customer_name
+        FROM payments p
+        LEFT JOIN customers c ON p.customer_id = c.customer_id
+        WHERE p.payment_id = @paymentId";
+
+            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            {
+                try
+                {
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@paymentId", paymentId);
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                // Retrieve payment information
+                                int customerId = reader.GetInt32("customer_id");
+                                int saleId = reader.GetInt32("sales_id");
+                                DateTime paymentDate = reader.GetDateTime("payment_date");
+                                decimal paymentAmount = reader.GetDecimal("payment_amount");
+                                string paymentMethod = reader.GetString("payment_method");
+                                string customerName = reader.GetString("customer_name");
+
+                                // Display information in TextBox controls
+                                txtCustomerID.Text = customerId.ToString();
+                                txtSaleID.Text = saleId.ToString();
+                                txtSearchPaymentDate.Text = paymentDate.ToString("yyyy-MM-dd");
+                                txtSearchAmountPaid.Text = $"₱ {paymentAmount.ToString("0.00")}";
+                                txtMethodStatus.Text = paymentMethod;
+                                txtCustomerName.Text = customerName;
+                            }
+                            else
+                            {
+                                txtCustomerID.Text = null;
+                                txtSaleID.Text = null;
+                                txtSearchPaymentDate.Text = null;
+                                txtSearchAmountPaid.Text = null;
+                                txtMethodStatus.Text = null;
+                                txtCustomerName.Text = null;
+                                txtPaymentSearch.Text = "Payment ID not found";
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    if (connection != null)
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            LoadingScreenManager.ShowLoadingScreen(() =>
+            {
+                GetPaymentInfo(txtPaymentSearch.Text);
+            });
+        }
+
+        private void txtPaymentSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+
+                LoadingScreenManager.ShowLoadingScreen(() =>
+                {
+                    GetPaymentInfo(txtPaymentSearch.Text.Trim());
+                    e.SuppressKeyPress = true;
+                });
+
+            }
         }
     }
 }

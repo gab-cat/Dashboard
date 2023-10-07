@@ -516,7 +516,7 @@ namespace Dashboard
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                OpenChildForm(new Forms.FormCollections(username, role, connection), sender);
+                OpenChildForm(new Forms.FormCollections(username, role), sender);
                     lblTitle.Text = "Collections";
                     btnOrder.Enabled = false;
                     btnInventory.Enabled = false;

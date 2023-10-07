@@ -25,8 +25,6 @@ namespace Dashboard.Forms
         private string join_date;
         private string username;
         private string role;
-
-        private MySqlConnection connection;
       
         public int CustomerId
         {

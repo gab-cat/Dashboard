@@ -242,7 +242,7 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Outfit Thin Medium", 9F, System.Drawing.FontStyle.Bold);
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(373, 162);
+            this.label3.Location = new System.Drawing.Point(375, 159);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(168, 15);
             this.label3.TabIndex = 11;
@@ -278,9 +278,9 @@
             // 
             this.pictureBox3.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(324, 162);
+            this.pictureBox3.Location = new System.Drawing.Point(319, 154);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox3.Size = new System.Drawing.Size(57, 58);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 10;
             this.pictureBox3.TabStop = false;

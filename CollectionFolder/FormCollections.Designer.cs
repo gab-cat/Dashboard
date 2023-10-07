@@ -32,6 +32,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.gunaGroupBox1 = new Guna.UI.WinForms.GunaGroupBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cboxSaleID = new System.Windows.Forms.ComboBox();
             this.txtChange = new System.Windows.Forms.TextBox();
@@ -75,6 +76,20 @@
             this.btnEmailPDF = new System.Windows.Forms.Button();
             this.listInvoice = new System.Windows.Forms.ListView();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.txtMethodStatus = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.txtSearchAmountPaid = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.txtSearchPaymentDate = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.txtSaleID = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.txtCustomerName = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtCustomerID = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtPaymentSearch = new System.Windows.Forms.TextBox();
             this.guna2GroupBox2 = new Guna.UI2.WinForms.Guna2GroupBox();
             this.txtBalance = new System.Windows.Forms.TextBox();
             this.txtPayments = new System.Windows.Forms.TextBox();
@@ -91,12 +106,12 @@
             this.btnAddMemo = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.btnPaymentHistory = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.gunaGroupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CustomerGrid)).BeginInit();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.guna2GroupBox2.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.SuspendLayout();
@@ -134,6 +149,20 @@
             this.gunaGroupBox1.TabIndex = 3;
             this.gunaGroupBox1.Text = "Payments Collection Tool";
             this.gunaGroupBox1.TextLocation = new System.Drawing.Point(10, 8);
+            // 
+            // button1
+            // 
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.ForeColor = System.Drawing.Color.Black;
+            this.button1.Location = new System.Drawing.Point(451, 41);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(81, 27);
+            this.button1.TabIndex = 54;
+            this.button1.Text = "Search";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // groupBox2
             // 
@@ -765,12 +794,217 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.txtMethodStatus);
+            this.groupBox4.Controls.Add(this.label20);
+            this.groupBox4.Controls.Add(this.txtSearchAmountPaid);
+            this.groupBox4.Controls.Add(this.label19);
+            this.groupBox4.Controls.Add(this.txtSearchPaymentDate);
+            this.groupBox4.Controls.Add(this.label18);
+            this.groupBox4.Controls.Add(this.txtSaleID);
+            this.groupBox4.Controls.Add(this.label13);
+            this.groupBox4.Controls.Add(this.txtCustomerName);
+            this.groupBox4.Controls.Add(this.label2);
+            this.groupBox4.Controls.Add(this.txtCustomerID);
+            this.groupBox4.Controls.Add(this.button2);
+            this.groupBox4.Controls.Add(this.label1);
+            this.groupBox4.Controls.Add(this.txtPaymentSearch);
             this.groupBox4.Location = new System.Drawing.Point(572, 12);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(344, 200);
             this.groupBox4.TabIndex = 51;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Search Payment";
+            this.groupBox4.Text = "Search Payment ID";
+            // 
+            // txtMethodStatus
+            // 
+            this.txtMethodStatus.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtMethodStatus.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtMethodStatus.CausesValidation = false;
+            this.txtMethodStatus.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtMethodStatus.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtMethodStatus.ForeColor = System.Drawing.Color.Black;
+            this.txtMethodStatus.Location = new System.Drawing.Point(134, 175);
+            this.txtMethodStatus.Name = "txtMethodStatus";
+            this.txtMethodStatus.ReadOnly = true;
+            this.txtMethodStatus.Size = new System.Drawing.Size(202, 19);
+            this.txtMethodStatus.TabIndex = 66;
+            this.txtMethodStatus.TabStop = false;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.BackColor = System.Drawing.Color.Transparent;
+            this.label20.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.ForeColor = System.Drawing.Color.Black;
+            this.label20.Location = new System.Drawing.Point(7, 173);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(130, 19);
+            this.label20.TabIndex = 65;
+            this.label20.Text = "Method/Status      :";
+            // 
+            // txtSearchAmountPaid
+            // 
+            this.txtSearchAmountPaid.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtSearchAmountPaid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtSearchAmountPaid.CausesValidation = false;
+            this.txtSearchAmountPaid.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtSearchAmountPaid.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSearchAmountPaid.ForeColor = System.Drawing.Color.Black;
+            this.txtSearchAmountPaid.Location = new System.Drawing.Point(134, 151);
+            this.txtSearchAmountPaid.Name = "txtSearchAmountPaid";
+            this.txtSearchAmountPaid.ReadOnly = true;
+            this.txtSearchAmountPaid.Size = new System.Drawing.Size(202, 19);
+            this.txtSearchAmountPaid.TabIndex = 64;
+            this.txtSearchAmountPaid.TabStop = false;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.BackColor = System.Drawing.Color.Transparent;
+            this.label19.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.ForeColor = System.Drawing.Color.Black;
+            this.label19.Location = new System.Drawing.Point(7, 149);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(131, 19);
+            this.label19.TabIndex = 63;
+            this.label19.Text = "Amount Paid           :";
+            // 
+            // txtSearchPaymentDate
+            // 
+            this.txtSearchPaymentDate.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtSearchPaymentDate.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtSearchPaymentDate.CausesValidation = false;
+            this.txtSearchPaymentDate.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtSearchPaymentDate.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSearchPaymentDate.ForeColor = System.Drawing.Color.Black;
+            this.txtSearchPaymentDate.Location = new System.Drawing.Point(134, 127);
+            this.txtSearchPaymentDate.Name = "txtSearchPaymentDate";
+            this.txtSearchPaymentDate.ReadOnly = true;
+            this.txtSearchPaymentDate.Size = new System.Drawing.Size(202, 19);
+            this.txtSearchPaymentDate.TabIndex = 62;
+            this.txtSearchPaymentDate.TabStop = false;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.BackColor = System.Drawing.Color.Transparent;
+            this.label18.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.ForeColor = System.Drawing.Color.Black;
+            this.label18.Location = new System.Drawing.Point(9, 125);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(129, 19);
+            this.label18.TabIndex = 61;
+            this.label18.Text = "Payment Date       :";
+            // 
+            // txtSaleID
+            // 
+            this.txtSaleID.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtSaleID.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtSaleID.CausesValidation = false;
+            this.txtSaleID.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtSaleID.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSaleID.ForeColor = System.Drawing.Color.Black;
+            this.txtSaleID.Location = new System.Drawing.Point(134, 103);
+            this.txtSaleID.Name = "txtSaleID";
+            this.txtSaleID.ReadOnly = true;
+            this.txtSaleID.Size = new System.Drawing.Size(202, 19);
+            this.txtSaleID.TabIndex = 60;
+            this.txtSaleID.TabStop = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.BackColor = System.Drawing.Color.Transparent;
+            this.label13.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.ForeColor = System.Drawing.Color.Black;
+            this.label13.Location = new System.Drawing.Point(9, 101);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(128, 19);
+            this.label13.TabIndex = 59;
+            this.label13.Text = "Sale ID                       :";
+            // 
+            // txtCustomerName
+            // 
+            this.txtCustomerName.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtCustomerName.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCustomerName.CausesValidation = false;
+            this.txtCustomerName.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtCustomerName.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCustomerName.ForeColor = System.Drawing.Color.Black;
+            this.txtCustomerName.Location = new System.Drawing.Point(134, 79);
+            this.txtCustomerName.Name = "txtCustomerName";
+            this.txtCustomerName.ReadOnly = true;
+            this.txtCustomerName.Size = new System.Drawing.Size(202, 19);
+            this.txtCustomerName.TabIndex = 58;
+            this.txtCustomerName.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.Transparent;
+            this.label2.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.Color.Black;
+            this.label2.Location = new System.Drawing.Point(9, 77);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(128, 19);
+            this.label2.TabIndex = 57;
+            this.label2.Text = "Customer Name  :";
+            // 
+            // txtCustomerID
+            // 
+            this.txtCustomerID.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtCustomerID.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtCustomerID.CausesValidation = false;
+            this.txtCustomerID.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtCustomerID.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtCustomerID.ForeColor = System.Drawing.Color.Black;
+            this.txtCustomerID.Location = new System.Drawing.Point(134, 55);
+            this.txtCustomerID.Name = "txtCustomerID";
+            this.txtCustomerID.ReadOnly = true;
+            this.txtCustomerID.Size = new System.Drawing.Size(202, 19);
+            this.txtCustomerID.TabIndex = 56;
+            this.txtCustomerID.TabStop = false;
+            // 
+            // button2
+            // 
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.ForeColor = System.Drawing.Color.Black;
+            this.button2.Location = new System.Drawing.Point(255, 23);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(81, 26);
+            this.button2.TabIndex = 56;
+            this.button2.Text = "Search";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Outfit Thin Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(9, 52);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(129, 19);
+            this.label1.TabIndex = 55;
+            this.label1.Text = "Customer ID           :";
+            // 
+            // txtPaymentSearch
+            // 
+            this.txtPaymentSearch.BackColor = System.Drawing.Color.White;
+            this.txtPaymentSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtPaymentSearch.CausesValidation = false;
+            this.txtPaymentSearch.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtPaymentSearch.Font = new System.Drawing.Font("Calibri", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPaymentSearch.ForeColor = System.Drawing.Color.Black;
+            this.txtPaymentSearch.Location = new System.Drawing.Point(13, 23);
+            this.txtPaymentSearch.Name = "txtPaymentSearch";
+            this.txtPaymentSearch.Size = new System.Drawing.Size(235, 26);
+            this.txtPaymentSearch.TabIndex = 55;
+            this.txtPaymentSearch.TabStop = false;
+            this.txtPaymentSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPaymentSearch_KeyDown);
             // 
             // guna2GroupBox2
             // 
@@ -970,20 +1204,6 @@
             this.btnPaymentHistory.UseVisualStyleBackColor = true;
             this.btnPaymentHistory.Click += new System.EventHandler(this.button7_Click);
             // 
-            // button1
-            // 
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.Black;
-            this.button1.Location = new System.Drawing.Point(451, 41);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(81, 27);
-            this.button1.TabIndex = 54;
-            this.button1.Text = "Search";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
             // FormCollections
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1001,6 +1221,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "FormCollections";
             this.Text = "FormOrder";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormCollections_FormClosed);
             this.Load += new System.EventHandler(this.FormOrder_Load);
             this.gunaGroupBox1.ResumeLayout(false);
             this.gunaGroupBox1.PerformLayout();
@@ -1010,6 +1231,8 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CustomerGrid)).EndInit();
             this.groupBox3.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.guna2GroupBox2.ResumeLayout(false);
             this.guna2GroupBox2.PerformLayout();
             this.groupBox5.ResumeLayout(false);
@@ -1079,5 +1302,19 @@
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Button btnPaymentHistory;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox txtCustomerID;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtPaymentSearch;
+        private System.Windows.Forms.TextBox txtMethodStatus;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox txtSearchAmountPaid;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox txtSearchPaymentDate;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox txtSaleID;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox txtCustomerName;
+        private System.Windows.Forms.Label label2;
     }
 }
