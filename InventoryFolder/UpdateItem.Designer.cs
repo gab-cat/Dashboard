@@ -32,6 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.gunaGroupBox1 = new Guna.UI.WinForms.GunaGroupBox();
             this.cboxCategory = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.cboxSupplierID = new System.Windows.Forms.ComboBox();
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -39,13 +40,15 @@
             this.label6 = new System.Windows.Forms.Label();
             this.txtSellingPrice = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.txtCostPrice = new System.Windows.Forms.TextBox();
             this.txtProductName = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.txtMemo = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.gunaGroupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,7 +68,9 @@
             this.gunaGroupBox1.BaseColor = System.Drawing.SystemColors.ControlLight;
             this.gunaGroupBox1.BorderColor = System.Drawing.SystemColors.ControlLight;
             this.gunaGroupBox1.BorderSize = 1;
+            this.gunaGroupBox1.Controls.Add(this.label9);
             this.gunaGroupBox1.Controls.Add(this.cboxCategory);
+            this.gunaGroupBox1.Controls.Add(this.label8);
             this.gunaGroupBox1.Controls.Add(this.cboxSupplierID);
             this.gunaGroupBox1.Controls.Add(this.txtDescription);
             this.gunaGroupBox1.Controls.Add(this.label7);
@@ -73,8 +78,6 @@
             this.gunaGroupBox1.Controls.Add(this.label6);
             this.gunaGroupBox1.Controls.Add(this.txtSellingPrice);
             this.gunaGroupBox1.Controls.Add(this.label5);
-            this.gunaGroupBox1.Controls.Add(this.button2);
-            this.gunaGroupBox1.Controls.Add(this.button1);
             this.gunaGroupBox1.Controls.Add(this.txtCostPrice);
             this.gunaGroupBox1.Controls.Add(this.txtProductName);
             this.gunaGroupBox1.Controls.Add(this.label4);
@@ -99,6 +102,16 @@
             this.cboxCategory.Size = new System.Drawing.Size(207, 23);
             this.cboxCategory.TabIndex = 19;
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Calibri", 12F);
+            this.label8.Location = new System.Drawing.Point(9, 309);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(95, 19);
+            this.label8.TabIndex = 20;
+            this.label8.Text = "Price History ";
+            // 
             // cboxSupplierID
             // 
             this.cboxSupplierID.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -117,7 +130,7 @@
             this.txtDescription.Location = new System.Drawing.Point(102, 229);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
-            this.txtDescription.Size = new System.Drawing.Size(237, 115);
+            this.txtDescription.Size = new System.Drawing.Size(237, 75);
             this.txtDescription.TabIndex = 17;
             // 
             // label7
@@ -152,7 +165,7 @@
             // 
             // txtSellingPrice
             // 
-            this.txtSellingPrice.BackColor = System.Drawing.Color.White;
+            this.txtSellingPrice.BackColor = System.Drawing.SystemColors.Info;
             this.txtSellingPrice.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtSellingPrice.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
             this.txtSellingPrice.Location = new System.Drawing.Point(132, 167);
@@ -169,30 +182,6 @@
             this.label5.Size = new System.Drawing.Size(124, 19);
             this.label5.TabIndex = 12;
             this.label5.Text = "Selling Price        :";
-            // 
-            // button2
-            // 
-            this.button2.Font = new System.Drawing.Font("Calibri", 10F);
-            this.button2.Location = new System.Drawing.Point(144, 347);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(76, 23);
-            this.button2.TabIndex = 11;
-            this.button2.Text = "Close";
-            this.button2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // button1
-            // 
-            this.button1.Font = new System.Drawing.Font("Calibri", 10F);
-            this.button1.Location = new System.Drawing.Point(226, 347);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(113, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "Confirm";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtCostPrice
             // 
@@ -244,13 +233,62 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Category             :";
             // 
+            // button2
+            // 
+            this.button2.Font = new System.Drawing.Font("Calibri", 10F);
+            this.button2.Location = new System.Drawing.Point(143, 439);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(76, 23);
+            this.button2.TabIndex = 11;
+            this.button2.Text = "Close";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.Font = new System.Drawing.Font("Calibri", 10F);
+            this.button1.Location = new System.Drawing.Point(225, 439);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(113, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "Confirm";
+            this.button1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // txtMemo
+            // 
+            this.txtMemo.BackColor = System.Drawing.Color.Gainsboro;
+            this.txtMemo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtMemo.Enabled = false;
+            this.txtMemo.Font = new System.Drawing.Font("Calibri", 10F, System.Drawing.FontStyle.Bold);
+            this.txtMemo.Location = new System.Drawing.Point(101, 309);
+            this.txtMemo.Multiline = true;
+            this.txtMemo.Name = "txtMemo";
+            this.txtMemo.Size = new System.Drawing.Size(237, 124);
+            this.txtMemo.TabIndex = 21;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Calibri", 12F);
+            this.label9.Location = new System.Drawing.Point(41, 328);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(58, 19);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "Memo :";
+            // 
             // UpdateItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(364, 381);
+            this.ClientSize = new System.Drawing.Size(355, 472);
+            this.Controls.Add(this.txtMemo);
             this.Controls.Add(this.gunaGroupBox1);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "UpdateItem";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -259,6 +297,7 @@
             this.gunaGroupBox1.ResumeLayout(false);
             this.gunaGroupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -281,5 +320,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtSellingPrice;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox txtMemo;
+        private System.Windows.Forms.Label label9;
     }
 }

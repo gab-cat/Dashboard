@@ -13,9 +13,12 @@ namespace Dashboard.Forms
 {
     public partial class FormInventory : Form
     {
+        private int product_id;
         private string employee_name;
         private string role;
         private DataTable originalProductData;
+        private DataTable priceHistoryTable;
+
         public FormInventory(string employee_name, string role)
         {
             InitializeComponent();
@@ -32,6 +35,15 @@ namespace Dashboard.Forms
             ProductGrid.ColumnHeadersDefaultCellStyle.SelectionBackColor = ThemeColor.SecondaryColor;
             ProductGrid.DefaultCellStyle.SelectionForeColor = Color.White;
             ProductGrid.DefaultCellStyle.SelectionBackColor = ThemeColor.SecondaryColor;
+
+            dgvPriceHistory.ColumnHeadersDefaultCellStyle.BackColor = ThemeColor.SecondaryColor;
+            dgvPriceHistory.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvPriceHistory.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
+            dgvPriceHistory.ColumnHeadersDefaultCellStyle.SelectionBackColor = ThemeColor.SecondaryColor;
+
+            lblLastUpdate.ForeColor = ThemeColor.SecondaryColor;
+            lblProductName.ForeColor = ThemeColor.SecondaryColor;
+            button1.OnHoverBaseColor = ThemeColor.SecondaryColor;
 
             foreach (DataGridViewColumn col in ProductGrid.Columns)
             {
@@ -273,10 +285,6 @@ namespace Dashboard.Forms
             ProductGrid.DataSource = filteredView.ToTable();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            cboxProductCategory.SelectedIndex = -1;
-        }
         private void PerformSearch()
         {
             // Get the selected filter criteria
@@ -361,6 +369,124 @@ namespace Dashboard.Forms
                 }
             });
 
+        }
+
+        private DataTable LoadPriceHistory(int productId)
+        {
+            // Create a DataTable to store the price history data
+            DataTable priceHistoryTable = new DataTable();
+
+            // Define your SQL query to retrieve price history data for the selected product
+            string query = @"
+        SELECT effective_date, price, employee_name, user_text
+        FROM price_history
+        WHERE product_id = @productId
+        ORDER BY effective_date DESC"; // Order by effective_date in descending order
+
+            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            {
+                try
+                {
+                    using (MySqlCommand command = new MySqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@productId", productId);
+
+                        using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
+                        {
+                            // Fill the DataTable with price history data
+                            adapter.Fill(priceHistoryTable);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            return priceHistoryTable;
+        }
+
+        private void LoadPriceHistoryForSelectedProduct(int productId, string productName)
+        {
+            // Initialize the DataTable and load the price history data
+            priceHistoryTable = new DataTable();
+            priceHistoryTable = LoadPriceHistory(productId);
+
+            // Bind the DataGridView to the DataTable
+            dgvPriceHistory.DataSource = priceHistoryTable;
+
+            // Set column headers (you can customize these as needed)
+            dgvPriceHistory.Columns["effective_date"].HeaderText = "Effective Date";
+            dgvPriceHistory.Columns["price"].HeaderText = "Price";
+            dgvPriceHistory.Columns["employee_name"].HeaderText = "Employee Name"; // Add this line to set the column header
+
+            // Hide the user_text column in the DataGridView
+            dgvPriceHistory.Columns["user_text"].Visible = false;
+
+            // Display the product name in lblProductName
+            lblProductName.Text = productName;
+
+            // Check if there are any rows in the price history
+            if (priceHistoryTable.Rows.Count > 0)
+            {
+                // Get the latest effective_date from the first row
+                DateTime latestDate = (DateTime)priceHistoryTable.Rows[0]["effective_date"];
+                lblLastUpdate.Text = "Last Update: " + latestDate.ToString("yyyy-MM-dd HH:mm:ss");
+
+                // Display the user_text for the latest row in txtMemo
+                string latestUserText = priceHistoryTable.Rows[0]["user_text"].ToString();
+                string latestEmployeeName = priceHistoryTable.Rows[0]["employee_name"].ToString();
+                txtMemo.Text = "Processed by: " + Environment.NewLine + latestEmployeeName + Environment.NewLine + Environment.NewLine + latestUserText;
+            }
+            else
+            {
+                lblLastUpdate.Text = "Last Update: N/A"; // No price history available
+                txtMemo.Text = ""; // Clear txtMemo when there's no price history
+            }
+        }
+
+
+        private void ProductGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            // Check if there is a selected row in the ProductGrid
+            if (ProductGrid.SelectedRows.Count > 0)
+            {
+                // Get the product_id and product name from the selected row
+                int productId = Convert.ToInt32(ProductGrid.SelectedRows[0].Cells["Product ID"].Value);
+                string productName = Convert.ToString(ProductGrid.SelectedRows[0].Cells["Product Name"].Value);
+
+                // Load the price history for the selected product
+                LoadPriceHistoryForSelectedProduct(productId, productName);
+            }
+            else
+            {
+                // Clear the DataGridView and TextBox if no row is selected
+                dgvPriceHistory.DataSource = null;
+                lblProductName.Text = "";
+                lblLastUpdate.Text = "Last Update: N/A";
+                txtMemo.Text = "";
+            }
+        }
+
+        private void dgvPriceHistory_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvPriceHistory.SelectedRows.Count > 0)
+            {
+                int selectedRowIndex = dgvPriceHistory.SelectedRows[0].Index;
+                if (selectedRowIndex >= 0 && selectedRowIndex < priceHistoryTable.Rows.Count)
+                {
+                    string userText = priceHistoryTable.Rows[selectedRowIndex]["user_text"].ToString();
+                    string employeeName = priceHistoryTable.Rows[selectedRowIndex]["employee_name"].ToString();
+
+                    txtMemo.Text = "Processed by: " + Environment.NewLine + employeeName + Environment.NewLine + Environment.NewLine + userText;
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            cboxProductCategory.SelectedIndex = -1;
         }
     }
 }

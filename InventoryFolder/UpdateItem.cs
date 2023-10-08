@@ -1,4 +1,5 @@
 ﻿using Dashboard.Forms;
+using Microsoft.VisualBasic;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ namespace Dashboard
     public partial class UpdateItem : Form
     {
         private string employee_name;
-        private string EmployeeName;
         private int productId;
         private bool changesMade = false;
+        private decimal originalSellingPrice;
         public UpdateItem(string EmployeeName, int productId)
         {
             InitializeComponent();
@@ -46,14 +47,37 @@ namespace Dashboard
             if (textBox.Text != textBox.Tag.ToString())
             {
                 changesMade = true;
+
+                // Check if the modified field is the selling price
+                if (textBox == txtSellingPrice)
+                {
+                    // Enable the txtMemo TextBox
+                    txtMemo.Enabled = true;
+                    txtMemo.BackColor = SystemColors.Info;
+                }
             }
             else
             {
                 changesMade = false;
+
+                // Disable the txtMemo TextBox if no changes were made or if the selling price is not modified
+                if (textBox != txtSellingPrice)
+                {
+                    txtMemo.Enabled = false;
+                    txtMemo.BackColor = Color.Gainsboro;
+                    txtMemo.Text = ""; // Clear the memo text
+                }
             }
 
             // Enable or disable the "Save" button based on whether changes were made
             button1.Enabled = changesMade;
+            txtMemo.Enabled = changesMade;
+            if (changesMade) txtMemo.BackColor = SystemColors.Info;
+            else
+            {
+                txtMemo.BackColor = Color.Gainsboro;
+                txtMemo.Text = string.Empty;
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -65,18 +89,52 @@ namespace Dashboard
                 int supplierID = Convert.ToInt32(cboxSupplierID.SelectedItem);
                 string productName = txtProductName.Text;
                 decimal costPrice = Convert.ToDecimal(txtCostPrice.Text);
-                decimal sellingPrice = Convert.ToDecimal(txtSellingPrice.Text);
+                decimal newSellingPrice = Convert.ToDecimal(txtSellingPrice.Text);
                 int criticalStock = Convert.ToInt32(txtCriticalStock.Text);
                 string description = txtDescription.Text;
 
+                // Check if the selling price is modified
+                if (newSellingPrice != originalSellingPrice)
+                {
+                    // Selling price is modified, check if there's a memo
+                    if (txtMemo.Enabled && !string.IsNullOrEmpty(txtMemo.Text))
+                    {
+                        // Calculate the price change
+                        decimal priceChange = newSellingPrice - originalSellingPrice;
+                        string priceChangeText = priceChange >= 0
+                            ? $"{originalSellingPrice:F2}  ->  {newSellingPrice:F2}\n{Math.Abs(priceChange):F2} increase"
+                            : $"{originalSellingPrice:F2}  ->  {newSellingPrice:F2}\n{Math.Abs(priceChange):F2} decrease";
+
+                        // Add price change information to the memo
+                        string memoWithPriceChange = $"{priceChangeText}\n{txtMemo.Text}";
+
+                        // Selling price modified and memo provided, add a price history entry
+                        AddPriceHistoryEntry(productId, newSellingPrice, memoWithPriceChange, employee_name);
+                    }
+                    else
+                    {
+                        // Selling price modified but no memo provided
+                        MessageBox.Show("A memo is required for the price change.", "Memo Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return; // Exit the function without saving changes
+                    }
+                }
+                else
+                {
+                    // Selling price not modified, simply add the memo
+                    if (!string.IsNullOrEmpty(txtMemo.Text))
+                    {
+                        AddPriceHistoryEntry(productId, newSellingPrice, txtMemo.Text, employee_name);
+                    }
+                }
+
                 // Create an SQL UPDATE statement
                 string updateQuery = @"
-                    UPDATE products
-                    SET product_name = @productName, description = @description, 
-                        category = @category, supplier_id = @supplierID, 
-                        cost_price = @costPrice, selling_price = @sellingPrice, 
-                        critical_quantity = @criticalStock
-                    WHERE product_id = @productId";
+        UPDATE products
+        SET product_name = @productName, description = @description, 
+            category = @category, supplier_id = @supplierID, 
+            cost_price = @costPrice, selling_price = @newSellingPrice, 
+            critical_quantity = @criticalStock
+        WHERE product_id = @productId";
 
                 using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
                 {
@@ -91,7 +149,7 @@ namespace Dashboard
                             command.Parameters.AddWithValue("@category", category);
                             command.Parameters.AddWithValue("@supplierID", supplierID);
                             command.Parameters.AddWithValue("@costPrice", costPrice);
-                            command.Parameters.AddWithValue("@sellingPrice", sellingPrice);
+                            command.Parameters.AddWithValue("@newSellingPrice", newSellingPrice); // Use the new selling price
                             command.Parameters.AddWithValue("@criticalStock", criticalStock);
 
                             // Execute the UPDATE command
@@ -114,8 +172,48 @@ namespace Dashboard
                     }
                 }
             });
-
         }
+
+        private void AddPriceHistoryEntry(int productId, decimal newSellingPrice, string memo, string employee_name)
+        {
+            // Create an SQL INSERT statement to add a new row to the price_history table
+            string insertQuery = @"
+        INSERT INTO price_history (product_id, effective_date, price, user_text, employee_name)
+        VALUES (@productId, @effectiveDate, @price, @userText, @employeeName)";
+
+            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            {
+                try
+                {
+                    using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
+                    {
+                        // Add parameters to the SQL command
+                        command.Parameters.AddWithValue("@productId", productId);
+                        command.Parameters.AddWithValue("@effectiveDate", DateTime.Now); // Use the current date and time as the effective date
+                        command.Parameters.AddWithValue("@price", newSellingPrice);
+                        command.Parameters.AddWithValue("@userText", memo);
+                        command.Parameters.AddWithValue("@employeeName", employee_name);
+
+                        // Execute the INSERT command
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Price history entry added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to add the price history entry.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -200,7 +298,11 @@ namespace Dashboard
                                 cboxCategory.SelectedItem = reader.GetString("category");
                                 cboxSupplierID.SelectedItem = reader.GetInt32("supplier_id");
                                 txtCostPrice.Text = reader.GetDecimal("cost_price").ToString();
-                                txtSellingPrice.Text = reader.GetDecimal("selling_price").ToString();
+
+                                // Store the original selling price
+                                originalSellingPrice = reader.GetDecimal("selling_price");
+
+                                txtSellingPrice.Text = originalSellingPrice.ToString();
                                 txtCriticalStock.Text = reader.GetInt32("critical_quantity").ToString();
 
                                 // Set the Tag property for each control with its original value
