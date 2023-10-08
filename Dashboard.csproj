@@ -233,6 +233,18 @@
     <Compile Include="Initializer2.Designer.cs">
       <DependentUpon>Initializer2.cs</DependentUpon>
     </Compile>
+    <Compile Include="InventoryFolder\UpdateItem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InventoryFolder\UpdateItem.Designer.cs">
+      <DependentUpon>UpdateItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InventoryFolder\NewItem.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InventoryFolder\NewItem.Designer.cs">
+      <DependentUpon>NewItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="ItemAddedEventArgs.cs" />
     <Compile Include="LoadingAnimation.cs">
       <SubType>Form</SubType>
@@ -309,6 +321,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Initializer2.resx">
       <DependentUpon>Initializer2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InventoryFolder\UpdateItem.resx">
+      <DependentUpon>UpdateItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InventoryFolder\NewItem.resx">
+      <DependentUpon>NewItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoadingAnimation.resx">
       <DependentUpon>LoadingAnimation.cs</DependentUpon>
