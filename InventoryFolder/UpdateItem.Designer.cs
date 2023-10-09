@@ -31,6 +31,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.gunaGroupBox1 = new Guna.UI.WinForms.GunaGroupBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.cboxCategory = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.cboxSupplierID = new System.Windows.Forms.ComboBox();
@@ -48,7 +49,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.txtMemo = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
             this.gunaGroupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -92,6 +92,16 @@
             this.gunaGroupBox1.TabIndex = 1;
             this.gunaGroupBox1.Text = "Item Information";
             this.gunaGroupBox1.TextLocation = new System.Drawing.Point(10, 8);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Calibri", 12F);
+            this.label9.Location = new System.Drawing.Point(41, 328);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(58, 19);
+            this.label9.TabIndex = 21;
+            this.label9.Text = "Memo :";
             // 
             // cboxCategory
             // 
@@ -152,6 +162,7 @@
             this.txtCriticalStock.Name = "txtCriticalStock";
             this.txtCriticalStock.Size = new System.Drawing.Size(208, 24);
             this.txtCriticalStock.TabIndex = 15;
+            this.txtCriticalStock.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCriticalStock_KeyPress);
             // 
             // label6
             // 
@@ -172,6 +183,7 @@
             this.txtSellingPrice.Name = "txtSellingPrice";
             this.txtSellingPrice.Size = new System.Drawing.Size(208, 24);
             this.txtSellingPrice.TabIndex = 13;
+            this.txtSellingPrice.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSellingPrice_KeyPress);
             // 
             // label5
             // 
@@ -192,6 +204,7 @@
             this.txtCostPrice.Name = "txtCostPrice";
             this.txtCostPrice.Size = new System.Drawing.Size(208, 24);
             this.txtCostPrice.TabIndex = 4;
+            this.txtCostPrice.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCostPrice_KeyPress);
             // 
             // txtProductName
             // 
@@ -268,16 +281,6 @@
             this.txtMemo.Name = "txtMemo";
             this.txtMemo.Size = new System.Drawing.Size(237, 124);
             this.txtMemo.TabIndex = 21;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Calibri", 12F);
-            this.label9.Location = new System.Drawing.Point(41, 328);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(58, 19);
-            this.label9.TabIndex = 21;
-            this.label9.Text = "Memo :";
             // 
             // UpdateItem
             // 

@@ -321,7 +321,7 @@ namespace Dashboard.Forms
                 if (selectedMemoTag != null)
                 {
                     string selectedMemoText = selectedMemoTag.ToString();
-                    txtMemo.Text = "Memo: \n" + selectedMemoText;
+                    txtMemo.Text = "Memo: " + selectedMemoText;
                 }
                 else
                 {

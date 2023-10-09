@@ -30,13 +30,14 @@ namespace Dashboard
             // Wire up TextChanged event handlers for input fields
             txtProductName.TextChanged += InputField_TextChanged;
             txtCostPrice.TextChanged += InputField_TextChanged;
-            txtSellingPrice.TextChanged += InputField_TextChanged;
             txtCriticalStock.TextChanged += InputField_TextChanged;
             txtDescription.TextChanged += InputField_TextChanged;
             button1.Enabled = false;
 
             this.productId = productId; // Store the product ID for updating
 
+            // Handle the TextChanged event of txtSellingPrice separately
+            txtSellingPrice.TextChanged += TxtSellingPrice_TextChanged;
         }
 
         private void InputField_TextChanged(object sender, EventArgs e)
@@ -67,17 +68,66 @@ namespace Dashboard
                     txtMemo.BackColor = Color.Gainsboro;
                     txtMemo.Text = ""; // Clear the memo text
                 }
+                else if (textBox == txtSellingPrice && !changesMade)
+                {
+                    // If the selling price is not changed, keep the txtMemo disabled
+                    txtMemo.Enabled = false;
+                    txtMemo.BackColor = Color.Gainsboro;
+                    txtMemo.Text = ""; // Clear the memo text
+                }
             }
 
             // Enable or disable the "Save" button based on whether changes were made
             button1.Enabled = changesMade;
-            txtMemo.Enabled = changesMade;
+            txtMemo.Enabled = changesMade && (textBox == txtSellingPrice);
+            /*
             if (changesMade) txtMemo.BackColor = SystemColors.Info;
             else
             {
                 txtMemo.BackColor = Color.Gainsboro;
                 txtMemo.Text = string.Empty;
             }
+            */
+        }
+
+        private void TxtSellingPrice_TextChanged(object sender, EventArgs e)
+        {
+            // Enable or disable the txtMemo TextBox based on whether the selling price is modified
+            if (txtSellingPrice.Text != txtSellingPrice.Tag.ToString())
+            {
+                // Selling price is modified, restore all text boxes to their original state
+                RestoreOriginalTextBoxValues();
+
+                txtMemo.Enabled = true;
+                txtMemo.BackColor = SystemColors.Info;
+                button1.Enabled = true;
+            }
+            else
+            {
+                txtMemo.Enabled = false;
+                txtMemo.BackColor = Color.Gainsboro;
+                txtMemo.Text = ""; // Clear the memo text
+            }
+        }
+
+        private void RestoreOriginalTextBoxValues()
+        {
+            // Restore all text boxes to their original state
+            txtProductName.Text = txtProductName.Tag.ToString();
+            txtCostPrice.Text = txtCostPrice.Tag.ToString();
+            txtCriticalStock.Text = txtCriticalStock.Tag.ToString();
+            txtDescription.Text = txtDescription.Tag.ToString();
+
+            txtProductName.Enabled = false;
+            txtCostPrice.Enabled = false;
+            txtCriticalStock.Enabled = false;
+            txtDescription.Enabled = false;
+
+            // Disable the "Save" button and txtMemo
+            button1.Enabled = false;
+            txtMemo.Enabled = false;
+            txtMemo.BackColor = Color.Gainsboro;
+            txtMemo.Text = "";
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -92,6 +142,61 @@ namespace Dashboard
                 decimal newSellingPrice = Convert.ToDecimal(txtSellingPrice.Text);
                 int criticalStock = Convert.ToInt32(txtCriticalStock.Text);
                 string description = txtDescription.Text;
+
+                // Create a list to store all changes made
+                List<string> changesMadeList = new List<string>();
+
+                // Check if the product category is modified
+                if (category != cboxCategory.Tag.ToString())
+                {
+                    changesMadeList.Add($"Category from \"{cboxCategory.Tag}\" to \"{category}\"");
+                }
+
+                // Check if the supplier ID is modified
+                if (supplierID != (int)cboxSupplierID.Tag)
+                {
+                    changesMadeList.Add($"Supplier ID from \"{cboxSupplierID.Tag}\" to \"{supplierID}\"");
+                }
+
+                // Check if the product name is modified
+                if (productName != txtProductName.Tag.ToString())
+                {
+                    changesMadeList.Add($"Product Name from \"{txtProductName.Tag}\" to \"{productName}\"");
+                }
+
+                // Check if the cost price is modified
+                if (costPrice != Convert.ToDecimal(txtCostPrice.Tag))
+                {
+                    changesMadeList.Add($"Cost Price from \"{txtCostPrice.Tag}\" to \"{costPrice:F2}\"");
+                }
+
+                // Check if the critical stock quantity is modified
+                if (criticalStock != Convert.ToInt32(txtCriticalStock.Tag))
+                {
+                    changesMadeList.Add($"Critical Stock from \"{txtCriticalStock.Tag}\" to \"{criticalStock}\"");
+                }
+
+                // Check if the description is modified
+                if (description != txtDescription.Tag.ToString())
+                {
+                    changesMadeList.Add($"Description from \"{txtDescription.Tag}\" to \"{description}\"");
+                }
+
+                // Check if there are any changes other than the selling price
+                if (changesMadeList.Count > 0)
+                {
+                    // Audit trail for changes other than the selling price change
+                    string auditTrail = string.Join("\n", changesMadeList);
+                    string systemMemo = $"{auditTrail}\n\nProduct updated by {employee_name}.{Environment.NewLine}Effective as of {DateTime.Now}.";
+
+                    // Show the audit trail in the memo
+                    txtMemo.Text = systemMemo;
+                    txtMemo.Enabled = true;
+                    txtMemo.BackColor = SystemColors.Info;
+
+                    // Add audit trail for product update
+                    AddAuditTrail(productName, auditTrail, employee_name);
+                }
 
                 // Check if the selling price is modified
                 if (newSellingPrice != originalSellingPrice)
@@ -108,7 +213,15 @@ namespace Dashboard
                         // Add price change information to the memo
                         string memoWithPriceChange = $"{priceChangeText}\n{txtMemo.Text}";
 
-                        // Selling price modified and memo provided, add a price history entry
+                        // Audit trail for selling price change
+                        string systemMemo = $"Selling price changed: {priceChangeText}\n\n{memoWithPriceChange}\n\nProduct updated by {employee_name} as of {DateTime.Now}.";
+
+                        // Show the audit trail in the memo
+                        txtMemo.Text = systemMemo;
+                        txtMemo.Enabled = true;
+                        txtMemo.BackColor = SystemColors.Info;
+
+                        // Add price history entry
                         AddPriceHistoryEntry(productId, newSellingPrice, memoWithPriceChange, employee_name);
                     }
                     else
@@ -116,14 +229,6 @@ namespace Dashboard
                         // Selling price modified but no memo provided
                         MessageBox.Show("A memo is required for the price change.", "Memo Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return; // Exit the function without saving changes
-                    }
-                }
-                else
-                {
-                    // Selling price not modified, simply add the memo
-                    if (!string.IsNullOrEmpty(txtMemo.Text))
-                    {
-                        AddPriceHistoryEntry(productId, newSellingPrice, txtMemo.Text, employee_name);
                     }
                 }
 
@@ -172,6 +277,13 @@ namespace Dashboard
                     }
                 }
             });
+        }
+
+        private void AddAuditTrail(string productName, string changesMade, string employee_name)
+        {
+            string systemMemo = $"Updated Product: {productName}\n{changesMade}\n\nProduct updated by {employee_name} as of {DateTime.Now}.";
+            AddInvMemo addmemo = new AddInvMemo(employee_name, "Updated Product", systemMemo);
+            addmemo.Show();
         }
 
         private void AddPriceHistoryEntry(int productId, decimal newSellingPrice, string memo, string employee_name)
@@ -329,5 +441,42 @@ namespace Dashboard
             }
         }
 
+        private void txtCostPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true; 
+            }
+            if (e.KeyChar == '.' && (sender as TextBox).Text.Contains("."))
+            {
+                e.Handled = true; 
+            }
+        }
+
+        private void txtSellingPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true; 
+            }
+
+            if (e.KeyChar == '.' && (sender as TextBox).Text.Contains("."))
+            {
+                e.Handled = true; 
+            }
+        }
+
+        private void txtCriticalStock_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+
+            if (e.KeyChar == '.' && (sender as TextBox).Text.Contains("."))
+            {
+                e.Handled = true;
+            }
+        }
     }
 }

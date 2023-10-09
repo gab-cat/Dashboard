@@ -493,23 +493,23 @@ namespace Dashboard
         }
         private void btnOrder_Click(object sender, EventArgs e)
         {
-            LoadingScreenManager.ShowLoadingScreen(() =>
-            {
+
                 SearchCustomer search = new SearchCustomer(username);
-                // The code inside this block is executed while the loading animation is displayed
                 if (search.ShowDialog() == DialogResult.OK)
                 {
-                    int customer_id = search.SelectedCustomerId;
-                    // Pass the customer_id to the FormOrder constructor
-                    OpenChildFormOrder(new Forms.FormOrder(customer_id, username, role), sender, customer_id, username); // Provide customer_id here
-                    lblTitle.Text = "Create Order";
+                    LoadingScreenManager.ShowLoadingScreen(() =>
+                    {
+                        int customer_id = search.SelectedCustomerId;
+                        // Pass the customer_id to the FormOrder constructor
+                        OpenChildFormOrder(new Forms.FormOrder(customer_id, username, role), sender, customer_id, username); // Provide customer_id here
+                        lblTitle.Text = "Create Order";
 
-                    btnPay.Enabled = false;
-                    btnInventory.Enabled = false;
-                    btnReport.Enabled = false;
-                    btnMaintenance.Enabled = false;
+                        btnPay.Enabled = false;
+                        btnInventory.Enabled = false;
+                        btnReport.Enabled = false;
+                        btnMaintenance.Enabled = false;
+                    });
                 }
-            });
         }
 
         private void btnPay_Click(object sender, EventArgs e)

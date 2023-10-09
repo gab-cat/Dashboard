@@ -61,7 +61,9 @@ namespace Dashboard
 
                             if (rowsAffected > 0)
                             {
-                                MessageBox.Show("Product added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                string systemMemo = $"New Product {productName} {Environment.NewLine}Added by {employee_name}. Effective as of {DateTime.Now}.";
+                                AddInvMemo addmemo = new AddInvMemo(employee_name, "New Product", systemMemo);
+                                addmemo.Show();
                                 this.Close();
                             }
                             else
