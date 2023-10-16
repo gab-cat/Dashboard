@@ -138,6 +138,7 @@
             this.txtCriticalStock.Name = "txtCriticalStock";
             this.txtCriticalStock.Size = new System.Drawing.Size(208, 24);
             this.txtCriticalStock.TabIndex = 15;
+            this.txtCriticalStock.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCriticalStock_KeyPress);
             // 
             // label6
             // 
@@ -158,6 +159,7 @@
             this.txtSellingPrice.Name = "txtSellingPrice";
             this.txtSellingPrice.Size = new System.Drawing.Size(208, 24);
             this.txtSellingPrice.TabIndex = 13;
+            this.txtSellingPrice.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSellingPrice_KeyPress);
             // 
             // label5
             // 
@@ -202,6 +204,7 @@
             this.txtCostPrice.Name = "txtCostPrice";
             this.txtCostPrice.Size = new System.Drawing.Size(208, 24);
             this.txtCostPrice.TabIndex = 4;
+            this.txtCostPrice.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCostPrice_KeyPress);
             // 
             // txtProductName
             // 

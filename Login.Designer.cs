@@ -56,25 +56,23 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Outfit Thin", 23F, System.Drawing.FontStyle.Bold);
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(12, 72);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(233, 39);
+            this.label1.Size = new System.Drawing.Size(282, 39);
             this.label1.TabIndex = 0;
             this.label1.Text = "Welcome Back!";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Calibri Light", 9F, System.Drawing.FontStyle.Italic);
             this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(16, 111);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(255, 14);
+            this.label2.Size = new System.Drawing.Size(278, 40);
             this.label2.TabIndex = 1;
             this.label2.Text = "Please login using your Employee ID and Password.";
             // 

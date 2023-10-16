@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using iTextSharp.text.xml;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -31,6 +33,8 @@ namespace Dashboard
         Color inactive = Color.FromArgb(27, 55, 90);
 
         private MySqlConnection connection;
+        private bool updatePasswordMenu = false;
+        private string tempUsername;
         public Login()
         {
             InitializeComponent();
@@ -56,48 +60,62 @@ namespace Dashboard
             }
         }
 
+        private void passwordChangeUI()
+        {
+            groupBox1.Text = "Enter New Password";
+            groupBox2.Text = "Re-enter New Password";
+            button1.Text = "Confirm";
+            label1.Text = "Set up Password";
+            label2.Text = "Password must be at least 8 characters, has one uppercase letter, number and special character.";
+            textBoxUsername.UseSystemPasswordChar = true;
+            textBoxUsername.Focus();
+
+        }
+
+        private void normalLoginUI()
+        {
+            groupBox1.Text = "Employee ID";
+            groupBox2.Text = "Password";
+            button1.Text = "Login";
+            label1.Text = "Welcome Back!";
+            label2.Text = "Please login using your Employee ID and Password.";
+            textBoxUsername.UseSystemPasswordChar = false;
+            textBoxUsername.Focus();
+        }
+
         private async void button1_Click(object sender, EventArgs e)
         {
             string enteredUsername = textBoxUsername.Text;
             string enteredPassword = textBoxPassword.Text;
 
-
-
-            if (enteredUsername == "" || enteredPassword == "")
+            if (updatePasswordMenu)
             {
-                textBoxUsername.Enabled = false;
-                textBoxUsername.BackColor = inactive;
-                textBoxPassword.Enabled = false;
-                textBoxPassword.BackColor = inactive;
-                await Task.Delay(1000);
-                MessageBox.Show("Username or Password is missing! Please try again.");
+                if (enteredPassword != enteredUsername)
+                {
+                    MessageBox.Show("Password does not match.", "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-                textBoxUsername.Enabled = true;
-                textBoxUsername.BackColor = color;
-                textBoxPassword.Enabled = true;
-                textBoxPassword.BackColor = color;
-
-                return;
+                UpdatePasswordInTable(tempUsername, enteredPassword);
             }
             else
             {
-                textBoxUsername.Enabled = false;
-                textBoxUsername.BackColor = inactive;
-                textBoxPassword.Enabled = false;
-                textBoxPassword.BackColor = inactive;
-                await Task.Delay(1000);
-                if (CheckLogin(enteredUsername, enteredPassword))
+                if (enteredUsername == "" || enteredPassword == "")
                 {
-                    connection.Close();
-                    (string firstName, string lastName, string role) = GetUserDetailsFromDatabase(enteredUsername);
+                    textBoxUsername.Enabled = false;
+                    textBoxUsername.BackColor = inactive;
+                    textBoxPassword.Enabled = false;
+                    textBoxPassword.BackColor = inactive;
 
-                    Dashboard form1 = new Dashboard(firstName, lastName, role);
+                    await Task.Delay(1000);
+                    MessageBox.Show("Username or Password is missing! Please try again.");
 
-                    this.Hide();
-                    ShowLoadingForm(firstName);
+                    textBoxUsername.Enabled = true;
+                    textBoxUsername.BackColor = color;
+                    textBoxPassword.Enabled = true;
+                    textBoxPassword.BackColor = color;
 
-                    form1.Show();
-                    this.Close();
+                    return;
                 }
                 else
                 {
@@ -106,20 +124,117 @@ namespace Dashboard
                     textBoxPassword.Enabled = false;
                     textBoxPassword.BackColor = inactive;
                     await Task.Delay(1000);
+                    if (CheckLogin(enteredUsername, enteredPassword))
+                    {
+                        if (updatePasswordMenu)
+                        {
 
-                    incorrect.Visible = true;
+                            textBoxUsername.Enabled = true;
+                            textBoxUsername.BackColor = color;
+                            textBoxPassword.Enabled = true;
+                            textBoxPassword.BackColor = color;
+                            tempUsername = enteredUsername;
+                            textBoxPassword.Text = string.Empty; textBoxUsername.Text = string.Empty;
 
-                    textBoxUsername.Enabled = true;
-                    textBoxUsername.BackColor = color;
-                    textBoxPassword.Enabled = true;
-                    textBoxPassword.BackColor = color;
+                            passwordChangeUI();
+                            return;
+                        }
+                            
 
-                    textBoxPassword.Text = "";
-                    textBoxUsername.Text = "";
-                    textBoxUsername.Focus();
+
+                        connection.Close();
+                        (string firstName, string lastName, string role) = GetUserDetailsFromDatabase(enteredUsername);
+
+
+
+
+                        Dashboard form1 = new Dashboard(firstName, lastName, role);
+
+                        this.Hide();
+                        ShowLoadingForm(firstName);
+
+                        form1.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        textBoxUsername.Enabled = false;
+                        textBoxUsername.BackColor = inactive;
+                        textBoxPassword.Enabled = false;
+                        textBoxPassword.BackColor = inactive;
+                        await Task.Delay(1000);
+
+                        incorrect.Visible = true;
+
+                        textBoxUsername.Enabled = true;
+                        textBoxUsername.BackColor = color;
+                        textBoxPassword.Enabled = true;
+                        textBoxPassword.BackColor = color;
+
+                        textBoxPassword.Text = "";
+                        textBoxUsername.Text = "";
+                        textBoxUsername.Focus();
+                    }
                 }
             }
         }
+
+        private void UpdatePasswordInTable(string username, string newPassword)
+        {
+            try
+            {
+                // Check if the new password meets the validation requirements
+                if (!IsNewPasswordValid(newPassword))
+                {
+                    MessageBox.Show("New password must meet the following requirements:\n" +
+                                    "- At least 8-16 characters in length\n" +
+                                    "- At least one uppercase letter (A-Z)\n" +
+                                    "- At least one digit (0-9)\n" +
+                                    "- At least one special character (!@#$%^&*)\n",
+                                    "Invalid Password", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+
+                // SQL statement to update the password and set temporary_password to 0
+                string updateQuery = "UPDATE logins SET password = @Password, temporary_password = 0 WHERE username = @Username";
+
+                using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@Password", newPassword);
+                    command.Parameters.AddWithValue("@Username", username);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Password updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        normalLoginUI();
+                        updatePasswordMenu = false;
+                        textBoxPassword.Text = string.Empty; textBoxUsername.Text = string.Empty;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to update the password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+                MessageBox.Show("An error occurred while updating the password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool IsNewPasswordValid(string password)
+        {
+            // Define a regular expression pattern that enforces the password requirements
+            string pattern = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,16}$";
+
+            // Use Regex.IsMatch to check if the password matches the pattern
+            return Regex.IsMatch(password, pattern);
+        }
+
 
         private bool CheckLogin(string username, string password)
         {
@@ -130,13 +245,26 @@ namespace Dashboard
                     return false;
                 }
 
-                // SQL statement to check for the username and password in the 'logins' table
-                string query = "SELECT COUNT(*) FROM logins WHERE username = @username AND password = @password";
+                // SQL statement to check for the username and password, as well as additional conditions in the 'logins' table
+                string query = "SELECT COUNT(*) FROM logins WHERE username = @username AND password = @password AND employee_status = 1";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", password);
 
                 int count = Convert.ToInt32(command.ExecuteScalar());
+
+                if (count > 0)
+                {
+                    string tempPasswordQuery = "SELECT temporary_password FROM logins WHERE username = @username";
+                    MySqlCommand tempPasswordCommand = new MySqlCommand(tempPasswordQuery, connection);
+                    tempPasswordCommand.Parameters.AddWithValue("@username", username);
+                    int tempPassword = Convert.ToInt32(tempPasswordCommand.ExecuteScalar());
+
+                    if (tempPassword == 1)
+                    {
+                        updatePasswordMenu = true;
+                    }
+                }
 
                 return count > 0; // If count > 0, a matching record was found
             }
@@ -145,9 +273,10 @@ namespace Dashboard
                 Console.WriteLine("Error: " + ex.Message);
                 incorrect.Visible = true;
                 incorrect.Text = "Server cannot be reached. \nPlease check your connection and restart the app.";
-                return false; 
+                return false;
             }
         }
+
 
         private void ShowLoadingForm(string firstName)
         {

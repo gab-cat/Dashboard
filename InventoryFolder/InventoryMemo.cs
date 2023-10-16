@@ -38,6 +38,17 @@ namespace Dashboard.Forms
             txtreason.Text = reason;
             txtreason.Enabled = false;
         }
+        public AddInvMemo(string employee_name, string systemText)
+        {
+            InitializeComponent();
+            this.Focus();
+            txtCustomerID.Text = 9999.ToString();
+            txtCustomerID.Visible = false;
+            txtEmployee.Text = employee_name;
+            txtTimeStamp.Text = DateTime.Now.ToString();
+            txtSystemText.Text = systemText;
+            txtreason.DropDownStyle = ComboBoxStyle.DropDownList;
+        }
 
         private void button2_Click(object sender, EventArgs e)
         {

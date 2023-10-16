@@ -50,9 +50,16 @@ namespace Dashboard.Forms
             dataGridViewMemos.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
             dataGridViewMemos.ColumnHeadersDefaultCellStyle.SelectionBackColor = ThemeColor.SecondaryColor;
 
+            StockGrid.ColumnHeadersDefaultCellStyle.BackColor = ThemeColor.SecondaryColor;
+            StockGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            StockGrid.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
+            StockGrid.ColumnHeadersDefaultCellStyle.SelectionBackColor = ThemeColor.SecondaryColor;
+
             lblLastUpdate.ForeColor = ThemeColor.SecondaryColor;
             lblProductName.ForeColor = ThemeColor.SecondaryColor;
             button1.OnHoverBaseColor = ThemeColor.SecondaryColor;
+
+            chkRestock.CheckedOnColor = ThemeColor.SecondaryColor;
 
             foreach (DataGridViewColumn col in ProductGrid.Columns)
             {
@@ -94,6 +101,26 @@ namespace Dashboard.Forms
             }
 
 
+            btnDeleteProduct.BackColor = Color.White;
+            btnDeleteProduct.ForeColor = ThemeColor.SecondaryColor;
+            btnDeleteProduct.FlatAppearance.BorderColor = ThemeColor.SecondaryColor;
+
+            btnDeleteStockItem.BackColor = Color.White;
+            btnDeleteStockItem.ForeColor = ThemeColor.SecondaryColor;
+            btnDeleteStockItem.FlatAppearance.BorderColor = ThemeColor.SecondaryColor;
+
+            btnClear.BackColor = Color.White;
+            btnClear.ForeColor = ThemeColor.SecondaryColor;
+            btnClear.FlatAppearance.BorderColor = ThemeColor.SecondaryColor;
+
+            btnRemoveStocks.BackColor = Color.White;
+            btnRemoveStocks.ForeColor = ThemeColor.SecondaryColor;
+            btnRemoveStocks.FlatAppearance.BorderColor = ThemeColor.SecondaryColor;
+
+            button2.BackColor = Color.White;
+            button2.ForeColor = ThemeColor.SecondaryColor;
+            button2.FlatAppearance.BorderColor = ThemeColor.SecondaryColor;
+
         }
 
         private void FormOrder_Load(object sender, EventArgs e)
@@ -108,21 +135,40 @@ namespace Dashboard.Forms
 
             // Set the DataGridView data source to the original data
             ProductGrid.DataSource = originalProductData;
+
+            // Add columns to StockGrid
+            StockGrid.Columns.Add("Product ID","ID");            
+            StockGrid.Columns.Add("Product Name", "Product");      
+            StockGrid.Columns.Add("Add/Sub", "Add/Sub");
+            StockGrid.Columns.Add("Quantity", "Qty");              
+            StockGrid.Columns.Add("Current Stock", "Current");     
+            StockGrid.Columns.Add("After Stock", "After");         
+
+            // Set column widths
+            StockGrid.Columns["Product ID"].Width = 50;
+            StockGrid.Columns["Product Name"].Width = 110;
+            StockGrid.Columns["Add/Sub"].Width = 50;
+            StockGrid.Columns["Quantity"].Width = 50;
+            StockGrid.Columns["Current Stock"].Width = 50;
+            StockGrid.Columns["After Stock"].Width = 50;
         }
 
         private DataTable LoadProductDatas()
         {
             DataTable dataTable = new DataTable();
 
-            // Define your SQL query to retrieve product data
             string query = @"
-        SELECT product_id AS 'Product ID', product_name AS 'Product Name', 
-               description AS 'Description', category AS 'Category', 
-               supplier_id AS 'Supplier ID', cost_price AS 'Cost Price', 
-               selling_price AS 'Selling Price', 
-               quantity_in_stock AS 'Quantity in Stock', 
-               critical_quantity AS 'Critical Quantity'
-        FROM products";
+    SELECT product_id AS 'Product ID', product_name AS 'Product Name', 
+           description AS 'Description', category AS 'Category', 
+           supplier_id AS 'Supplier ID', cost_price AS 'Cost Price', 
+           selling_price AS 'Selling Price', 
+           quantity_in_stock AS 'Quantity in Stock', 
+           critical_quantity AS 'Critical Quantity'
+    FROM products
+    ORDER BY CASE
+             WHEN quantity_in_stock < critical_quantity THEN 0
+             ELSE 1
+           END ASC, product_id ASC"; // Order by critical quantity condition and then by Product ID in ascending order
 
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
@@ -147,15 +193,18 @@ namespace Dashboard.Forms
 
         private void LoadProductData()
         {
-            // Define your SQL query to retrieve product data
             string query = @"
-        SELECT product_id AS 'Product ID', product_name AS 'Product Name', 
-               description AS 'Description', category AS 'Category', 
-               supplier_id AS 'Supplier ID', cost_price AS 'Cost Price', 
-               selling_price AS 'Selling Price', 
-               quantity_in_stock AS 'Quantity in Stock', 
-               critical_quantity AS 'Critical Quantity'
-        FROM products";
+    SELECT product_id AS 'Product ID', product_name AS 'Product Name', 
+           description AS 'Description', category AS 'Category', 
+           supplier_id AS 'Supplier ID', cost_price AS 'Cost Price', 
+           selling_price AS 'Selling Price', 
+           quantity_in_stock AS 'Quantity in Stock', 
+           critical_quantity AS 'Critical Quantity'
+    FROM products
+    ORDER BY CASE
+             WHEN quantity_in_stock < critical_quantity THEN 0
+             ELSE 1
+           END ASC, product_id ASC"; // Order by critical quantity condition and then by Product ID in ascending order
 
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
@@ -461,24 +510,53 @@ namespace Dashboard.Forms
 
         private void ProductGrid_SelectionChanged(object sender, EventArgs e)
         {
-            // Check if there is a selected row in the ProductGrid
+            // Price History
             if (ProductGrid.SelectedRows.Count > 0)
             {
-                // Get the product_id and product name from the selected row
                 int productId = Convert.ToInt32(ProductGrid.SelectedRows[0].Cells["Product ID"].Value);
                 string productName = Convert.ToString(ProductGrid.SelectedRows[0].Cells["Product Name"].Value);
-
-                // Load the price history for the selected product
                 LoadPriceHistoryForSelectedProduct(productId, productName);
             }
             else
             {
-                // Clear the DataGridView and TextBox if no row is selected
                 dgvPriceHistory.DataSource = null;
                 lblProductName.Text = "";
                 lblLastUpdate.Text = "Last Update: N/A";
                 txtMemoPH.Text = "";
             }
+
+            // Stock Management
+            if (ProductGrid.SelectedRows.Count > 0)
+            {
+                DataGridViewRow selectedRow = ProductGrid.SelectedRows[0];
+
+
+                string quantityInStock = selectedRow.Cells["Quantity in Stock"].Value.ToString();
+                string costPrice = selectedRow.Cells["Cost Price"].Value.ToString();
+                string sellingPrice = selectedRow.Cells["Selling Price"].Value.ToString();
+                string productName = selectedRow.Cells["Product Name"].Value.ToString();
+                string productID = selectedRow.Cells["Product ID"].Value.ToString();
+                string category = selectedRow.Cells["Category"].Value.ToString();
+
+                txtQuantityInStock.Text = quantityInStock;
+                txtCostPrice.Text = "₱ " +costPrice;
+                txtSellingPrice.Text = "₱ " + sellingPrice;
+                txtProductName.Text = productName;
+                txtProductID.Text = productID;
+                txtCategory.Text = category;
+            }
+            else
+            {
+                txtQuantityInStock.Text = "";
+                txtCostPrice.Text = "";
+                txtSellingPrice.Text = "";
+            }
+
+            if (chkRestock.Checked == true)
+            {
+                txtQuantity.Focus();
+            }
+
         }
 
         private void dgvPriceHistory_SelectionChanged(object sender, EventArgs e)
@@ -601,7 +679,110 @@ namespace Dashboard.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            StringBuilder restockBuilder = new StringBuilder();
+            StringBuilder removedStocksBuilder = new StringBuilder();
 
+            // Iterate through the rows in StockGrid
+            foreach (DataGridViewRow row in StockGrid.Rows)
+            {
+                // Check if the row is not a new row and has valid data
+                if (!row.IsNewRow &&
+                    row.Cells["Product ID"].Value != null &&
+                    row.Cells["Product Name"].Value != null &&
+                    row.Cells["Current Stock"].Value != null &&
+                    row.Cells["After Stock"].Value != null)
+                {
+                    // Get the product ID, product name, current stock, and after stock values
+                    int productID = Convert.ToInt32(row.Cells["Product ID"].Value);
+                    string productName = row.Cells["Product Name"].Value.ToString();
+                    int currentStock = Convert.ToInt32(row.Cells["Current Stock"].Value);
+                    int afterStock = Convert.ToInt32(row.Cells["After Stock"].Value);
+
+                    // Check if the quantity increased or decreased
+                    if (afterStock > currentStock)
+                    {
+                        string updateInfo = $"[{productID}] {productName}: {currentStock} -> {afterStock}{Environment.NewLine}";
+                        restockBuilder.Append(updateInfo);
+                    }
+                    else if (afterStock < currentStock)
+                    {
+                        string updateInfo = $"[{productID}] {productName}: {currentStock} -> {afterStock}{Environment.NewLine}";
+                        removedStocksBuilder.Append(updateInfo);
+                    }
+
+                    UpdateProductStock(productID, afterStock);
+                }
+            }
+
+            // Get the complete system text for restock and removed stocks
+            string restockText = restockBuilder.ToString();
+            string removedStocksText = removedStocksBuilder.ToString();
+
+            originalProductData = LoadProductDatas();
+            ProductGrid.DataSource = originalProductData;
+
+            // Show a dialog to save the system text or perform any other actions
+            if (!string.IsNullOrEmpty(restockText) || !string.IsNullOrEmpty(removedStocksText))
+            {
+                StringBuilder systemTextBuilder = new StringBuilder();
+
+                if (!string.IsNullOrEmpty(restockText))
+                {
+                    systemTextBuilder.AppendLine("Restock:");
+                    systemTextBuilder.AppendLine(restockText);
+                }
+
+                if (!string.IsNullOrEmpty(removedStocksText))
+                {
+                    systemTextBuilder.AppendLine("Removed Stocks:");
+                    systemTextBuilder.AppendLine(removedStocksText);
+                }
+
+                string systemText = systemTextBuilder.ToString();
+
+                AddInvMemo addmemo = new AddInvMemo(employee_name, systemText);
+                addmemo.ShowDialog();
+            }
+
+            StockGrid.Rows.Clear();
+            addedProductIds.Clear();
+        }
+
+        private void UpdateProductStock(int productID, int afterStock)
+        {
+            // Define your SQL update query to update the product stock
+            string updateQuery = "UPDATE products SET quantity_in_stock = @afterStock WHERE product_id = @productID";
+
+            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            {
+                try
+                {
+                    using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
+                    {
+                        // Set parameters for the update query
+                        command.Parameters.AddWithValue("@afterStock", afterStock);
+                        command.Parameters.AddWithValue("@productID", productID);
+
+                        // Execute the update query
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            // Update successful
+
+                        }
+                        else
+                        {
+                            // Update failed
+                            MessageBox.Show($"Failed to update product ID {productID} stock.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void cboxColumn_SelectedIndexChanged(object sender, EventArgs e)
@@ -714,6 +895,197 @@ namespace Dashboard.Forms
                     e.Handled = true; // Suppress the character input
                 }
             }
+        }
+
+        private void ProductGrid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            // Check if the row is not a header and there are cells in the "Quantity in Stock" and "Critical Quantity" columns
+            if (e.RowIndex >= 0 && ProductGrid.Rows[e.RowIndex].Cells["Quantity in Stock"].Value != null &&
+                ProductGrid.Rows[e.RowIndex].Cells["Critical Quantity"].Value != null)
+            {
+                // Parse the values from the cells
+                int quantityInStock = Convert.ToInt32(ProductGrid.Rows[e.RowIndex].Cells["Quantity in Stock"].Value);
+                int criticalQuantity = Convert.ToInt32(ProductGrid.Rows[e.RowIndex].Cells["Critical Quantity"].Value);
+
+                // Compare the quantity in stock with the critical quantity
+                if (quantityInStock < criticalQuantity)
+                {
+                    // If it's less, set the row's font color to red and bold
+                    ProductGrid.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Red;
+                    ProductGrid.Rows[e.RowIndex].DefaultCellStyle.Font = new System.Drawing.Font(ProductGrid.Font, FontStyle.Bold);
+                }
+                else
+                {
+                    // If it's not less, reset the row's font color and style
+                    ProductGrid.Rows[e.RowIndex].DefaultCellStyle.ForeColor = ProductGrid.DefaultCellStyle.ForeColor;
+                    ProductGrid.Rows[e.RowIndex].DefaultCellStyle.Font = ProductGrid.DefaultCellStyle.Font;
+                }
+            }
+        }
+
+
+        HashSet<int> addedProductIds = new HashSet<int>();
+
+        private void HandleStockChange(string action)
+        {
+            if (ProductGrid.SelectedRows.Count > 0)
+            {
+                // Get the selected row from the ProductGrid
+                DataGridViewRow selectedRow = ProductGrid.SelectedRows[0];
+
+                // Get the product ID, name, and quantity from the selected row
+                int productId = Convert.ToInt32(selectedRow.Cells["Product ID"].Value);
+
+                // Check if the product ID is already in the HashSet (indicating it's already in the StockGrid)
+                if (addedProductIds.Contains(productId))
+                {
+                    MessageBox.Show("Product with ID " + productId + " is already in the StockGrid.", "Duplicate Entry", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return; // Exit the method to prevent adding duplicate entries
+                }
+
+                string productName = selectedRow.Cells["Product Name"].Value.ToString();
+                int quantityChange;
+
+                // Ensure the quantity input is a valid integer
+                if (int.TryParse(txtQuantity.Text, out quantityChange))
+                {
+                    int currentStock = Convert.ToInt32(selectedRow.Cells["Quantity in Stock"].Value);
+
+                    // Check if the action is "Subtract" and if subtracting would make the stock negative
+                    if (action == "Subtract" && quantityChange > currentStock)
+                    {
+                        MessageBox.Show("Cannot subtract more than the current stock.", "Invalid Operation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        // Calculate the new stock quantity based on the action (add or subtract)
+                        int newStock = action == "Add" ? currentStock + quantityChange : currentStock - quantityChange;
+
+                        // Add a new row to the StockGrid
+                        StockGrid.Rows.Add(productId, productName, action, quantityChange, currentStock, newStock);
+
+                        // Add the product ID to the HashSet to mark it as added
+                        addedProductIds.Add(productId);
+
+                        txtQuantity.Text = string.Empty;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a valid quantity.", "Invalid Quantity", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    txtQuantity.Focus();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a product from the ProductGrid.", "No Product Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnAddStock_Click(object sender, EventArgs e)
+        {
+            HandleStockChange("Add");
+            txtQuantity.Focus();
+        }
+
+        private void btnRemoveStocks_Click(object sender, EventArgs e)
+        {
+            HandleStockChange("Subtract");
+            txtQuantity.Focus();
+        }
+
+        private void btnDeleteStockItem_Click(object sender, EventArgs e)
+        {
+            if (StockGrid.SelectedRows.Count > 0)
+            {
+                DataGridViewRow selectedRow = StockGrid.SelectedRows[0];
+                int productId = Convert.ToInt32(selectedRow.Cells["Product ID"].Value);
+
+                addedProductIds.Remove(productId);
+
+                StockGrid.Rows.Remove(selectedRow);
+            }
+            else
+            {
+                MessageBox.Show("Please select a stock item to delete.", "No Item Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            StockGrid.Rows.Clear();
+            addedProductIds.Clear();
+        }
+
+        private void cboxFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtSearchTerm.Text = string.Empty;
+            txtSearchTerm.Focus();
+        }
+
+        private void txtQuantity_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; 
+            }
+        }
+
+        private void ProductGrid_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        {
+            // Check if the column being sorted is the "Critical Quantity" column
+            if (e.Column.Name == "Critical Quantity")
+            {
+                // Get the cell values for the two rows being compared
+                object value1 = e.CellValue1;
+                object value2 = e.CellValue2;
+
+                // Check if both values are not null
+                if (value1 != null && value2 != null)
+                {
+                    int criticalQuantity1 = Convert.ToInt32(value1);
+                    int criticalQuantity2 = Convert.ToInt32(value2);
+
+                    // Compare the critical quantities in reverse order (higher critical quantity at the top)
+                    e.SortResult = criticalQuantity2.CompareTo(criticalQuantity1);
+
+                    // If the critical quantities are equal, use the default comparison for Product ID
+                    if (e.SortResult == 0 && e.Column.Name == "Critical Quantity")
+                    {
+                        e.SortResult = Convert.ToInt32(ProductGrid.Rows[e.RowIndex1].Cells["Product ID"].Value)
+                            .CompareTo(Convert.ToInt32(ProductGrid.Rows[e.RowIndex2].Cells["Product ID"].Value));
+                    }
+
+                    // Set Handled to true to indicate that the comparison has been handled
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void chkRestock_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkRestock.Checked == true)
+            {
+                btnRemoveStocks.Enabled = false;
+            }
+            if (chkRestock.Checked == false)
+            {
+                btnRemoveStocks.Enabled = true;
+            }
+        }
+
+        private void txtQuantity_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (chkRestock.Checked == true)
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    HandleStockChange("Add");
+                    txtQuantity.Focus();
+                    e.Handled = true;
+                }
+            }
+
         }
     }
 }

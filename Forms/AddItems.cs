@@ -154,12 +154,20 @@ namespace Dashboard.Forms
             int quantity;
             while (true)
             {
-                // Prompt the user to enter the quantity
-                if (!int.TryParse(Interaction.InputBox("Enter Quantity:"), out quantity))
+                string input = Interaction.InputBox("Enter Quantity:");
+
+                // Check if the user clicked the Cancel button
+                if (string.IsNullOrEmpty(input))
+                {
+                    // User canceled the input
+                    return; // Exit the method or do appropriate handling here
+                }
+
+                if (!int.TryParse(input, out quantity))
                 {
                     // User entered an invalid quantity (not an integer)
                     MessageBox.Show("Please enter a valid quantity (a positive whole number).");
-                    continue; 
+                    continue;
                 }
 
                 if (quantity <= 0)

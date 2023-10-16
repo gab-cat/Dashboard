@@ -530,7 +530,7 @@ namespace Dashboard
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 OpenChildForm(new Forms.FormInventory(username, role), sender);
-                lblTitle.Text = "Inventory";
+                lblTitle.Text = "Inventory Manager";
                 btnOrder.Enabled = false;
                 btnPay.Enabled = false;
                 btnReport.Enabled = false;
@@ -546,8 +546,15 @@ namespace Dashboard
 
         private void btnMaintenance_Click(object sender, EventArgs e)
         {
-            //OpenChildForm(new Forms.FormOrder(), sender);
-            lblTitle.Text = "Maintenance";
+            LoadingScreenManager.ShowLoadingScreen(() =>
+            {
+                OpenChildForm(new Forms.FormMaintenance(username, role), sender);
+                lblTitle.Text = "Maintenance";
+                btnOrder.Enabled = false;
+                btnPay.Enabled = false;
+                btnReport.Enabled = false;
+                btnInventory.Enabled = false;
+            });
         }
 
         private void gunaCircleButton1_Click(object sender, EventArgs e)

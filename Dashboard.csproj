@@ -144,6 +144,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollectionFolder\FormMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CollectionFolder\FormMaintenance.Designer.cs">
+      <DependentUpon>FormMaintenance.cs</DependentUpon>
+    </Compile>
     <Compile Include="InventoryFolder\InventoryMemo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -286,6 +292,9 @@
       <DependentUpon>SearchCustomer.cs</DependentUpon>
     </Compile>
     <Compile Include="ThemeColor.cs" />
+    <EmbeddedResource Include="CollectionFolder\FormMaintenance.resx">
+      <DependentUpon>FormMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InventoryFolder\InventoryMemo.resx">
       <DependentUpon>InventoryMemo.cs</DependentUpon>
     </EmbeddedResource>

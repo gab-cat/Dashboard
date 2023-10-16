@@ -25,16 +25,33 @@ namespace Dashboard
 
         private void button1_Click(object sender, EventArgs e)
         {
-            LoadingScreenManager.ShowLoadingScreen(() =>
+            string category;
+            int supplierID;
+            string productName;
+            decimal costPrice;
+            decimal sellingPrice;
+            int criticalStock;
+            string description;
+
+            try
             {
                 // Retrieve values from the form controls
-                string category = cboxCategory.Text.ToString();
-                int supplierID = Convert.ToInt32(cboxSupplierID.SelectedItem);
-                string productName = txtProductName.Text;
-                decimal costPrice = Convert.ToDecimal(txtCostPrice.Text);
-                decimal sellingPrice = Convert.ToDecimal(txtSellingPrice.Text);
-                int criticalStock = Convert.ToInt32(txtCriticalStock.Text);
-                string description = txtDescription.Text;
+                category = cboxCategory.Text.ToString();
+                supplierID = Convert.ToInt32(cboxSupplierID.SelectedItem);
+                productName = txtProductName.Text;
+                costPrice = Convert.ToDecimal(txtCostPrice.Text);
+                sellingPrice = Convert.ToDecimal(txtSellingPrice.Text);
+                criticalStock = Convert.ToInt32(txtCriticalStock.Text);
+                description = txtDescription.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fiels cannot be empty. Please make sure to fill up all fields.\nError: " + ex , "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            LoadingScreenManager.ShowLoadingScreen(() =>
+            {
 
                 // Create an SQL INSERT statement
                 string insertQuery = @"
@@ -139,5 +156,36 @@ namespace Dashboard
             }
         }
 
+        private void txtCostPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+            else if (e.KeyChar == '.' && txtCostPrice.Text.Contains("."))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtSellingPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar) && e.KeyChar != '.')
+            {
+                e.Handled = true;
+            }
+            else if (e.KeyChar == '.' && txtSellingPrice.Text.Contains("."))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtCriticalStock_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
     }
 }
