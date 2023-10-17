@@ -1,4 +1,5 @@
-﻿using iTextSharp.text.xml;
+﻿using Dashboard.Forms;
+using iTextSharp.text.xml;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace Dashboard
         private MySqlConnection connection;
         private bool updatePasswordMenu = false;
         private string tempUsername;
+        private int loginAttempts;
         public Login()
         {
             InitializeComponent();
@@ -62,6 +64,7 @@ namespace Dashboard
 
         private void passwordChangeUI()
         {
+            incorrect.Visible = false;
             groupBox1.Text = "Enter New Password";
             groupBox2.Text = "Re-enter New Password";
             button1.Text = "Confirm";
@@ -79,6 +82,8 @@ namespace Dashboard
             button1.Text = "Login";
             label1.Text = "Welcome Back!";
             label2.Text = "Please login using your Employee ID and Password.";
+            textBoxUsername.Text = string.Empty;
+            textBoxPassword.Text = string.Empty;
             textBoxUsername.UseSystemPasswordChar = false;
             textBoxUsername.Focus();
         }
@@ -142,9 +147,9 @@ namespace Dashboard
                             
 
 
-                        connection.Close();
+                        
                         (string firstName, string lastName, string role) = GetUserDetailsFromDatabase(enteredUsername);
-
+                        // connection.Close();
 
 
 
@@ -158,6 +163,24 @@ namespace Dashboard
                     }
                     else
                     {
+                        // Login failed
+                        // loginAttempts--;
+
+                        if (loginAttempts == 3)
+                        {
+                            incorrect.Text = "You have 3 login attempts remaining.";
+                        }
+                        else if (loginAttempts > 0)
+                        {
+                            incorrect.Text = $"Your entered credentials are incorrect. Please try again.";
+                        }
+                        else
+                        {
+                            incorrect.Text = "This profile is locked due to multiple failed attempts. Reach out to your supervisor to reset your password.";
+                            // You can also disable the login button or take other actions here.
+                        }
+
+
                         textBoxUsername.Enabled = false;
                         textBoxUsername.BackColor = inactive;
                         textBoxPassword.Enabled = false;
@@ -212,6 +235,10 @@ namespace Dashboard
                         normalLoginUI();
                         updatePasswordMenu = false;
                         textBoxPassword.Text = string.Empty; textBoxUsername.Text = string.Empty;
+
+                        string memoText = $"Created new password for {username} {Environment.NewLine}Account is automatically unlocked.";
+                        MaintenanceMemo newmemo = new MaintenanceMemo("System Initiated Account Protection", "New Password", memoText, 1);
+                        newmemo.Hide();
                     }
                     else
                     {
@@ -255,6 +282,7 @@ namespace Dashboard
 
                 if (count > 0)
                 {
+                    ResetLoginAttempts(username);
                     string tempPasswordQuery = "SELECT temporary_password FROM logins WHERE username = @username";
                     MySqlCommand tempPasswordCommand = new MySqlCommand(tempPasswordQuery, connection);
                     tempPasswordCommand.Parameters.AddWithValue("@username", username);
@@ -263,6 +291,21 @@ namespace Dashboard
                     if (tempPassword == 1)
                     {
                         updatePasswordMenu = true;
+                    }
+                }
+
+                else
+                {
+                    // Failed login, increment login attempts
+                    IncrementLoginAttempts(username);
+
+                    // Check if login attempts exceed a limit
+                    int loginAttempts = GetLoginAttempts(username);
+                    if (loginAttempts >= 5)
+                    {
+                        LockAccount(username);
+                        MessageBox.Show("This profile is locked due to multiple failed attempts. " +
+                            "Reach out to your supervisor to reset your password.", "Account Locked", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
 
@@ -277,6 +320,56 @@ namespace Dashboard
             }
         }
 
+        private void IncrementLoginAttempts(string username)
+        {
+            // Increment the login attempts for the user
+            string incrementQuery = "UPDATE logins SET login_attempts = login_attempts + 1 WHERE username = @username";
+            MySqlCommand incrementCommand = new MySqlCommand(incrementQuery, connection);
+            incrementCommand.Parameters.AddWithValue("@username", username);
+            incrementCommand.ExecuteNonQuery();
+        }
+
+        private int GetLoginAttempts(string username)
+        {
+            // Retrieve the current login attempts count
+            string query = "SELECT login_attempts FROM logins WHERE username = @username";
+            MySqlCommand command = new MySqlCommand(query, connection);
+            command.Parameters.AddWithValue("@username", username);
+            int loginAttempts = Convert.ToInt32(command.ExecuteScalar());
+
+            if (loginAttempts >= 5)
+            {
+                this.loginAttempts = 0;
+            }
+            else
+            {
+                this.loginAttempts = 5 - loginAttempts;
+            }
+
+            
+            return loginAttempts;
+        }
+
+        private void ResetLoginAttempts(string username)
+        {
+            // Reset the login attempts for the user
+            string resetQuery = "UPDATE logins SET login_attempts = 0 WHERE username = @username";
+            MySqlCommand resetCommand = new MySqlCommand(resetQuery, connection);
+            resetCommand.Parameters.AddWithValue("@username", username);
+            resetCommand.ExecuteNonQuery();
+        }
+
+        private void LockAccount(string username)
+        {
+            // Lock the user account by setting employee_status to 0
+            string lockQuery = "UPDATE logins SET employee_status = 0 WHERE username = @username";
+            MySqlCommand lockCommand = new MySqlCommand(lockQuery, connection);
+            lockCommand.Parameters.AddWithValue("@username", username);
+            lockCommand.ExecuteNonQuery();
+            string memoText = $"Profile {username} is locked due to multiple failed attempts.";
+            MaintenanceMemo newmemo = new MaintenanceMemo("System Initiated Account Protection", "Locked Account", memoText, 1);
+            newmemo.Hide();
+        }
 
         private void ShowLoadingForm(string firstName)
         {

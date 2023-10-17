@@ -150,6 +150,18 @@
     <Compile Include="CollectionFolder\FormMaintenance.Designer.cs">
       <DependentUpon>FormMaintenance.cs</DependentUpon>
     </Compile>
+    <Compile Include="CollectionFolder\MaintenanceMemo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CollectionFolder\MaintenanceMemo.Designer.cs">
+      <DependentUpon>MaintenanceMemo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CollectionFolder\ServerConnections.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CollectionFolder\ServerConnections.Designer.cs">
+      <DependentUpon>ServerConnections.cs</DependentUpon>
+    </Compile>
     <Compile Include="InventoryFolder\InventoryMemo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -283,6 +295,12 @@
     <Compile Include="Forms\NewCustomer.Designer.cs">
       <DependentUpon>NewCustomer.cs</DependentUpon>
     </Compile>
+    <Compile Include="MtnMemoView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MtnMemoView.Designer.cs">
+      <DependentUpon>MtnMemoView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\SearchCustomer.cs">
@@ -294,6 +312,12 @@
     <Compile Include="ThemeColor.cs" />
     <EmbeddedResource Include="CollectionFolder\FormMaintenance.resx">
       <DependentUpon>FormMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CollectionFolder\MaintenanceMemo.resx">
+      <DependentUpon>MaintenanceMemo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CollectionFolder\ServerConnections.resx">
+      <DependentUpon>ServerConnections.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InventoryFolder\InventoryMemo.resx">
       <DependentUpon>InventoryMemo.cs</DependentUpon>
@@ -357,6 +381,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NewCustomer.resx">
       <DependentUpon>NewCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MtnMemoView.resx">
+      <DependentUpon>MtnMemoView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

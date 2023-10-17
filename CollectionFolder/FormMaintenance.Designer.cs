@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle33 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle34 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle35 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle36 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.EmployeeGrid = new System.Windows.Forms.DataGridView();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.txtSupervisor = new System.Windows.Forms.TextBox();
@@ -46,20 +46,20 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnDelete = new System.Windows.Forms.Button();
+            this.txtRole = new System.Windows.Forms.ComboBox();
+            this.btnServerConnections = new System.Windows.Forms.Button();
+            this.btnOpenLogs = new System.Windows.Forms.Button();
+            this.chkNewProfile = new Guna.UI.WinForms.GunaCheckBox();
+            this.ActivateProfile = new System.Windows.Forms.Button();
+            this.btnResetPassword = new System.Windows.Forms.Button();
             this.txtStatus = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnUpdate = new System.Windows.Forms.Button();
-            this.btnResetPassword = new System.Windows.Forms.Button();
-            this.ActivateProfile = new System.Windows.Forms.Button();
-            this.chkNewProfile = new Guna.UI.WinForms.GunaCheckBox();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnDeleteSupplier = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.btnOpenLogs = new System.Windows.Forms.Button();
-            this.btnServerConnections = new System.Windows.Forms.Button();
-            this.txtRole = new System.Windows.Forms.ComboBox();
+            this.button5 = new System.Windows.Forms.Button();
+            this.btnDeleteSupplier = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.EmployeeGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -75,23 +75,23 @@
             this.EmployeeGrid.BackgroundColor = System.Drawing.Color.Gainsboro;
             this.EmployeeGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.EmployeeGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle33.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle33.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            dataGridViewCellStyle33.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(254)));
-            dataGridViewCellStyle33.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle33.SelectionBackColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle33.SelectionForeColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle33.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.EmployeeGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle33;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(254)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.EmployeeGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.EmployeeGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle34.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle34.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle34.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle34.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle34.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle34.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle34.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.EmployeeGrid.DefaultCellStyle = dataGridViewCellStyle34;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.EmployeeGrid.DefaultCellStyle = dataGridViewCellStyle2;
             this.EmployeeGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
             this.EmployeeGrid.EnableHeadersVisualStyles = false;
             this.EmployeeGrid.Location = new System.Drawing.Point(12, 12);
@@ -115,23 +115,23 @@
             this.dataGridView1.BackgroundColor = System.Drawing.Color.Gainsboro;
             this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle35.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle35.BackColor = System.Drawing.SystemColors.InactiveCaption;
-            dataGridViewCellStyle35.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(254)));
-            dataGridViewCellStyle35.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle35.SelectionBackColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle35.SelectionForeColor = System.Drawing.SystemColors.GradientActiveCaption;
-            dataGridViewCellStyle35.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle35;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.InactiveCaption;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(254)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.GradientActiveCaption;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle36.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle36.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle36.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle36.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle36.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle36.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle36.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle36;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView1.DefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView1.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
             this.dataGridView1.EnableHeadersVisualStyles = false;
             this.dataGridView1.Location = new System.Drawing.Point(8, 19);
@@ -322,19 +322,92 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Employee Information";
             // 
-            // btnDelete
+            // txtRole
             // 
-            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDelete.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDelete.ForeColor = System.Drawing.Color.Black;
-            this.btnDelete.Location = new System.Drawing.Point(273, 232);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(100, 27);
-            this.btnDelete.TabIndex = 10;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            this.txtRole.BackColor = System.Drawing.SystemColors.Menu;
+            this.txtRole.Enabled = false;
+            this.txtRole.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.txtRole.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRole.FormattingEnabled = true;
+            this.txtRole.Items.AddRange(new object[] {
+            "Admin",
+            "Manager",
+            "Cashier"});
+            this.txtRole.Location = new System.Drawing.Point(130, 120);
+            this.txtRole.Name = "txtRole";
+            this.txtRole.Size = new System.Drawing.Size(244, 24);
+            this.txtRole.TabIndex = 4;
+            // 
+            // btnServerConnections
+            // 
+            this.btnServerConnections.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnServerConnections.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnServerConnections.ForeColor = System.Drawing.Color.Black;
+            this.btnServerConnections.Location = new System.Drawing.Point(11, 281);
+            this.btnServerConnections.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnServerConnections.Name = "btnServerConnections";
+            this.btnServerConnections.Size = new System.Drawing.Size(156, 27);
+            this.btnServerConnections.TabIndex = 11;
+            this.btnServerConnections.Text = "Server Connections";
+            this.btnServerConnections.UseVisualStyleBackColor = true;
+            this.btnServerConnections.Click += new System.EventHandler(this.btnServerConnections_Click);
+            // 
+            // btnOpenLogs
+            // 
+            this.btnOpenLogs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOpenLogs.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOpenLogs.ForeColor = System.Drawing.Color.Black;
+            this.btnOpenLogs.Location = new System.Drawing.Point(11, 312);
+            this.btnOpenLogs.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnOpenLogs.Name = "btnOpenLogs";
+            this.btnOpenLogs.Size = new System.Drawing.Size(155, 27);
+            this.btnOpenLogs.TabIndex = 13;
+            this.btnOpenLogs.Text = "Open Logs";
+            this.btnOpenLogs.UseVisualStyleBackColor = true;
+            this.btnOpenLogs.Click += new System.EventHandler(this.btnOpenLogs_Click);
+            // 
+            // chkNewProfile
+            // 
+            this.chkNewProfile.BaseColor = System.Drawing.Color.White;
+            this.chkNewProfile.CheckedOffColor = System.Drawing.Color.Gray;
+            this.chkNewProfile.CheckedOnColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
+            this.chkNewProfile.FillColor = System.Drawing.Color.White;
+            this.chkNewProfile.Font = new System.Drawing.Font("Outfit Thin", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkNewProfile.ForeColor = System.Drawing.Color.Black;
+            this.chkNewProfile.Location = new System.Drawing.Point(19, 236);
+            this.chkNewProfile.Name = "chkNewProfile";
+            this.chkNewProfile.Size = new System.Drawing.Size(144, 20);
+            this.chkNewProfile.TabIndex = 8;
+            this.chkNewProfile.Text = "Create New Profile";
+            this.chkNewProfile.CheckedChanged += new System.EventHandler(this.chkNewProfile_CheckedChanged);
+            // 
+            // ActivateProfile
+            // 
+            this.ActivateProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ActivateProfile.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ActivateProfile.ForeColor = System.Drawing.Color.Black;
+            this.ActivateProfile.Location = new System.Drawing.Point(170, 312);
+            this.ActivateProfile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.ActivateProfile.Name = "ActivateProfile";
+            this.ActivateProfile.Size = new System.Drawing.Size(203, 27);
+            this.ActivateProfile.TabIndex = 14;
+            this.ActivateProfile.Text = "Activate Profile";
+            this.ActivateProfile.UseVisualStyleBackColor = true;
+            this.ActivateProfile.Click += new System.EventHandler(this.ActivateProfile_Click);
+            // 
+            // btnResetPassword
+            // 
+            this.btnResetPassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResetPassword.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnResetPassword.ForeColor = System.Drawing.Color.Black;
+            this.btnResetPassword.Location = new System.Drawing.Point(170, 281);
+            this.btnResetPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnResetPassword.Name = "btnResetPassword";
+            this.btnResetPassword.Size = new System.Drawing.Size(203, 27);
+            this.btnResetPassword.TabIndex = 12;
+            this.btnResetPassword.Text = "Reset Password";
+            this.btnResetPassword.UseVisualStyleBackColor = true;
+            this.btnResetPassword.Click += new System.EventHandler(this.btnResetPassword_Click);
             // 
             // txtStatus
             // 
@@ -377,48 +450,19 @@
             this.btnUpdate.UseVisualStyleBackColor = true;
             this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
-            // btnResetPassword
+            // btnDelete
             // 
-            this.btnResetPassword.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResetPassword.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResetPassword.ForeColor = System.Drawing.Color.Black;
-            this.btnResetPassword.Location = new System.Drawing.Point(170, 281);
-            this.btnResetPassword.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnResetPassword.Name = "btnResetPassword";
-            this.btnResetPassword.Size = new System.Drawing.Size(203, 27);
-            this.btnResetPassword.TabIndex = 12;
-            this.btnResetPassword.Text = "Reset Password";
-            this.btnResetPassword.UseVisualStyleBackColor = true;
-            this.btnResetPassword.Click += new System.EventHandler(this.btnResetPassword_Click);
-            // 
-            // ActivateProfile
-            // 
-            this.ActivateProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ActivateProfile.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ActivateProfile.ForeColor = System.Drawing.Color.Black;
-            this.ActivateProfile.Location = new System.Drawing.Point(170, 312);
-            this.ActivateProfile.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.ActivateProfile.Name = "ActivateProfile";
-            this.ActivateProfile.Size = new System.Drawing.Size(203, 27);
-            this.ActivateProfile.TabIndex = 14;
-            this.ActivateProfile.Text = "Activate Profile";
-            this.ActivateProfile.UseVisualStyleBackColor = true;
-            this.ActivateProfile.Click += new System.EventHandler(this.ActivateProfile_Click);
-            // 
-            // chkNewProfile
-            // 
-            this.chkNewProfile.BaseColor = System.Drawing.Color.White;
-            this.chkNewProfile.CheckedOffColor = System.Drawing.Color.Gray;
-            this.chkNewProfile.CheckedOnColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            this.chkNewProfile.FillColor = System.Drawing.Color.White;
-            this.chkNewProfile.Font = new System.Drawing.Font("Outfit Thin", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.chkNewProfile.ForeColor = System.Drawing.Color.Black;
-            this.chkNewProfile.Location = new System.Drawing.Point(19, 236);
-            this.chkNewProfile.Name = "chkNewProfile";
-            this.chkNewProfile.Size = new System.Drawing.Size(144, 20);
-            this.chkNewProfile.TabIndex = 8;
-            this.chkNewProfile.Text = "Create New Profile";
-            this.chkNewProfile.CheckedChanged += new System.EventHandler(this.chkNewProfile_CheckedChanged);
+            this.btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDelete.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDelete.ForeColor = System.Drawing.Color.Black;
+            this.btnDelete.Location = new System.Drawing.Point(273, 232);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(100, 27);
+            this.btnDelete.TabIndex = 10;
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // groupBox2
             // 
@@ -433,18 +477,18 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Supplier Information";
             // 
-            // btnDeleteSupplier
+            // button6
             // 
-            this.btnDeleteSupplier.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDeleteSupplier.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDeleteSupplier.ForeColor = System.Drawing.Color.Black;
-            this.btnDeleteSupplier.Location = new System.Drawing.Point(270, 251);
-            this.btnDeleteSupplier.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnDeleteSupplier.Name = "btnDeleteSupplier";
-            this.btnDeleteSupplier.Size = new System.Drawing.Size(100, 27);
-            this.btnDeleteSupplier.TabIndex = 101;
-            this.btnDeleteSupplier.Text = "Delete";
-            this.btnDeleteSupplier.UseVisualStyleBackColor = true;
+            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button6.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button6.ForeColor = System.Drawing.Color.Black;
+            this.button6.Location = new System.Drawing.Point(62, 251);
+            this.button6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(100, 27);
+            this.button6.TabIndex = 103;
+            this.button6.Text = "Create New";
+            this.button6.UseVisualStyleBackColor = true;
             // 
             // button5
             // 
@@ -459,60 +503,18 @@
             this.button5.Text = "Update ";
             this.button5.UseVisualStyleBackColor = true;
             // 
-            // button6
+            // btnDeleteSupplier
             // 
-            this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button6.ForeColor = System.Drawing.Color.Black;
-            this.button6.Location = new System.Drawing.Point(62, 251);
-            this.button6.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(100, 27);
-            this.button6.TabIndex = 103;
-            this.button6.Text = "Create New";
-            this.button6.UseVisualStyleBackColor = true;
-            // 
-            // btnOpenLogs
-            // 
-            this.btnOpenLogs.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnOpenLogs.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOpenLogs.ForeColor = System.Drawing.Color.Black;
-            this.btnOpenLogs.Location = new System.Drawing.Point(11, 312);
-            this.btnOpenLogs.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnOpenLogs.Name = "btnOpenLogs";
-            this.btnOpenLogs.Size = new System.Drawing.Size(155, 27);
-            this.btnOpenLogs.TabIndex = 13;
-            this.btnOpenLogs.Text = "Open Logs";
-            this.btnOpenLogs.UseVisualStyleBackColor = true;
-            // 
-            // btnServerConnections
-            // 
-            this.btnServerConnections.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnServerConnections.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnServerConnections.ForeColor = System.Drawing.Color.Black;
-            this.btnServerConnections.Location = new System.Drawing.Point(11, 281);
-            this.btnServerConnections.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
-            this.btnServerConnections.Name = "btnServerConnections";
-            this.btnServerConnections.Size = new System.Drawing.Size(156, 27);
-            this.btnServerConnections.TabIndex = 11;
-            this.btnServerConnections.Text = "Server Connections";
-            this.btnServerConnections.UseVisualStyleBackColor = true;
-            // 
-            // txtRole
-            // 
-            this.txtRole.BackColor = System.Drawing.SystemColors.Menu;
-            this.txtRole.Enabled = false;
-            this.txtRole.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.txtRole.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRole.FormattingEnabled = true;
-            this.txtRole.Items.AddRange(new object[] {
-            "Admin",
-            "Manager",
-            "Cashier"});
-            this.txtRole.Location = new System.Drawing.Point(130, 120);
-            this.txtRole.Name = "txtRole";
-            this.txtRole.Size = new System.Drawing.Size(244, 24);
-            this.txtRole.TabIndex = 4;
+            this.btnDeleteSupplier.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDeleteSupplier.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDeleteSupplier.ForeColor = System.Drawing.Color.Black;
+            this.btnDeleteSupplier.Location = new System.Drawing.Point(270, 251);
+            this.btnDeleteSupplier.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.btnDeleteSupplier.Name = "btnDeleteSupplier";
+            this.btnDeleteSupplier.Size = new System.Drawing.Size(100, 27);
+            this.btnDeleteSupplier.TabIndex = 101;
+            this.btnDeleteSupplier.Text = "Delete";
+            this.btnDeleteSupplier.UseVisualStyleBackColor = true;
             // 
             // FormMaintenance
             // 

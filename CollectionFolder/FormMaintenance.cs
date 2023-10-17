@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dashboard.CollectionFolder;
 
 namespace Dashboard.Forms
 {
@@ -143,6 +144,20 @@ namespace Dashboard.Forms
                     {
                         txtStatus.ForeColor = Color.DarkRed;
                         ActivateProfile.Text = "Activate Profile";
+                        btnResetPassword.Enabled = false;
+                    }
+
+                    if (txtUsername.Text == "admin")
+                    {
+                        btnDelete.Enabled = false;
+                        ActivateProfile.Enabled = false;
+                        btnResetPassword.Enabled = false;
+                    }
+                    else
+                    {
+                        btnDelete.Enabled = true;
+                        ActivateProfile.Enabled = true;
+                        btnResetPassword.Enabled = true;
                     }
 
                 }
@@ -198,6 +213,20 @@ namespace Dashboard.Forms
                     {
                         txtStatus.ForeColor = Color.DarkRed;
                         ActivateProfile.Text = "Activate Profile";
+                        btnResetPassword.Enabled = false;
+                    }
+
+                    if (txtUsername.Text == "admin")
+                    {
+                        btnDelete.Enabled = false;
+                        ActivateProfile.Enabled = false;
+                        btnResetPassword.Enabled = false;
+                    }
+                    else
+                    {
+                        btnDelete.Enabled = true;
+                        ActivateProfile.Enabled = true;
+                        btnResetPassword.Enabled = true;
                     }
 
                 }
@@ -268,6 +297,18 @@ namespace Dashboard.Forms
         {
             if (chkNewProfile.Checked)
             {
+                if (txtUsername.Text == string.Empty ||
+                    txtFirstName.Text == string.Empty ||
+                    txtLastName.Text == string.Empty ||
+                    txtEmailAddress.Text == string.Empty ||
+                    txtSupervisor.Text == string.Empty ||
+                    txtRole.SelectedIndex == 0 )
+                {
+                    MessageBox.Show("A field cannot be empty. Please make sure to fill out all fields.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+
                 LoadingScreenManager.ShowLoadingScreen(() =>
                 {
                     createNewProfile();
@@ -364,6 +405,12 @@ namespace Dashboard.Forms
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            if (txtStatus.Text != "INACTIVE")
+            {
+                MessageBox.Show("Please disable first the account before deleting it. Try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             if (EmployeeGrid.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = EmployeeGrid.SelectedRows[0];
@@ -418,32 +465,53 @@ namespace Dashboard.Forms
 
         private void ActivateProfile_Click(object sender, EventArgs e)
         {
-            if (EmployeeGrid.SelectedRows.Count > 0)
+            LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                DataGridViewRow selectedRow = EmployeeGrid.SelectedRows[0];
-                string username = selectedRow.Cells["Username"].Value.ToString();
-                int currentStatus;
-
-                if (string.Equals(selectedRow.Cells["Status"].Value.ToString(), "ACTIVE", StringComparison.OrdinalIgnoreCase))
+                if (EmployeeGrid.SelectedRows.Count > 0)
                 {
-                    currentStatus = 1;
+                    DataGridViewRow selectedRow = EmployeeGrid.SelectedRows[0];
+                    string username = txtUsername.Text;
+                    string emailAddress = txtEmailAddress.Text;
+                    int currentStatus;
+
+                    if (string.Equals(selectedRow.Cells["Status"].Value.ToString(), "ACTIVE", StringComparison.OrdinalIgnoreCase))
+                    {
+                        currentStatus = 1;
+                    }
+                    else
+                    {
+                        currentStatus = 0;
+                    }
+
+
+                    // Toggle the status (if 0, set to 1; if 1, set to 0)
+                    int newStatus = currentStatus == 0 ? 1 : 0;
+
+                    // Update the status in the database
+                    UpdateEmployeeStatus(username, newStatus);
+                    if (newStatus == 1)
+                    {
+
+                        ResetPassword(username, emailAddress);
+
+                    }
+                    string statusText;
+                    if (newStatus == 0)
+                    {
+                        statusText = "INACTIVE/DISABLED";
+                    }
+                    else
+                    {
+                        statusText = "ACTIVE";
+                    }
+                    MessageBox.Show($"Employee profile is now {statusText}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    currentStatus = 0;
+                    MessageBox.Show("Please select an employee to activate/deactivate.", "No Employee Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+            });
 
-
-                // Toggle the status (if 0, set to 1; if 1, set to 0)
-                int newStatus = currentStatus == 0 ? 1 : 0;
-
-                // Update the status in the database
-                UpdateEmployeeStatus(username, newStatus);
-            }
-            else
-            {
-                MessageBox.Show("Please select an employee to activate/deactivate.", "No Employee Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
         }
 
         private void UpdateEmployeeStatus(string username, int newStatus)
@@ -464,7 +532,7 @@ namespace Dashboard.Forms
                         if (rowsAffected > 0)
                         {
                             string statusText = newStatus == 1 ? "Active" : "Inactive";
-                            MessageBox.Show($"Employee profile is now {statusText}.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            
 
                             // Refresh the DataGridView to reflect the changes
                             LoadEmployeeData();
@@ -487,7 +555,7 @@ namespace Dashboard.Forms
             string newPassword = GenerateRandomPassword(8);
 
             // Update the password and temporary_password in the database
-            string updateQuery = "UPDATE logins SET password = @password, temporary_password = 1 WHERE username = @username";
+            string updateQuery = "UPDATE logins SET password = @password, temporary_password = 1, login_attempts = 0 WHERE username = @username";
 
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
@@ -519,7 +587,14 @@ namespace Dashboard.Forms
 
         private void btnResetPassword_Click(object sender, EventArgs e)
         {
-            // Ask for confirmation before resetting the password
+
+            if (txtStatus.Text == "INACTIVE")
+            {
+                MessageBox.Show("Please activate the profile instead. ", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+                // Ask for confirmation before resetting the password
             DialogResult confirmationResult = MessageBox.Show($"Are you sure you want to reset the password for {txtFirstName.Text + " " + txtLastName.Text }?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirmationResult == DialogResult.Yes)
@@ -529,6 +604,18 @@ namespace Dashboard.Forms
                     ResetPassword(txtUsername.Text, txtEmailAddress.Text);
                 });
             }
+        }
+
+        private void btnOpenLogs_Click(object sender, EventArgs e)
+        {
+                MtnMemoView memoview = new MtnMemoView(employee_name);
+                memoview.Show();
+        }
+
+        private void btnServerConnections_Click(object sender, EventArgs e)
+        {
+            ServerConnections serverConnections = new ServerConnections(employee_name);
+            serverConnections.Show();
         }
     }
 }

@@ -109,7 +109,7 @@ namespace Dashboard
                         await Task.Delay(1000);
 
                         // Show the login screen
-                        DatabaseHelper.CloseConnection(connection);
+                        // DatabaseHelper.CloseConnection(connection);
                         this.Hide();
 
                         Login loginForm = new Login();
