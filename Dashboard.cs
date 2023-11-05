@@ -490,6 +490,7 @@ namespace Dashboard
             btnInventory.Enabled = true;
             btnReport.Enabled = true;
             btnMaintenance.Enabled = true;
+            button1.Enabled = true;
         }
         private void btnOrder_Click(object sender, EventArgs e)
         {
@@ -508,6 +509,7 @@ namespace Dashboard
                         btnInventory.Enabled = false;
                         btnReport.Enabled = false;
                         btnMaintenance.Enabled = false;
+                        button1.Enabled = false;
                     });
                 }
         }
@@ -522,6 +524,7 @@ namespace Dashboard
                     btnInventory.Enabled = false;
                     btnReport.Enabled = false;
                     btnMaintenance.Enabled = false;
+                button1.Enabled = false;
             });
         }
 
@@ -535,6 +538,7 @@ namespace Dashboard
                 btnPay.Enabled = false;
                 btnReport.Enabled = false;
                 btnMaintenance.Enabled = false;
+                button1.Enabled = false;
             });
         }
 
@@ -554,6 +558,7 @@ namespace Dashboard
                 btnPay.Enabled = false;
                 btnReport.Enabled = false;
                 btnInventory.Enabled = false;
+                button1.Enabled = false;
             });
         }
 

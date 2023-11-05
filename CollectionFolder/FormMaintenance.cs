@@ -317,7 +317,8 @@ namespace Dashboard.Forms
             }
             else
             {
-                 
+                UpdateEmployee update = new UpdateEmployee(employee_name, role, txtUsername.Text, txtFirstName.Text, txtLastName.Text, txtRole.Text, txtEmailAddress.Text, txtSupervisor.Text);
+                update.ShowDialog();
             }
         }
 
@@ -491,9 +492,7 @@ namespace Dashboard.Forms
                     UpdateEmployeeStatus(username, newStatus);
                     if (newStatus == 1)
                     {
-
                         ResetPassword(username, emailAddress);
-
                     }
                     string statusText;
                     if (newStatus == 0)

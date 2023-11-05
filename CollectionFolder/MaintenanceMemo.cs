@@ -110,7 +110,7 @@ namespace Dashboard.Forms
                             if (rowsAffected > 0)
                             {
                                 MessageBox.Show("Memo inserted successfully. The form will now close.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                
+                                this.Close();
                             }
                             else
                             {

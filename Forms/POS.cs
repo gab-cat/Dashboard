@@ -135,7 +135,9 @@ namespace Dashboard.Forms
             orderGrid.Columns["Subtotal"].Width = 70; 
         }
 
-        private void button2_Click(object sender, EventArgs e)
+
+        
+        private void AddItem()
         {
             if (isDiscountApplied)
             {
@@ -277,7 +279,9 @@ namespace Dashboard.Forms
             }
         }
 
-        private void BacktoForm_Click(object sender, EventArgs e)
+
+
+        private void BackToForm()
         {
             if (!orderCreated)
             {
@@ -311,21 +315,20 @@ namespace Dashboard.Forms
                     }
                 }
             }
-         this.Close();
+            this.Close();
 
-         // Show the previously hidden Dashboard and FormOrder forms
-         Dashboard dashboardForm = Application.OpenForms["Dashboard"] as Dashboard;
-         if (dashboardForm != null)
-         {
-            dashboardForm.Show(); 
-         }
+            // Show the previously hidden Dashboard and FormOrder forms
+            Dashboard dashboardForm = Application.OpenForms["Dashboard"] as Dashboard;
+            if (dashboardForm != null)
+            {
+                dashboardForm.Show();
+            }
 
-         FormOrder formOrderForm = Application.OpenForms["FormOrder"] as FormOrder;
-         if (formOrderForm != null)
-         {
-         formOrderForm.Show(); 
-          }
-            
+            FormOrder formOrderForm = Application.OpenForms["FormOrder"] as FormOrder;
+            if (formOrderForm != null)
+            {
+                formOrderForm.Show();
+            }
         }
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
@@ -375,6 +378,31 @@ namespace Dashboard.Forms
 
         private void btnNewTransaction_Click(object sender, EventArgs e)
         {
+            NewTransaction();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            AddItem();
+        }
+
+        private void btnDiscount_Click(object sender, EventArgs e)
+        {
+            Discount();
+        }
+
+        private void btnCreateOrder_Click(object sender, EventArgs e)
+        {
+            CreateOrderEvent();
+        }
+
+        private void BacktoForm_Click(object sender, EventArgs e)
+        {
+            BackToForm();
+        }
+
+        private void NewTransaction()
+        {
             if (orderOngoing)
             {
                 MessageBox.Show("You already have an active order Transaction.", "New Transaction", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -398,7 +426,7 @@ namespace Dashboard.Forms
             GenerateTransactionID();
         }
 
-        private void btnDiscount_Click(object sender, EventArgs e)
+        private void Discount()
         {
             // Check if a discount has already been applied
             if (isDiscountApplied)
@@ -615,32 +643,34 @@ namespace Dashboard.Forms
         {
             if (e.KeyCode == Keys.F1)
             {
-                btnNewTransaction.PerformClick();
+                NewTransaction();
                 e.Handled = true; 
             }
             if (e.KeyCode == Keys.F2)
             {
-                btnAddItem.PerformClick();
+                AddItem();
                 e.Handled = true; 
             }
             if (e.KeyCode == Keys.F3)
             {
-                btnDiscount.PerformClick();
+                Discount();
                 e.Handled = true; 
             }
             if (e.KeyCode == Keys.F4)
             {
-                btnCreateOrder.PerformClick();
+                CreateOrderEvent();
                 e.Handled = true; 
             }
             if (e.KeyCode == Keys.F5)
             {
-                BacktoForm.PerformClick();
+                BackToForm();
                 e.Handled = true; 
             }
         }
 
-        private void btnCreateOrder_Click(object sender, EventArgs e)
+
+
+        private void CreateOrderEvent()
         {
             DialogResult result = MessageBox.Show("Are you sure you want to create this order?", "Confirm Order Creation: " + new_sale_id.ToString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -661,7 +691,7 @@ namespace Dashboard.Forms
                 txtTransactionID.Text = "No Transaction";
 
                 string memotext = "Successfully created a new order " + new_sale_id + " for customer ID: " + customer_id;
-                
+
 
                 LoadingScreenManager.ShowLoadingScreen(() =>
                 {
@@ -672,8 +702,8 @@ namespace Dashboard.Forms
                     {
                         string discountmemo = Environment.NewLine + "Manager Discretion: " + supervisor_name + Environment.NewLine + "Applied " + discountPercent + "% discount for Sale ID: " + new_sale_id + Environment.NewLine +
                             "Total discount applied for current sale is ₱ " + discount_amount;
-                            AddMemo memo1 = new AddMemo(customer_id, employee_name, "Discount Added", discountmemo);
-                            memo1.ShowDialog();
+                        AddMemo memo1 = new AddMemo(customer_id, employee_name, "Discount Added", discountmemo);
+                        memo1.ShowDialog();
                     }
                 });
 

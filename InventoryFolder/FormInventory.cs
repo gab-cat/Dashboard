@@ -251,9 +251,9 @@ namespace Dashboard.Forms
 
         private void btnDeleteProduct_Click(object sender, EventArgs e)
         {
-            LoadingScreenManager.ShowLoadingScreen(() =>
+            if (ProductGrid.SelectedRows.Count > 0)
             {
-                if (ProductGrid.SelectedRows.Count > 0)
+                LoadingScreenManager.ShowLoadingScreen(() =>
                 {
                     int selectedProductID = Convert.ToInt32(ProductGrid.SelectedRows[0].Cells["Product ID"].Value);
                     string productName = Convert.ToString(ProductGrid.SelectedRows[0].Cells["Product Name"].Value);
@@ -277,7 +277,7 @@ namespace Dashboard.Forms
                                     if (rowsAffected > 0)
                                     {
                                         string systemMemo = $"Product ID {selectedProductID} ({productName}) was deleted.";
-                                        AddInvMemo addmemo = new AddInvMemo(employee_name, "Delete Product",systemMemo);
+                                        AddInvMemo addmemo = new AddInvMemo(employee_name, "Delete Product", systemMemo);
                                         addmemo.Show();
                                     }
                                     else
@@ -292,12 +292,12 @@ namespace Dashboard.Forms
                             }
                         }
                     }
-                }
-                else
-                {
-                    MessageBox.Show("Please select a product to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            });
+                });
+            }
+            else
+            {
+                MessageBox.Show("Please select a product to delete.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         private void PopulateCategoryComboBox()
         {
@@ -391,6 +391,13 @@ namespace Dashboard.Forms
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
+            string searchKeyword = txtSearchTerm.Text.Trim();
+            if (string.IsNullOrWhiteSpace(searchKeyword))
+            {
+                MessageBox.Show("Please enter a search keyword.", "Empty Search Box", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 PerformSearch();
@@ -399,8 +406,17 @@ namespace Dashboard.Forms
 
         private void txtSearchTerm_KeyDown(object sender, KeyEventArgs e)
         {
+
+
             if (e.KeyCode == Keys.Enter)
             {
+                string searchKeyword = txtSearchTerm.Text.Trim();
+                if (string.IsNullOrWhiteSpace(searchKeyword))
+                {
+                    MessageBox.Show("Please enter a search keyword.", "Empty Search Box", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 LoadingScreenManager.ShowLoadingScreen(() =>
                 {
                     PerformSearch();
@@ -411,9 +427,9 @@ namespace Dashboard.Forms
         private void btnUpdateProduct_Click(object sender, EventArgs e)
         {
 
-            LoadingScreenManager.ShowLoadingScreen(() =>
+            if (ProductGrid.SelectedRows.Count > 0)
             {
-                if (ProductGrid.SelectedRows.Count > 0)
+                LoadingScreenManager.ShowLoadingScreen(() =>
                 {
                     // Get the selected product's ID from the DataGridView
                     int selectedProductID = Convert.ToInt32(ProductGrid.SelectedRows[0].Cells["Product ID"].Value);
@@ -423,13 +439,12 @@ namespace Dashboard.Forms
 
                     // Show the UpdateItem form as a dialog
                     updateForm.Show();
-                }
-                else
-                {
-                    MessageBox.Show("Please select a product to update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            });
-
+                });
+            }
+            else
+            {
+                MessageBox.Show("Please select a product to update.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private DataTable LoadPriceHistory(int productId)

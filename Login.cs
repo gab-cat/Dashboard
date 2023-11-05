@@ -165,18 +165,21 @@ namespace Dashboard
                     {
                         // Login failed
                         // loginAttempts--;
-
-                        if (loginAttempts == 3)
+                        if (loginAttempts > 3)
+                        {
+                            incorrect.Text = "Your entered credentials is incorrect. Please try again.";
+                        }
+                        else if (loginAttempts == 3)
                         {
                             incorrect.Text = "You have 3 login attempts remaining.";
                         }
-                        else if (loginAttempts > 0)
+                        else if (loginAttempts < 3)
                         {
-                            incorrect.Text = $"Your entered credentials are incorrect. Please try again.";
+                            incorrect.Text = $"You have {loginAttempts} login attempts remaining. Please try again.";
                         }
                         else
                         {
-                            incorrect.Text = "This profile is locked due to multiple failed attempts. Reach out to your supervisor to reset your password.";
+                            incorrect.Text = "This profile is locked due to multiple failed login attempts. Reach out to your supervisor to reset your password.";
                             // You can also disable the login button or take other actions here.
                         }
 
@@ -273,7 +276,7 @@ namespace Dashboard
                 }
 
                 // SQL statement to check for the username and password, as well as additional conditions in the 'logins' table
-                string query = "SELECT COUNT(*) FROM logins WHERE username = @username AND password = @password AND employee_status = 1";
+                string query = "SELECT COUNT(*) FROM logins WHERE BINARY username = @username AND BINARY password = @password AND employee_status = 1";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@username", username);
                 command.Parameters.AddWithValue("@password", password);

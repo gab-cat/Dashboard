@@ -32,7 +32,7 @@ namespace Dashboard.CollectionFolder
         {
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
-                string query = "SHOW PROCESSLIST"; // MySQL command to show active processes
+                string query = "SHOW PROCESSLIST"; 
 
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {

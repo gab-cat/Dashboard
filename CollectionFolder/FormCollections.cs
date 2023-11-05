@@ -25,7 +25,7 @@ namespace Dashboard.Forms
 {
     public partial class FormCollections : Form
     {
-        private int customerId;
+        private int customerId = 0;
         private string employee_name;
         private string role;
         private bool pastdue;
@@ -191,6 +191,11 @@ namespace Dashboard.Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
+                if (string.IsNullOrWhiteSpace(txtSearchTerm.Text))
+                {
+                    MessageBox.Show("Please enter a search keyword.", "Empty Search Box", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 LoadingScreenManager.ShowLoadingScreen(() =>
                 {
@@ -475,6 +480,12 @@ namespace Dashboard.Forms
 
         private void button7_Click(object sender, EventArgs e)
         {
+            if (customerId == 0)
+            {
+                MessageBox.Show("Please select a customer first.", "No Customer Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 PaymentHistory payment = new PaymentHistory(customerId, employee_name);
@@ -484,6 +495,12 @@ namespace Dashboard.Forms
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
+            if (customerId == 0)
+            {
+                MessageBox.Show("Please select a customer first.", "No Customer Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             LoadingScreenManager.ShowLoadingScreen(() =>
             { 
                 UpdateCustomer update = new UpdateCustomer(customerId, employee_name);
@@ -493,6 +510,13 @@ namespace Dashboard.Forms
 
         private void btnValidate_Click(object sender, EventArgs e)
         {
+            if (customerId == 0)
+            {
+                MessageBox.Show("Please select a customer first.", "No Customer Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+
             string phone = txtPhone.Text;
             string email = txtEmail.Text;
 
@@ -502,6 +526,12 @@ namespace Dashboard.Forms
 
         private void btnAddMemo_Click(object sender, EventArgs e)
         {
+            if (customerId == 0)
+            {
+                MessageBox.Show("Please select a customer first.", "No Customer Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 AddMemo addmemo = new AddMemo(customerId, employee_name);
@@ -1021,9 +1051,11 @@ namespace Dashboard.Forms
 
         private void btnEmailPDF_Click(object sender, EventArgs e)
         {
-            LoadingScreenManager.ShowLoadingScreen(() =>
+
+
+            if (listInvoice.SelectedItems.Count > 0)
             {
-                if (listInvoice.SelectedItems.Count > 0)
+                LoadingScreenManager.ShowLoadingScreen(() =>
                 {
                     // Get the selected item's text, which is the file name
                     string fileName = listInvoice.SelectedItems[0].Text;
@@ -1039,7 +1071,7 @@ namespace Dashboard.Forms
                     string filePath = Path.Combine(directoryPath, fileName);
                     if (File.Exists(filePath))
                     {
-                        string recipientEmail = txtEmail.Text; 
+                        string recipientEmail = txtEmail.Text;
                         string subject = "Invoice Attached";
                         string plainTextBody = "Please find the attached invoice.";
 
@@ -1050,7 +1082,7 @@ namespace Dashboard.Forms
                                 From = new MailAddress(fromEmail, "Contact Center"),
                                 Subject = subject,
                                 Body = plainTextBody,
-                                IsBodyHtml = false, 
+                                IsBodyHtml = false,
                             };
 
                             message.To.Add(recipientEmail);
@@ -1091,12 +1123,12 @@ namespace Dashboard.Forms
                     {
                         MessageBox.Show($"The selected file '{fileName}' does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                }
-                else
-                {
-                    MessageBox.Show("Please select an invoice to email.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            });
+                });
+            }
+            else
+            {
+                MessageBox.Show("Please select an invoice to email.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnNotifyEmail_Click(object sender, EventArgs e)
@@ -1258,6 +1290,13 @@ namespace Dashboard.Forms
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+
+            if (string.IsNullOrWhiteSpace(txtSearchTerm.Text))
+            {
+                MessageBox.Show("Please enter a search keyword.", "Empty Search Box", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 searchCX();
