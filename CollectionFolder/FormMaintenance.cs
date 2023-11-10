@@ -360,8 +360,17 @@ namespace Dashboard.Forms
                         string emailBody = $"Username: <strong>{username}</strong><br>Password: <strong>{password}</strong><br>First Name: <strong>{firstName}</strong><br>Last Name: <strong>{lastName}</strong><br>Role: <strong>{role}</strong><br>Email Address: <strong>{emailAddress}</strong><br>Supervisor: <strong>{supervisor}</strong>";
                         string outro = "<br><br><i>Please use the temporary password to log in at OrderMAX. Once logged in, you will be able to set up your own password.</i><br><i>This is a system-generated message. Do not reply.</i>";
 
+                        
+                        string systemText = $"Requested by : {employee_name}{Environment.NewLine}{Environment.NewLine}Username: {username}{Environment.NewLine}Password: XXXXXXXX{Environment.NewLine}First Name: {firstName}{Environment.NewLine}Last Name: {lastName}{Environment.NewLine}Role: {role}{Environment.NewLine}Email Address: {emailAddress}{Environment.NewLine}Supervisor: {supervisor}";
+
+
+
                         // Send the email
                         SendsEmail(emailAddress, emailSubject, emailBody + outro);
+
+                        MaintenanceMemo nm = new MaintenanceMemo("System Profiles Manager" ,"New User Profile", systemText, 1);
+                        nm.Hide();
+
                         LoadEmployeeData();
                     }
                     catch (Exception ex)

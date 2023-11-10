@@ -94,6 +94,7 @@
             this.label14 = new System.Windows.Forms.Label();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.panelMenu = new Guna.UI.WinForms.GunaPanel();
+            this.btnClock = new System.Windows.Forms.Button();
             this.btnMaintenance = new System.Windows.Forms.Button();
             this.btnReport = new System.Windows.Forms.Button();
             this.btnInventory = new System.Windows.Forms.Button();
@@ -923,6 +924,7 @@
             // panelMenu
             // 
             this.panelMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.panelMenu.Controls.Add(this.btnClock);
             this.panelMenu.Controls.Add(this.btnMaintenance);
             this.panelMenu.Controls.Add(this.btnReport);
             this.panelMenu.Controls.Add(this.btnInventory);
@@ -935,6 +937,23 @@
             this.panelMenu.Name = "panelMenu";
             this.panelMenu.Size = new System.Drawing.Size(198, 734);
             this.panelMenu.TabIndex = 25;
+            // 
+            // btnClock
+            // 
+            this.btnClock.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(81)))), ((int)(((byte)(81)))), ((int)(((byte)(119)))));
+            this.btnClock.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClock.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F);
+            this.btnClock.ForeColor = System.Drawing.Color.Transparent;
+            this.btnClock.Image = ((System.Drawing.Image)(resources.GetObject("btnClock.Image")));
+            this.btnClock.Location = new System.Drawing.Point(0, 658);
+            this.btnClock.Name = "btnClock";
+            this.btnClock.Padding = new System.Windows.Forms.Padding(27, 0, 0, 0);
+            this.btnClock.Size = new System.Drawing.Size(198, 35);
+            this.btnClock.TabIndex = 7;
+            this.btnClock.Text = "    Clock";
+            this.btnClock.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnClock.UseVisualStyleBackColor = true;
+            this.btnClock.Click += new System.EventHandler(this.btnClock_Click);
             // 
             // btnMaintenance
             // 
@@ -1402,6 +1421,7 @@
         private System.Windows.Forms.PictureBox pictureBox9;
         private System.Windows.Forms.PictureBox pictureBox10;
         private System.Windows.Forms.PictureBox pictureBox8;
+        private System.Windows.Forms.Button btnClock;
     }
 }
 

@@ -1375,6 +1375,12 @@ namespace Dashboard.Forms
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtPaymentSearch.Text.Trim()))
+            {
+                MessageBox.Show("Please enter a search keyword.", "Empty Search Box", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 GetPaymentInfo(txtPaymentSearch.Text);
@@ -1385,6 +1391,11 @@ namespace Dashboard.Forms
         {
             if (e.KeyCode == Keys.Enter)
             {
+                if (string.IsNullOrWhiteSpace(txtPaymentSearch.Text.Trim()))
+                {
+                    MessageBox.Show("Please enter a search keyword.", "Empty Search Box", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
                 LoadingScreenManager.ShowLoadingScreen(() =>
                 {

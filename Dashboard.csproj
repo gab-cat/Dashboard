@@ -144,6 +144,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clock.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Clock.Designer.cs">
+      <DependentUpon>Clock.cs</DependentUpon>
+    </Compile>
     <Compile Include="CollectionFolder\FormMaintenance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -316,6 +322,9 @@
       <DependentUpon>SearchCustomer.cs</DependentUpon>
     </Compile>
     <Compile Include="ThemeColor.cs" />
+    <EmbeddedResource Include="Clock.resx">
+      <DependentUpon>Clock.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CollectionFolder\FormMaintenance.resx">
       <DependentUpon>FormMaintenance.cs</DependentUpon>
     </EmbeddedResource>
@@ -431,6 +440,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="login1.ico" />
+    <None Include="Resources\icons8-play-30.png" />
+    <None Include="Resources\icons8-stop-50.png" />
     <None Include="Resources\bin.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

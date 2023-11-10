@@ -39,6 +39,7 @@ namespace Dashboard
         public int customer_id;
         private string role;
         private MySqlConnection connection = DatabaseHelper.GetOpenConnection();
+        Clock clock = null;
         public Dashboard(string firstName, string lastName, string role)
         {
             
@@ -55,6 +56,7 @@ namespace Dashboard
 
             label15.BringToFront();
 
+            
         }
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -585,6 +587,18 @@ namespace Dashboard
 
         private void panelDesktopPane_Paint(object sender, PaintEventArgs e)
         {
+
+        }
+
+        private void btnClock_Click(object sender, EventArgs e)
+        {
+            
+            if (clock == null)
+            {
+                clock = new Clock();
+            }
+
+            clock.Show();
 
         }
     }

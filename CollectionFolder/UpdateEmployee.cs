@@ -29,6 +29,8 @@ namespace Dashboard
             this.supervisor = supervisor;
             this.role = role;
 
+            string fullName = first_name + " " + last_name;
+
             setInfo();
 
             // Wire up TextChanged event handlers for input fields
@@ -39,6 +41,9 @@ namespace Dashboard
             txtEmail.TextChanged += InputField_TextChanged;
             txtSupervisor.TextChanged += InputField_TextChanged;
             button1.Enabled = false; // Disable the "Save" button initially
+
+            AddChangeMemo($"Update Profile by {role}");
+            AddChangeMemo($"Username: {username}{Environment.NewLine}Employee Name: {fullName}{Environment.NewLine}");
         }
 
         private void InputField_TextChanged(object sender, EventArgs e)

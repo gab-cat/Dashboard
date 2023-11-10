@@ -380,7 +380,7 @@ namespace Dashboard
             loadingForm.StartPosition = FormStartPosition.CenterScreen;
 
             System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-            timer.Interval = 3000;
+            timer.Interval = 5000;
             timer.Tick += (sender, e) =>
             {
                 loadingForm.Close();
