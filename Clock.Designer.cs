@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Clock));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblSunday = new System.Windows.Forms.Label();
@@ -43,11 +43,7 @@
             this.lblFriday = new System.Windows.Forms.Label();
             this.lblDate = new System.Windows.Forms.Label();
             this.lblClock = new System.Windows.Forms.Label();
-            this.btnCloseChildForm = new Guna.UI.WinForms.GunaAdvenceButton();
             this.label1 = new System.Windows.Forms.Label();
-            this.gunaButton2 = new Guna.UI.WinForms.GunaButton();
-            this.gunaButton3 = new Guna.UI.WinForms.GunaButton();
-            this.gunaButton4 = new Guna.UI.WinForms.GunaButton();
             this.timestampGrid = new Guna.UI.WinForms.GunaDataGridView();
             this.Activity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.StartTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,14 +51,6 @@
             this.Limit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Duration = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Remarks = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnPullout = new Guna.UI.WinForms.GunaAdvenceTileButton();
-            this.btnUnscheduled = new Guna.UI.WinForms.GunaAdvenceTileButton();
-            this.btnOvertime = new Guna.UI.WinForms.GunaAdvenceTileButton();
-            this.btnBio = new Guna.UI.WinForms.GunaAdvenceTileButton();
-            this.btnBreak2 = new Guna.UI.WinForms.GunaAdvenceTileButton();
-            this.btnLunch = new Guna.UI.WinForms.GunaAdvenceTileButton();
-            this.btnBreak1 = new Guna.UI.WinForms.GunaAdvenceTileButton();
-            this.btnStartEnd = new Guna.UI.WinForms.GunaAdvenceTileButton();
             this.panel3 = new System.Windows.Forms.Panel();
             this.lblOvertime = new System.Windows.Forms.Label();
             this.lblStartEnd = new System.Windows.Forms.Label();
@@ -72,15 +60,31 @@
             this.lblLunch = new System.Windows.Forms.Label();
             this.lblBreak2 = new System.Windows.Forms.Label();
             this.lblBreak1 = new System.Windows.Forms.Label();
+            this.btnStartEnd = new Guna.UI.WinForms.GunaAdvenceTileButton();
+            this.btnBreak1 = new Guna.UI.WinForms.GunaAdvenceTileButton();
+            this.btnLunch = new Guna.UI.WinForms.GunaAdvenceTileButton();
+            this.btnBreak2 = new Guna.UI.WinForms.GunaAdvenceTileButton();
+            this.btnBio = new Guna.UI.WinForms.GunaAdvenceTileButton();
+            this.btnPullout = new Guna.UI.WinForms.GunaAdvenceTileButton();
+            this.btnOvertime = new Guna.UI.WinForms.GunaAdvenceTileButton();
+            this.btnUnscheduled = new Guna.UI.WinForms.GunaAdvenceTileButton();
+            this.btnCloseChildForm = new Guna.UI.WinForms.GunaAdvenceButton();
+            this.btnClose = new Guna.UI.WinForms.GunaButton();
+            this.btnTimeCard = new Guna.UI.WinForms.GunaButton();
+            this.gunaButton4 = new Guna.UI.WinForms.GunaButton();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.panelDesktopPane = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timestampGrid)).BeginInit();
             this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.panel1.Controls.Add(this.btnClose);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.lblDate);
             this.panel1.Controls.Add(this.lblClock);
@@ -90,7 +94,7 @@
             this.panel1.ForeColor = System.Drawing.Color.White;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(518, 196);
+            this.panel1.Size = new System.Drawing.Size(518, 178);
             this.panel1.TabIndex = 0;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             // 
@@ -189,7 +193,7 @@
             // lblDate
             // 
             this.lblDate.Font = new System.Drawing.Font("Outfit Thin SemiBold", 12F, System.Drawing.FontStyle.Bold);
-            this.lblDate.Location = new System.Drawing.Point(0, 162);
+            this.lblDate.Location = new System.Drawing.Point(-2, 142);
             this.lblDate.Name = "lblDate";
             this.lblDate.Size = new System.Drawing.Size(518, 20);
             this.lblDate.TabIndex = 11;
@@ -199,45 +203,12 @@
             // lblClock
             // 
             this.lblClock.Font = new System.Drawing.Font("Outfit Thin SemiBold", 52F, System.Drawing.FontStyle.Bold);
-            this.lblClock.Location = new System.Drawing.Point(0, 65);
+            this.lblClock.Location = new System.Drawing.Point(0, 59);
             this.lblClock.Name = "lblClock";
             this.lblClock.Size = new System.Drawing.Size(518, 88);
             this.lblClock.TabIndex = 8;
             this.lblClock.Text = "00:00:00";
             this.lblClock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnCloseChildForm
-            // 
-            this.btnCloseChildForm.AnimationHoverSpeed = 0.07F;
-            this.btnCloseChildForm.AnimationSpeed = 0.03F;
-            this.btnCloseChildForm.BackColor = System.Drawing.Color.Transparent;
-            this.btnCloseChildForm.BaseColor = System.Drawing.Color.Transparent;
-            this.btnCloseChildForm.BorderColor = System.Drawing.Color.Black;
-            this.btnCloseChildForm.CheckedBaseColor = System.Drawing.Color.Gray;
-            this.btnCloseChildForm.CheckedBorderColor = System.Drawing.Color.Transparent;
-            this.btnCloseChildForm.CheckedForeColor = System.Drawing.Color.White;
-            this.btnCloseChildForm.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.CheckedImage")));
-            this.btnCloseChildForm.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnCloseChildForm.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnCloseChildForm.FocusedColor = System.Drawing.Color.Empty;
-            this.btnCloseChildForm.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnCloseChildForm.ForeColor = System.Drawing.Color.White;
-            this.btnCloseChildForm.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.Image")));
-            this.btnCloseChildForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.btnCloseChildForm.ImageSize = new System.Drawing.Size(35, 35);
-            this.btnCloseChildForm.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
-            this.btnCloseChildForm.Location = new System.Drawing.Point(480, 2);
-            this.btnCloseChildForm.Name = "btnCloseChildForm";
-            this.btnCloseChildForm.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(151)))), ((int)(((byte)(143)))), ((int)(((byte)(255)))));
-            this.btnCloseChildForm.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnCloseChildForm.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnCloseChildForm.OnHoverImage = null;
-            this.btnCloseChildForm.OnHoverLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
-            this.btnCloseChildForm.OnPressedColor = System.Drawing.Color.Black;
-            this.btnCloseChildForm.Radius = 15;
-            this.btnCloseChildForm.Size = new System.Drawing.Size(35, 35);
-            this.btnCloseChildForm.TabIndex = 10;
-            this.btnCloseChildForm.Click += new System.EventHandler(this.btnCloseChildForm_Click);
             // 
             // label1
             // 
@@ -250,105 +221,27 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Clock";
             // 
-            // gunaButton2
-            // 
-            this.gunaButton2.AnimationHoverSpeed = 0.07F;
-            this.gunaButton2.AnimationSpeed = 0.03F;
-            this.gunaButton2.BackColor = System.Drawing.Color.Transparent;
-            this.gunaButton2.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.gunaButton2.BorderColor = System.Drawing.Color.Black;
-            this.gunaButton2.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.gunaButton2.FocusedColor = System.Drawing.Color.Empty;
-            this.gunaButton2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gunaButton2.ForeColor = System.Drawing.Color.White;
-            this.gunaButton2.Image = null;
-            this.gunaButton2.ImageSize = new System.Drawing.Size(20, 20);
-            this.gunaButton2.Location = new System.Drawing.Point(407, 495);
-            this.gunaButton2.Name = "gunaButton2";
-            this.gunaButton2.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.gunaButton2.OnHoverBorderColor = System.Drawing.Color.DimGray;
-            this.gunaButton2.OnHoverForeColor = System.Drawing.Color.White;
-            this.gunaButton2.OnHoverImage = null;
-            this.gunaButton2.OnPressedColor = System.Drawing.Color.Black;
-            this.gunaButton2.Radius = 5;
-            this.gunaButton2.Size = new System.Drawing.Size(103, 29);
-            this.gunaButton2.TabIndex = 10;
-            this.gunaButton2.Text = "My Time Card";
-            this.gunaButton2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // gunaButton3
-            // 
-            this.gunaButton3.AnimationHoverSpeed = 0.07F;
-            this.gunaButton3.AnimationSpeed = 0.03F;
-            this.gunaButton3.BackColor = System.Drawing.Color.Transparent;
-            this.gunaButton3.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.gunaButton3.BorderColor = System.Drawing.Color.Black;
-            this.gunaButton3.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.gunaButton3.FocusedColor = System.Drawing.Color.Empty;
-            this.gunaButton3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gunaButton3.ForeColor = System.Drawing.Color.White;
-            this.gunaButton3.Image = null;
-            this.gunaButton3.ImageSize = new System.Drawing.Size(20, 20);
-            this.gunaButton3.Location = new System.Drawing.Point(305, 495);
-            this.gunaButton3.Name = "gunaButton3";
-            this.gunaButton3.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.gunaButton3.OnHoverBorderColor = System.Drawing.Color.DimGray;
-            this.gunaButton3.OnHoverForeColor = System.Drawing.Color.White;
-            this.gunaButton3.OnHoverImage = null;
-            this.gunaButton3.OnPressedColor = System.Drawing.Color.Black;
-            this.gunaButton3.Radius = 5;
-            this.gunaButton3.Size = new System.Drawing.Size(99, 29);
-            this.gunaButton3.TabIndex = 11;
-            this.gunaButton3.Text = "Dispute";
-            this.gunaButton3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // gunaButton4
-            // 
-            this.gunaButton4.AnimationHoverSpeed = 0.07F;
-            this.gunaButton4.AnimationSpeed = 0.03F;
-            this.gunaButton4.BackColor = System.Drawing.Color.Transparent;
-            this.gunaButton4.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.gunaButton4.BorderColor = System.Drawing.Color.Black;
-            this.gunaButton4.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.gunaButton4.FocusedColor = System.Drawing.Color.Empty;
-            this.gunaButton4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.gunaButton4.ForeColor = System.Drawing.Color.White;
-            this.gunaButton4.Image = null;
-            this.gunaButton4.ImageSize = new System.Drawing.Size(20, 20);
-            this.gunaButton4.Location = new System.Drawing.Point(6, 495);
-            this.gunaButton4.Name = "gunaButton4";
-            this.gunaButton4.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.gunaButton4.OnHoverBorderColor = System.Drawing.Color.DimGray;
-            this.gunaButton4.OnHoverForeColor = System.Drawing.Color.White;
-            this.gunaButton4.OnHoverImage = null;
-            this.gunaButton4.OnPressedColor = System.Drawing.Color.Black;
-            this.gunaButton4.Radius = 5;
-            this.gunaButton4.Size = new System.Drawing.Size(99, 29);
-            this.gunaButton4.TabIndex = 12;
-            this.gunaButton4.Text = "My Disputes";
-            this.gunaButton4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // timestampGrid
             // 
             this.timestampGrid.AllowUserToAddRows = false;
             this.timestampGrid.AllowUserToDeleteRows = false;
             this.timestampGrid.AllowUserToResizeColumns = false;
             this.timestampGrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            this.timestampGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            this.timestampGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
             this.timestampGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.timestampGrid.BackgroundColor = System.Drawing.Color.White;
             this.timestampGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.timestampGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.timestampGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Outfit Thin Medium", 9.749999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.timestampGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.timestampGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.timestampGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Activity,
             this.StartTime,
@@ -356,14 +249,14 @@
             this.Limit,
             this.Duration,
             this.Remarks});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.timestampGrid.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.timestampGrid.DefaultCellStyle = dataGridViewCellStyle6;
             this.timestampGrid.EnableHeadersVisualStyles = false;
             this.timestampGrid.GridColor = System.Drawing.Color.White;
             this.timestampGrid.Location = new System.Drawing.Point(8, 347);
@@ -383,7 +276,7 @@
             this.timestampGrid.ThemeStyle.GridColor = System.Drawing.Color.White;
             this.timestampGrid.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.White;
             this.timestampGrid.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.timestampGrid.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Outfit Thin Medium", 9.749999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.timestampGrid.ThemeStyle.HeaderStyle.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.timestampGrid.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.Black;
             this.timestampGrid.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
             this.timestampGrid.ThemeStyle.HeaderStyle.Height = 23;
@@ -438,280 +331,6 @@
             this.Remarks.Name = "Remarks";
             this.Remarks.ReadOnly = true;
             // 
-            // btnPullout
-            // 
-            this.btnPullout.AnimationHoverSpeed = 0.07F;
-            this.btnPullout.AnimationSpeed = 0.03F;
-            this.btnPullout.BackColor = System.Drawing.Color.Transparent;
-            this.btnPullout.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnPullout.BorderColor = System.Drawing.Color.Black;
-            this.btnPullout.CheckedBaseColor = System.Drawing.Color.DarkRed;
-            this.btnPullout.CheckedBorderColor = System.Drawing.Color.DarkRed;
-            this.btnPullout.CheckedForeColor = System.Drawing.Color.White;
-            this.btnPullout.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnPullout.CheckedImage")));
-            this.btnPullout.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnPullout.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnPullout.Enabled = false;
-            this.btnPullout.FocusedColor = System.Drawing.Color.Empty;
-            this.btnPullout.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPullout.ForeColor = System.Drawing.Color.White;
-            this.btnPullout.Image = ((System.Drawing.Image)(resources.GetObject("btnPullout.Image")));
-            this.btnPullout.ImageSize = new System.Drawing.Size(15, 15);
-            this.btnPullout.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnPullout.Location = new System.Drawing.Point(387, 75);
-            this.btnPullout.Name = "btnPullout";
-            this.btnPullout.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnPullout.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnPullout.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnPullout.OnHoverImage = null;
-            this.btnPullout.OnHoverLineColor = System.Drawing.Color.DimGray;
-            this.btnPullout.OnPressedColor = System.Drawing.Color.Black;
-            this.btnPullout.Radius = 10;
-            this.btnPullout.Size = new System.Drawing.Size(122, 66);
-            this.btnPullout.TabIndex = 8;
-            this.btnPullout.Text = "Pull Out";
-            this.btnPullout.Click += new System.EventHandler(this.btnPullout_Click);
-            // 
-            // btnUnscheduled
-            // 
-            this.btnUnscheduled.AnimationHoverSpeed = 0.07F;
-            this.btnUnscheduled.AnimationSpeed = 0.03F;
-            this.btnUnscheduled.BackColor = System.Drawing.Color.Transparent;
-            this.btnUnscheduled.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnUnscheduled.BorderColor = System.Drawing.Color.Black;
-            this.btnUnscheduled.CheckedBaseColor = System.Drawing.Color.DarkRed;
-            this.btnUnscheduled.CheckedBorderColor = System.Drawing.Color.DarkRed;
-            this.btnUnscheduled.CheckedForeColor = System.Drawing.Color.White;
-            this.btnUnscheduled.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnUnscheduled.CheckedImage")));
-            this.btnUnscheduled.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnUnscheduled.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnUnscheduled.Enabled = false;
-            this.btnUnscheduled.FocusedColor = System.Drawing.Color.Empty;
-            this.btnUnscheduled.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUnscheduled.ForeColor = System.Drawing.Color.White;
-            this.btnUnscheduled.Image = global::Dashboard.Properties.Resources.icons8_play_30;
-            this.btnUnscheduled.ImageSize = new System.Drawing.Size(15, 15);
-            this.btnUnscheduled.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnUnscheduled.Location = new System.Drawing.Point(259, 75);
-            this.btnUnscheduled.Name = "btnUnscheduled";
-            this.btnUnscheduled.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnUnscheduled.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnUnscheduled.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnUnscheduled.OnHoverImage = null;
-            this.btnUnscheduled.OnHoverLineColor = System.Drawing.Color.DimGray;
-            this.btnUnscheduled.OnPressedColor = System.Drawing.Color.Black;
-            this.btnUnscheduled.Radius = 10;
-            this.btnUnscheduled.Size = new System.Drawing.Size(122, 66);
-            this.btnUnscheduled.TabIndex = 7;
-            this.btnUnscheduled.Text = "Unscheduled";
-            this.btnUnscheduled.Click += new System.EventHandler(this.btnUnscheduled_Click);
-            // 
-            // btnOvertime
-            // 
-            this.btnOvertime.AnimationHoverSpeed = 0.07F;
-            this.btnOvertime.AnimationSpeed = 0.03F;
-            this.btnOvertime.BackColor = System.Drawing.Color.Transparent;
-            this.btnOvertime.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnOvertime.BorderColor = System.Drawing.Color.Black;
-            this.btnOvertime.CheckedBaseColor = System.Drawing.Color.DarkRed;
-            this.btnOvertime.CheckedBorderColor = System.Drawing.Color.DarkRed;
-            this.btnOvertime.CheckedForeColor = System.Drawing.Color.White;
-            this.btnOvertime.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnOvertime.CheckedImage")));
-            this.btnOvertime.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnOvertime.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnOvertime.Enabled = false;
-            this.btnOvertime.FocusedColor = System.Drawing.Color.Empty;
-            this.btnOvertime.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnOvertime.ForeColor = System.Drawing.Color.White;
-            this.btnOvertime.Image = global::Dashboard.Properties.Resources.icons8_play_30;
-            this.btnOvertime.ImageSize = new System.Drawing.Size(15, 15);
-            this.btnOvertime.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnOvertime.Location = new System.Drawing.Point(131, 75);
-            this.btnOvertime.Name = "btnOvertime";
-            this.btnOvertime.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnOvertime.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnOvertime.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnOvertime.OnHoverImage = null;
-            this.btnOvertime.OnHoverLineColor = System.Drawing.Color.DimGray;
-            this.btnOvertime.OnPressedColor = System.Drawing.Color.Black;
-            this.btnOvertime.Radius = 10;
-            this.btnOvertime.Size = new System.Drawing.Size(122, 66);
-            this.btnOvertime.TabIndex = 6;
-            this.btnOvertime.Text = "Overtime";
-            this.btnOvertime.Click += new System.EventHandler(this.btnOvertime_Click);
-            // 
-            // btnBio
-            // 
-            this.btnBio.AnimationHoverSpeed = 0.07F;
-            this.btnBio.AnimationSpeed = 0.03F;
-            this.btnBio.BackColor = System.Drawing.Color.Transparent;
-            this.btnBio.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnBio.BorderColor = System.Drawing.Color.Black;
-            this.btnBio.CheckedBaseColor = System.Drawing.Color.DarkRed;
-            this.btnBio.CheckedBorderColor = System.Drawing.Color.DarkRed;
-            this.btnBio.CheckedForeColor = System.Drawing.Color.White;
-            this.btnBio.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnBio.CheckedImage")));
-            this.btnBio.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnBio.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnBio.Enabled = false;
-            this.btnBio.FocusedColor = System.Drawing.Color.Empty;
-            this.btnBio.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBio.ForeColor = System.Drawing.Color.White;
-            this.btnBio.Image = ((System.Drawing.Image)(resources.GetObject("btnBio.Image")));
-            this.btnBio.ImageSize = new System.Drawing.Size(15, 15);
-            this.btnBio.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnBio.Location = new System.Drawing.Point(3, 75);
-            this.btnBio.Name = "btnBio";
-            this.btnBio.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnBio.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnBio.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnBio.OnHoverImage = null;
-            this.btnBio.OnHoverLineColor = System.Drawing.Color.DimGray;
-            this.btnBio.OnPressedColor = System.Drawing.Color.Black;
-            this.btnBio.Radius = 10;
-            this.btnBio.Size = new System.Drawing.Size(122, 66);
-            this.btnBio.TabIndex = 5;
-            this.btnBio.Text = "Bio Break";
-            this.btnBio.Click += new System.EventHandler(this.btnBio_Click);
-            // 
-            // btnBreak2
-            // 
-            this.btnBreak2.AnimationHoverSpeed = 0.07F;
-            this.btnBreak2.AnimationSpeed = 0.03F;
-            this.btnBreak2.BackColor = System.Drawing.Color.Transparent;
-            this.btnBreak2.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnBreak2.BorderColor = System.Drawing.Color.Black;
-            this.btnBreak2.CheckedBaseColor = System.Drawing.Color.DarkRed;
-            this.btnBreak2.CheckedBorderColor = System.Drawing.Color.DarkRed;
-            this.btnBreak2.CheckedForeColor = System.Drawing.Color.White;
-            this.btnBreak2.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnBreak2.CheckedImage")));
-            this.btnBreak2.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnBreak2.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnBreak2.Enabled = false;
-            this.btnBreak2.FocusedColor = System.Drawing.Color.Empty;
-            this.btnBreak2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBreak2.ForeColor = System.Drawing.Color.White;
-            this.btnBreak2.Image = ((System.Drawing.Image)(resources.GetObject("btnBreak2.Image")));
-            this.btnBreak2.ImageSize = new System.Drawing.Size(15, 15);
-            this.btnBreak2.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnBreak2.Location = new System.Drawing.Point(387, 3);
-            this.btnBreak2.Name = "btnBreak2";
-            this.btnBreak2.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnBreak2.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnBreak2.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnBreak2.OnHoverImage = null;
-            this.btnBreak2.OnHoverLineColor = System.Drawing.Color.DimGray;
-            this.btnBreak2.OnPressedColor = System.Drawing.Color.Black;
-            this.btnBreak2.Radius = 10;
-            this.btnBreak2.Size = new System.Drawing.Size(122, 66);
-            this.btnBreak2.TabIndex = 4;
-            this.btnBreak2.Text = "Break 2";
-            this.btnBreak2.Click += new System.EventHandler(this.btnBreak2_Click);
-            // 
-            // btnLunch
-            // 
-            this.btnLunch.AnimationHoverSpeed = 0.07F;
-            this.btnLunch.AnimationSpeed = 0.03F;
-            this.btnLunch.BackColor = System.Drawing.Color.Transparent;
-            this.btnLunch.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnLunch.BorderColor = System.Drawing.Color.Black;
-            this.btnLunch.CheckedBaseColor = System.Drawing.Color.DarkRed;
-            this.btnLunch.CheckedBorderColor = System.Drawing.Color.DarkRed;
-            this.btnLunch.CheckedForeColor = System.Drawing.Color.White;
-            this.btnLunch.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnLunch.CheckedImage")));
-            this.btnLunch.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnLunch.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnLunch.Enabled = false;
-            this.btnLunch.FocusedColor = System.Drawing.Color.Empty;
-            this.btnLunch.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLunch.ForeColor = System.Drawing.Color.White;
-            this.btnLunch.Image = ((System.Drawing.Image)(resources.GetObject("btnLunch.Image")));
-            this.btnLunch.ImageSize = new System.Drawing.Size(15, 15);
-            this.btnLunch.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnLunch.Location = new System.Drawing.Point(259, 3);
-            this.btnLunch.Name = "btnLunch";
-            this.btnLunch.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnLunch.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnLunch.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnLunch.OnHoverImage = null;
-            this.btnLunch.OnHoverLineColor = System.Drawing.Color.DimGray;
-            this.btnLunch.OnPressedColor = System.Drawing.Color.Black;
-            this.btnLunch.Radius = 10;
-            this.btnLunch.Size = new System.Drawing.Size(122, 66);
-            this.btnLunch.TabIndex = 3;
-            this.btnLunch.Text = "Lunch";
-            this.btnLunch.Click += new System.EventHandler(this.btnLunch_Click);
-            // 
-            // btnBreak1
-            // 
-            this.btnBreak1.AnimationHoverSpeed = 0.07F;
-            this.btnBreak1.AnimationSpeed = 0.03F;
-            this.btnBreak1.BackColor = System.Drawing.Color.Transparent;
-            this.btnBreak1.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnBreak1.BorderColor = System.Drawing.Color.Black;
-            this.btnBreak1.CheckedBaseColor = System.Drawing.Color.DarkRed;
-            this.btnBreak1.CheckedBorderColor = System.Drawing.Color.DarkRed;
-            this.btnBreak1.CheckedForeColor = System.Drawing.Color.White;
-            this.btnBreak1.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnBreak1.CheckedImage")));
-            this.btnBreak1.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnBreak1.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnBreak1.Enabled = false;
-            this.btnBreak1.FocusedColor = System.Drawing.Color.Empty;
-            this.btnBreak1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBreak1.ForeColor = System.Drawing.Color.White;
-            this.btnBreak1.Image = ((System.Drawing.Image)(resources.GetObject("btnBreak1.Image")));
-            this.btnBreak1.ImageSize = new System.Drawing.Size(15, 15);
-            this.btnBreak1.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnBreak1.Location = new System.Drawing.Point(131, 3);
-            this.btnBreak1.Name = "btnBreak1";
-            this.btnBreak1.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnBreak1.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnBreak1.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnBreak1.OnHoverImage = null;
-            this.btnBreak1.OnHoverLineColor = System.Drawing.Color.DimGray;
-            this.btnBreak1.OnPressedColor = System.Drawing.Color.Black;
-            this.btnBreak1.Radius = 10;
-            this.btnBreak1.Size = new System.Drawing.Size(122, 66);
-            this.btnBreak1.TabIndex = 2;
-            this.btnBreak1.Text = "Break 1";
-            this.btnBreak1.Click += new System.EventHandler(this.btnBreak1_Click);
-            // 
-            // btnStartEnd
-            // 
-            this.btnStartEnd.AnimationHoverSpeed = 0.07F;
-            this.btnStartEnd.AnimationSpeed = 0.03F;
-            this.btnStartEnd.BackColor = System.Drawing.Color.Transparent;
-            this.btnStartEnd.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnStartEnd.BorderColor = System.Drawing.Color.Black;
-            this.btnStartEnd.CheckedBaseColor = System.Drawing.Color.DarkRed;
-            this.btnStartEnd.CheckedBorderColor = System.Drawing.Color.DarkRed;
-            this.btnStartEnd.CheckedForeColor = System.Drawing.Color.White;
-            this.btnStartEnd.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnStartEnd.CheckedImage")));
-            this.btnStartEnd.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnStartEnd.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnStartEnd.FocusedColor = System.Drawing.Color.Empty;
-            this.btnStartEnd.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStartEnd.ForeColor = System.Drawing.Color.White;
-            this.btnStartEnd.Image = ((System.Drawing.Image)(resources.GetObject("btnStartEnd.Image")));
-            this.btnStartEnd.ImageSize = new System.Drawing.Size(15, 15);
-            this.btnStartEnd.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnStartEnd.Location = new System.Drawing.Point(3, 3);
-            this.btnStartEnd.Name = "btnStartEnd";
-            this.btnStartEnd.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnStartEnd.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnStartEnd.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnStartEnd.OnHoverImage = null;
-            this.btnStartEnd.OnHoverLineColor = System.Drawing.Color.DimGray;
-            this.btnStartEnd.OnPressedColor = System.Drawing.Color.Black;
-            this.btnStartEnd.Radius = 10;
-            this.btnStartEnd.Size = new System.Drawing.Size(122, 66);
-            this.btnStartEnd.TabIndex = 1;
-            this.btnStartEnd.Text = "Start Shift";
-            this.btnStartEnd.Click += new System.EventHandler(this.btnStartEnd_Click);
-            this.btnStartEnd.MouseEnter += new System.EventHandler(this.btnStartEnd_MouseEnter);
-            this.btnStartEnd.MouseLeave += new System.EventHandler(this.btnStartEnd_MouseLeave);
-            this.btnStartEnd.MouseHover += new System.EventHandler(this.btnStartEnd_MouseHover);
-            // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.Transparent;
@@ -731,7 +350,7 @@
             this.panel3.Controls.Add(this.btnPullout);
             this.panel3.Controls.Add(this.btnOvertime);
             this.panel3.Controls.Add(this.btnUnscheduled);
-            this.panel3.Location = new System.Drawing.Point(2, 198);
+            this.panel3.Location = new System.Drawing.Point(0, 184);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(516, 151);
             this.panel3.TabIndex = 14;
@@ -839,24 +458,430 @@
             this.lblBreak1.TabIndex = 14;
             this.lblBreak1.Text = "15 mins";
             // 
+            // btnStartEnd
+            // 
+            this.btnStartEnd.AnimationHoverSpeed = 0.07F;
+            this.btnStartEnd.AnimationSpeed = 0.03F;
+            this.btnStartEnd.BackColor = System.Drawing.Color.Transparent;
+            this.btnStartEnd.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnStartEnd.BorderColor = System.Drawing.Color.Black;
+            this.btnStartEnd.CheckedBaseColor = System.Drawing.Color.DarkRed;
+            this.btnStartEnd.CheckedBorderColor = System.Drawing.Color.DarkRed;
+            this.btnStartEnd.CheckedForeColor = System.Drawing.Color.White;
+            this.btnStartEnd.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnStartEnd.CheckedImage")));
+            this.btnStartEnd.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnStartEnd.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnStartEnd.FocusedColor = System.Drawing.Color.Empty;
+            this.btnStartEnd.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnStartEnd.ForeColor = System.Drawing.Color.White;
+            this.btnStartEnd.Image = ((System.Drawing.Image)(resources.GetObject("btnStartEnd.Image")));
+            this.btnStartEnd.ImageSize = new System.Drawing.Size(15, 15);
+            this.btnStartEnd.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnStartEnd.Location = new System.Drawing.Point(3, 3);
+            this.btnStartEnd.Name = "btnStartEnd";
+            this.btnStartEnd.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnStartEnd.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnStartEnd.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnStartEnd.OnHoverImage = null;
+            this.btnStartEnd.OnHoverLineColor = System.Drawing.Color.DimGray;
+            this.btnStartEnd.OnPressedColor = System.Drawing.Color.Black;
+            this.btnStartEnd.Radius = 10;
+            this.btnStartEnd.Size = new System.Drawing.Size(122, 66);
+            this.btnStartEnd.TabIndex = 1;
+            this.btnStartEnd.Text = "Start Shift";
+            this.btnStartEnd.Click += new System.EventHandler(this.btnStartEnd_Click);
+            this.btnStartEnd.MouseEnter += new System.EventHandler(this.btnStartEnd_MouseEnter);
+            this.btnStartEnd.MouseLeave += new System.EventHandler(this.btnStartEnd_MouseLeave);
+            this.btnStartEnd.MouseHover += new System.EventHandler(this.btnStartEnd_MouseHover);
+            // 
+            // btnBreak1
+            // 
+            this.btnBreak1.AnimationHoverSpeed = 0.07F;
+            this.btnBreak1.AnimationSpeed = 0.03F;
+            this.btnBreak1.BackColor = System.Drawing.Color.Transparent;
+            this.btnBreak1.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnBreak1.BorderColor = System.Drawing.Color.Black;
+            this.btnBreak1.CheckedBaseColor = System.Drawing.Color.DarkRed;
+            this.btnBreak1.CheckedBorderColor = System.Drawing.Color.DarkRed;
+            this.btnBreak1.CheckedForeColor = System.Drawing.Color.White;
+            this.btnBreak1.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnBreak1.CheckedImage")));
+            this.btnBreak1.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnBreak1.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnBreak1.Enabled = false;
+            this.btnBreak1.FocusedColor = System.Drawing.Color.Empty;
+            this.btnBreak1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBreak1.ForeColor = System.Drawing.Color.White;
+            this.btnBreak1.Image = ((System.Drawing.Image)(resources.GetObject("btnBreak1.Image")));
+            this.btnBreak1.ImageSize = new System.Drawing.Size(15, 15);
+            this.btnBreak1.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnBreak1.Location = new System.Drawing.Point(131, 3);
+            this.btnBreak1.Name = "btnBreak1";
+            this.btnBreak1.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnBreak1.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnBreak1.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnBreak1.OnHoverImage = null;
+            this.btnBreak1.OnHoverLineColor = System.Drawing.Color.DimGray;
+            this.btnBreak1.OnPressedColor = System.Drawing.Color.Black;
+            this.btnBreak1.Radius = 10;
+            this.btnBreak1.Size = new System.Drawing.Size(122, 66);
+            this.btnBreak1.TabIndex = 2;
+            this.btnBreak1.Text = "Break 1";
+            this.btnBreak1.Click += new System.EventHandler(this.btnBreak1_Click);
+            // 
+            // btnLunch
+            // 
+            this.btnLunch.AnimationHoverSpeed = 0.07F;
+            this.btnLunch.AnimationSpeed = 0.03F;
+            this.btnLunch.BackColor = System.Drawing.Color.Transparent;
+            this.btnLunch.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnLunch.BorderColor = System.Drawing.Color.Black;
+            this.btnLunch.CheckedBaseColor = System.Drawing.Color.DarkRed;
+            this.btnLunch.CheckedBorderColor = System.Drawing.Color.DarkRed;
+            this.btnLunch.CheckedForeColor = System.Drawing.Color.White;
+            this.btnLunch.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnLunch.CheckedImage")));
+            this.btnLunch.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnLunch.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnLunch.Enabled = false;
+            this.btnLunch.FocusedColor = System.Drawing.Color.Empty;
+            this.btnLunch.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLunch.ForeColor = System.Drawing.Color.White;
+            this.btnLunch.Image = ((System.Drawing.Image)(resources.GetObject("btnLunch.Image")));
+            this.btnLunch.ImageSize = new System.Drawing.Size(15, 15);
+            this.btnLunch.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnLunch.Location = new System.Drawing.Point(259, 3);
+            this.btnLunch.Name = "btnLunch";
+            this.btnLunch.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnLunch.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnLunch.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnLunch.OnHoverImage = null;
+            this.btnLunch.OnHoverLineColor = System.Drawing.Color.DimGray;
+            this.btnLunch.OnPressedColor = System.Drawing.Color.Black;
+            this.btnLunch.Radius = 10;
+            this.btnLunch.Size = new System.Drawing.Size(122, 66);
+            this.btnLunch.TabIndex = 3;
+            this.btnLunch.Text = "Lunch";
+            this.btnLunch.Click += new System.EventHandler(this.btnLunch_Click);
+            // 
+            // btnBreak2
+            // 
+            this.btnBreak2.AnimationHoverSpeed = 0.07F;
+            this.btnBreak2.AnimationSpeed = 0.03F;
+            this.btnBreak2.BackColor = System.Drawing.Color.Transparent;
+            this.btnBreak2.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnBreak2.BorderColor = System.Drawing.Color.Black;
+            this.btnBreak2.CheckedBaseColor = System.Drawing.Color.DarkRed;
+            this.btnBreak2.CheckedBorderColor = System.Drawing.Color.DarkRed;
+            this.btnBreak2.CheckedForeColor = System.Drawing.Color.White;
+            this.btnBreak2.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnBreak2.CheckedImage")));
+            this.btnBreak2.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnBreak2.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnBreak2.Enabled = false;
+            this.btnBreak2.FocusedColor = System.Drawing.Color.Empty;
+            this.btnBreak2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBreak2.ForeColor = System.Drawing.Color.White;
+            this.btnBreak2.Image = ((System.Drawing.Image)(resources.GetObject("btnBreak2.Image")));
+            this.btnBreak2.ImageSize = new System.Drawing.Size(15, 15);
+            this.btnBreak2.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnBreak2.Location = new System.Drawing.Point(387, 3);
+            this.btnBreak2.Name = "btnBreak2";
+            this.btnBreak2.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnBreak2.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnBreak2.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnBreak2.OnHoverImage = null;
+            this.btnBreak2.OnHoverLineColor = System.Drawing.Color.DimGray;
+            this.btnBreak2.OnPressedColor = System.Drawing.Color.Black;
+            this.btnBreak2.Radius = 10;
+            this.btnBreak2.Size = new System.Drawing.Size(122, 66);
+            this.btnBreak2.TabIndex = 4;
+            this.btnBreak2.Text = "Break 2";
+            this.btnBreak2.Click += new System.EventHandler(this.btnBreak2_Click);
+            // 
+            // btnBio
+            // 
+            this.btnBio.AnimationHoverSpeed = 0.07F;
+            this.btnBio.AnimationSpeed = 0.03F;
+            this.btnBio.BackColor = System.Drawing.Color.Transparent;
+            this.btnBio.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnBio.BorderColor = System.Drawing.Color.Black;
+            this.btnBio.CheckedBaseColor = System.Drawing.Color.DarkRed;
+            this.btnBio.CheckedBorderColor = System.Drawing.Color.DarkRed;
+            this.btnBio.CheckedForeColor = System.Drawing.Color.White;
+            this.btnBio.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnBio.CheckedImage")));
+            this.btnBio.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnBio.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnBio.Enabled = false;
+            this.btnBio.FocusedColor = System.Drawing.Color.Empty;
+            this.btnBio.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBio.ForeColor = System.Drawing.Color.White;
+            this.btnBio.Image = ((System.Drawing.Image)(resources.GetObject("btnBio.Image")));
+            this.btnBio.ImageSize = new System.Drawing.Size(15, 15);
+            this.btnBio.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnBio.Location = new System.Drawing.Point(3, 75);
+            this.btnBio.Name = "btnBio";
+            this.btnBio.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnBio.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnBio.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnBio.OnHoverImage = null;
+            this.btnBio.OnHoverLineColor = System.Drawing.Color.DimGray;
+            this.btnBio.OnPressedColor = System.Drawing.Color.Black;
+            this.btnBio.Radius = 10;
+            this.btnBio.Size = new System.Drawing.Size(122, 66);
+            this.btnBio.TabIndex = 5;
+            this.btnBio.Text = "Bio Break";
+            this.btnBio.Click += new System.EventHandler(this.btnBio_Click);
+            // 
+            // btnPullout
+            // 
+            this.btnPullout.AnimationHoverSpeed = 0.07F;
+            this.btnPullout.AnimationSpeed = 0.03F;
+            this.btnPullout.BackColor = System.Drawing.Color.Transparent;
+            this.btnPullout.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnPullout.BorderColor = System.Drawing.Color.Black;
+            this.btnPullout.CheckedBaseColor = System.Drawing.Color.DarkRed;
+            this.btnPullout.CheckedBorderColor = System.Drawing.Color.DarkRed;
+            this.btnPullout.CheckedForeColor = System.Drawing.Color.White;
+            this.btnPullout.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnPullout.CheckedImage")));
+            this.btnPullout.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnPullout.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnPullout.Enabled = false;
+            this.btnPullout.FocusedColor = System.Drawing.Color.Empty;
+            this.btnPullout.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnPullout.ForeColor = System.Drawing.Color.White;
+            this.btnPullout.Image = ((System.Drawing.Image)(resources.GetObject("btnPullout.Image")));
+            this.btnPullout.ImageSize = new System.Drawing.Size(15, 15);
+            this.btnPullout.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnPullout.Location = new System.Drawing.Point(387, 75);
+            this.btnPullout.Name = "btnPullout";
+            this.btnPullout.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnPullout.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnPullout.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnPullout.OnHoverImage = null;
+            this.btnPullout.OnHoverLineColor = System.Drawing.Color.DimGray;
+            this.btnPullout.OnPressedColor = System.Drawing.Color.Black;
+            this.btnPullout.Radius = 10;
+            this.btnPullout.Size = new System.Drawing.Size(122, 66);
+            this.btnPullout.TabIndex = 8;
+            this.btnPullout.Text = "Pull Out/COA";
+            this.btnPullout.Click += new System.EventHandler(this.btnPullout_Click);
+            // 
+            // btnOvertime
+            // 
+            this.btnOvertime.AnimationHoverSpeed = 0.07F;
+            this.btnOvertime.AnimationSpeed = 0.03F;
+            this.btnOvertime.BackColor = System.Drawing.Color.Transparent;
+            this.btnOvertime.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnOvertime.BorderColor = System.Drawing.Color.Black;
+            this.btnOvertime.CheckedBaseColor = System.Drawing.Color.DarkRed;
+            this.btnOvertime.CheckedBorderColor = System.Drawing.Color.DarkRed;
+            this.btnOvertime.CheckedForeColor = System.Drawing.Color.White;
+            this.btnOvertime.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnOvertime.CheckedImage")));
+            this.btnOvertime.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnOvertime.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnOvertime.Enabled = false;
+            this.btnOvertime.FocusedColor = System.Drawing.Color.Empty;
+            this.btnOvertime.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnOvertime.ForeColor = System.Drawing.Color.White;
+            this.btnOvertime.Image = global::Dashboard.Properties.Resources.icons8_play_30;
+            this.btnOvertime.ImageSize = new System.Drawing.Size(15, 15);
+            this.btnOvertime.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnOvertime.Location = new System.Drawing.Point(131, 75);
+            this.btnOvertime.Name = "btnOvertime";
+            this.btnOvertime.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnOvertime.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnOvertime.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnOvertime.OnHoverImage = null;
+            this.btnOvertime.OnHoverLineColor = System.Drawing.Color.DimGray;
+            this.btnOvertime.OnPressedColor = System.Drawing.Color.Black;
+            this.btnOvertime.Radius = 10;
+            this.btnOvertime.Size = new System.Drawing.Size(122, 66);
+            this.btnOvertime.TabIndex = 6;
+            this.btnOvertime.Text = "Overtime";
+            this.btnOvertime.Click += new System.EventHandler(this.btnOvertime_Click);
+            // 
+            // btnUnscheduled
+            // 
+            this.btnUnscheduled.AnimationHoverSpeed = 0.07F;
+            this.btnUnscheduled.AnimationSpeed = 0.03F;
+            this.btnUnscheduled.BackColor = System.Drawing.Color.Transparent;
+            this.btnUnscheduled.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnUnscheduled.BorderColor = System.Drawing.Color.Black;
+            this.btnUnscheduled.CheckedBaseColor = System.Drawing.Color.DarkRed;
+            this.btnUnscheduled.CheckedBorderColor = System.Drawing.Color.DarkRed;
+            this.btnUnscheduled.CheckedForeColor = System.Drawing.Color.White;
+            this.btnUnscheduled.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnUnscheduled.CheckedImage")));
+            this.btnUnscheduled.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnUnscheduled.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnUnscheduled.Enabled = false;
+            this.btnUnscheduled.FocusedColor = System.Drawing.Color.Empty;
+            this.btnUnscheduled.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUnscheduled.ForeColor = System.Drawing.Color.White;
+            this.btnUnscheduled.Image = global::Dashboard.Properties.Resources.icons8_play_30;
+            this.btnUnscheduled.ImageSize = new System.Drawing.Size(15, 15);
+            this.btnUnscheduled.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnUnscheduled.Location = new System.Drawing.Point(259, 75);
+            this.btnUnscheduled.Name = "btnUnscheduled";
+            this.btnUnscheduled.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnUnscheduled.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnUnscheduled.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnUnscheduled.OnHoverImage = null;
+            this.btnUnscheduled.OnHoverLineColor = System.Drawing.Color.DimGray;
+            this.btnUnscheduled.OnPressedColor = System.Drawing.Color.Black;
+            this.btnUnscheduled.Radius = 10;
+            this.btnUnscheduled.Size = new System.Drawing.Size(122, 66);
+            this.btnUnscheduled.TabIndex = 7;
+            this.btnUnscheduled.Text = "Unscheduled";
+            this.btnUnscheduled.Click += new System.EventHandler(this.btnUnscheduled_Click);
+            // 
+            // btnCloseChildForm
+            // 
+            this.btnCloseChildForm.AnimationHoverSpeed = 0.07F;
+            this.btnCloseChildForm.AnimationSpeed = 0.03F;
+            this.btnCloseChildForm.BackColor = System.Drawing.Color.Transparent;
+            this.btnCloseChildForm.BaseColor = System.Drawing.Color.Transparent;
+            this.btnCloseChildForm.BorderColor = System.Drawing.Color.Black;
+            this.btnCloseChildForm.CheckedBaseColor = System.Drawing.Color.Gray;
+            this.btnCloseChildForm.CheckedBorderColor = System.Drawing.Color.Transparent;
+            this.btnCloseChildForm.CheckedForeColor = System.Drawing.Color.White;
+            this.btnCloseChildForm.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.CheckedImage")));
+            this.btnCloseChildForm.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnCloseChildForm.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnCloseChildForm.FocusedColor = System.Drawing.Color.Empty;
+            this.btnCloseChildForm.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnCloseChildForm.ForeColor = System.Drawing.Color.White;
+            this.btnCloseChildForm.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.Image")));
+            this.btnCloseChildForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btnCloseChildForm.ImageSize = new System.Drawing.Size(35, 35);
+            this.btnCloseChildForm.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
+            this.btnCloseChildForm.Location = new System.Drawing.Point(480, 2);
+            this.btnCloseChildForm.Name = "btnCloseChildForm";
+            this.btnCloseChildForm.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(151)))), ((int)(((byte)(143)))), ((int)(((byte)(255)))));
+            this.btnCloseChildForm.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnCloseChildForm.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnCloseChildForm.OnHoverImage = null;
+            this.btnCloseChildForm.OnHoverLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
+            this.btnCloseChildForm.OnPressedColor = System.Drawing.Color.Black;
+            this.btnCloseChildForm.Radius = 15;
+            this.btnCloseChildForm.Size = new System.Drawing.Size(35, 35);
+            this.btnCloseChildForm.TabIndex = 10;
+            this.btnCloseChildForm.Click += new System.EventHandler(this.btnCloseChildForm_Click);
+            // 
+            // btnClose
+            // 
+            this.btnClose.AnimationHoverSpeed = 0.07F;
+            this.btnClose.AnimationSpeed = 0.03F;
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.BaseColor = System.Drawing.Color.White;
+            this.btnClose.BorderColor = System.Drawing.Color.Black;
+            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnClose.FocusedColor = System.Drawing.Color.Empty;
+            this.btnClose.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnClose.Image = null;
+            this.btnClose.ImageSize = new System.Drawing.Size(20, 20);
+            this.btnClose.Location = new System.Drawing.Point(73, 9);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnClose.OnHoverBorderColor = System.Drawing.Color.DimGray;
+            this.btnClose.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnClose.OnHoverImage = null;
+            this.btnClose.OnPressedColor = System.Drawing.Color.Black;
+            this.btnClose.Radius = 5;
+            this.btnClose.Size = new System.Drawing.Size(103, 25);
+            this.btnClose.TabIndex = 13;
+            this.btnClose.Text = "Close Time Card";
+            this.btnClose.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btnClose.Visible = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
+            // btnTimeCard
+            // 
+            this.btnTimeCard.AnimationHoverSpeed = 0.07F;
+            this.btnTimeCard.AnimationSpeed = 0.03F;
+            this.btnTimeCard.BackColor = System.Drawing.Color.Transparent;
+            this.btnTimeCard.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnTimeCard.BorderColor = System.Drawing.Color.Black;
+            this.btnTimeCard.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnTimeCard.FocusedColor = System.Drawing.Color.Empty;
+            this.btnTimeCard.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTimeCard.ForeColor = System.Drawing.Color.White;
+            this.btnTimeCard.Image = null;
+            this.btnTimeCard.ImageSize = new System.Drawing.Size(20, 20);
+            this.btnTimeCard.Location = new System.Drawing.Point(117, 4);
+            this.btnTimeCard.Name = "btnTimeCard";
+            this.btnTimeCard.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnTimeCard.OnHoverBorderColor = System.Drawing.Color.DimGray;
+            this.btnTimeCard.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnTimeCard.OnHoverImage = null;
+            this.btnTimeCard.OnPressedColor = System.Drawing.Color.Black;
+            this.btnTimeCard.Radius = 5;
+            this.btnTimeCard.Size = new System.Drawing.Size(103, 29);
+            this.btnTimeCard.TabIndex = 10;
+            this.btnTimeCard.Text = "My Time Card";
+            this.btnTimeCard.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btnTimeCard.Click += new System.EventHandler(this.btnTimeCard_Click);
+            // 
+            // gunaButton4
+            // 
+            this.gunaButton4.AnimationHoverSpeed = 0.07F;
+            this.gunaButton4.AnimationSpeed = 0.03F;
+            this.gunaButton4.BackColor = System.Drawing.Color.Transparent;
+            this.gunaButton4.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.gunaButton4.BorderColor = System.Drawing.Color.Black;
+            this.gunaButton4.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.gunaButton4.FocusedColor = System.Drawing.Color.Empty;
+            this.gunaButton4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gunaButton4.ForeColor = System.Drawing.Color.White;
+            this.gunaButton4.Image = null;
+            this.gunaButton4.ImageSize = new System.Drawing.Size(20, 20);
+            this.gunaButton4.Location = new System.Drawing.Point(14, 3);
+            this.gunaButton4.Name = "gunaButton4";
+            this.gunaButton4.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.gunaButton4.OnHoverBorderColor = System.Drawing.Color.DimGray;
+            this.gunaButton4.OnHoverForeColor = System.Drawing.Color.White;
+            this.gunaButton4.OnHoverImage = null;
+            this.gunaButton4.OnPressedColor = System.Drawing.Color.Black;
+            this.gunaButton4.Radius = 5;
+            this.gunaButton4.Size = new System.Drawing.Size(99, 29);
+            this.gunaButton4.TabIndex = 12;
+            this.gunaButton4.Text = "My Disputes";
+            this.gunaButton4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // panel4
+            // 
+            this.panel4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel4.BackColor = System.Drawing.Color.White;
+            this.panel4.Controls.Add(this.gunaButton4);
+            this.panel4.Controls.Add(this.btnTimeCard);
+            this.panel4.Location = new System.Drawing.Point(287, 497);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(224, 36);
+            this.panel4.TabIndex = 0;
+            // 
+            // panelDesktopPane
+            // 
+            this.panelDesktopPane.Location = new System.Drawing.Point(0, 184);
+            this.panelDesktopPane.Name = "panelDesktopPane";
+            this.panelDesktopPane.Size = new System.Drawing.Size(518, 349);
+            this.panelDesktopPane.TabIndex = 15;
+            // 
             // Clock
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(518, 536);
+            this.Controls.Add(this.panel4);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.timestampGrid);
-            this.Controls.Add(this.gunaButton4);
-            this.Controls.Add(this.gunaButton3);
-            this.Controls.Add(this.gunaButton2);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panelDesktopPane);
             this.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Clock";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Clock";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Clock_FormClosed);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -864,6 +889,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.timestampGrid)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -890,9 +916,6 @@
         private Guna.UI.WinForms.GunaAdvenceTileButton btnUnscheduled;
         private Guna.UI.WinForms.GunaAdvenceTileButton btnOvertime;
         private Guna.UI.WinForms.GunaAdvenceTileButton btnBio;
-        private Guna.UI.WinForms.GunaButton gunaButton2;
-        private Guna.UI.WinForms.GunaButton gunaButton3;
-        private Guna.UI.WinForms.GunaButton gunaButton4;
         private Guna.UI.WinForms.GunaDataGridView timestampGrid;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
@@ -910,5 +933,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Limit;
         private System.Windows.Forms.DataGridViewTextBoxColumn Duration;
         private System.Windows.Forms.DataGridViewTextBoxColumn Remarks;
+        private Guna.UI.WinForms.GunaButton btnClose;
+        private Guna.UI.WinForms.GunaButton btnTimeCard;
+        private Guna.UI.WinForms.GunaButton gunaButton4;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel panelDesktopPane;
     }
 }

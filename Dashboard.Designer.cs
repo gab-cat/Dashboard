@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -38,76 +37,59 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.gunaShadowPanel1 = new Guna.UI.WinForms.GunaShadowPanel();
-            this.pictureBox9 = new System.Windows.Forms.PictureBox();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.gunaCircleProgressBar1 = new Guna.UI.WinForms.GunaCircleProgressBar();
             this.gunaLabel10 = new Guna.UI.WinForms.GunaLabel();
             this.gunaLabel4 = new Guna.UI.WinForms.GunaLabel();
             this.gunaShadowPanel2 = new Guna.UI.WinForms.GunaShadowPanel();
-            this.pictureBox10 = new System.Windows.Forms.PictureBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.gunaCircleProgressBar2 = new Guna.UI.WinForms.GunaCircleProgressBar();
             this.gunaLabel11 = new Guna.UI.WinForms.GunaLabel();
             this.gunaLabel5 = new Guna.UI.WinForms.GunaLabel();
             this.gunaShadowPanel3 = new Guna.UI.WinForms.GunaShadowPanel();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.gunaElipsePanel1 = new Guna.UI.WinForms.GunaElipsePanel();
             this.label8 = new System.Windows.Forms.Label();
             this.txtCustomer = new Guna.UI.WinForms.GunaLabel();
             this.gunaLabel2 = new Guna.UI.WinForms.GunaLabel();
             this.gunaShadowPanel4 = new Guna.UI.WinForms.GunaShadowPanel();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.gunaElipsePanel2 = new Guna.UI.WinForms.GunaElipsePanel();
             this.label9 = new System.Windows.Forms.Label();
             this.txtItem = new Guna.UI.WinForms.GunaLabel();
             this.gunaLabel3 = new Guna.UI.WinForms.GunaLabel();
             this.gunaShadowPanel5 = new Guna.UI.WinForms.GunaShadowPanel();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.label4 = new System.Windows.Forms.Label();
             this.gunaElipsePanel3 = new Guna.UI.WinForms.GunaElipsePanel();
             this.label6 = new System.Windows.Forms.Label();
             this.txtSales = new Guna.UI.WinForms.GunaLabel();
             this.label1 = new Guna.UI.WinForms.GunaLabel();
             this.gunaShadowPanel6 = new Guna.UI.WinForms.GunaShadowPanel();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.gunaElipsePanel4 = new Guna.UI.WinForms.GunaElipsePanel();
             this.label7 = new System.Windows.Forms.Label();
             this.txtRevenue = new Guna.UI.WinForms.GunaLabel();
             this.gunaLabel1 = new Guna.UI.WinForms.GunaLabel();
             this.gunaShadowPanel7 = new Guna.UI.WinForms.GunaShadowPanel();
-            this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label16 = new System.Windows.Forms.Label();
             this.gunaShadowPanel8 = new Guna.UI.WinForms.GunaShadowPanel();
             this.label15 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.guna2DataGridView2 = new Guna.UI2.WinForms.Guna2DataGridView();
             this.guna2DataGridView1 = new Guna.UI2.WinForms.Guna2DataGridView();
             this.gunaShadowPanel9 = new Guna.UI.WinForms.GunaShadowPanel();
             this.label14 = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.panelMenu = new Guna.UI.WinForms.GunaPanel();
-            this.btnClock = new System.Windows.Forms.Button();
-            this.btnMaintenance = new System.Windows.Forms.Button();
-            this.btnReport = new System.Windows.Forms.Button();
-            this.btnInventory = new System.Windows.Forms.Button();
-            this.btnPay = new System.Windows.Forms.Button();
-            this.btnOrder = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.panelLogo = new System.Windows.Forms.Panel();
             this.label21 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label20 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.panelTitleBar = new Guna.UI.WinForms.GunaPanel();
-            this.btnCloseChildForm = new Guna.UI.WinForms.GunaAdvenceButton();
             this.lblTitle = new System.Windows.Forms.Label();
             this.gunaPanel1 = new Guna.UI.WinForms.GunaPanel();
             this.TimeDate = new System.Windows.Forms.Label();
@@ -116,38 +98,56 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.panelDesktopPane = new System.Windows.Forms.Panel();
+            this.btnCloseChildForm = new Guna.UI.WinForms.GunaAdvenceButton();
+            this.btnClock = new System.Windows.Forms.Button();
+            this.btnMaintenance = new System.Windows.Forms.Button();
+            this.btnReport = new System.Windows.Forms.Button();
+            this.btnInventory = new System.Windows.Forms.Button();
+            this.btnPay = new System.Windows.Forms.Button();
+            this.btnOrder = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.pictureBox10 = new System.Windows.Forms.PictureBox();
+            this.pictureBox9 = new System.Windows.Forms.PictureBox();
             this.gunaShadowPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             this.gunaCircleProgressBar1.SuspendLayout();
             this.gunaShadowPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
             this.gunaCircleProgressBar2.SuspendLayout();
             this.gunaShadowPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             this.gunaElipsePanel1.SuspendLayout();
             this.gunaShadowPanel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.gunaElipsePanel2.SuspendLayout();
             this.gunaShadowPanel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             this.gunaElipsePanel3.SuspendLayout();
             this.gunaShadowPanel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             this.gunaElipsePanel4.SuspendLayout();
             this.gunaShadowPanel7.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.gunaShadowPanel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView1)).BeginInit();
             this.gunaShadowPanel9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.panelMenu.SuspendLayout();
             this.panelLogo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelTitleBar.SuspendLayout();
             this.gunaPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
             this.SuspendLayout();
             // 
             // gunaShadowPanel1
@@ -168,16 +168,6 @@
             this.gunaShadowPanel1.ShadowDepth = 30;
             this.gunaShadowPanel1.Size = new System.Drawing.Size(190, 260);
             this.gunaShadowPanel1.TabIndex = 11;
-            // 
-            // pictureBox9
-            // 
-            this.pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
-            this.pictureBox9.Location = new System.Drawing.Point(20, 15);
-            this.pictureBox9.Name = "pictureBox9";
-            this.pictureBox9.Size = new System.Drawing.Size(25, 25);
-            this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox9.TabIndex = 30;
-            this.pictureBox9.TabStop = false;
             // 
             // label11
             // 
@@ -261,16 +251,6 @@
             this.gunaShadowPanel2.ShadowDepth = 30;
             this.gunaShadowPanel2.Size = new System.Drawing.Size(190, 260);
             this.gunaShadowPanel2.TabIndex = 12;
-            // 
-            // pictureBox10
-            // 
-            this.pictureBox10.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox10.Image")));
-            this.pictureBox10.Location = new System.Drawing.Point(20, 15);
-            this.pictureBox10.Name = "pictureBox10";
-            this.pictureBox10.Size = new System.Drawing.Size(25, 25);
-            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox10.TabIndex = 31;
-            this.pictureBox10.TabStop = false;
             // 
             // label13
             // 
@@ -357,16 +337,6 @@
             this.gunaShadowPanel3.Size = new System.Drawing.Size(190, 120);
             this.gunaShadowPanel3.TabIndex = 13;
             // 
-            // pictureBox7
-            // 
-            this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
-            this.pictureBox7.Location = new System.Drawing.Point(145, 15);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(30, 30);
-            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox7.TabIndex = 29;
-            this.pictureBox7.TabStop = false;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -440,16 +410,6 @@
             this.gunaShadowPanel4.ShadowDepth = 30;
             this.gunaShadowPanel4.Size = new System.Drawing.Size(190, 120);
             this.gunaShadowPanel4.TabIndex = 14;
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(145, 15);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(30, 30);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox4.TabIndex = 28;
-            this.pictureBox4.TabStop = false;
             // 
             // label5
             // 
@@ -525,16 +485,6 @@
             this.gunaShadowPanel5.Size = new System.Drawing.Size(190, 120);
             this.gunaShadowPanel5.TabIndex = 14;
             // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(145, 15);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(30, 30);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox5.TabIndex = 29;
-            this.pictureBox5.TabStop = false;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -609,16 +559,6 @@
             this.gunaShadowPanel6.Size = new System.Drawing.Size(190, 120);
             this.gunaShadowPanel6.TabIndex = 14;
             // 
-            // pictureBox6
-            // 
-            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-            this.pictureBox6.Location = new System.Drawing.Point(145, 15);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(27, 27);
-            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox6.TabIndex = 29;
-            this.pictureBox6.TabStop = false;
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -690,16 +630,6 @@
             this.gunaShadowPanel7.Size = new System.Drawing.Size(403, 295);
             this.gunaShadowPanel7.TabIndex = 21;
             // 
-            // pictureBox8
-            // 
-            this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
-            this.pictureBox8.Location = new System.Drawing.Point(23, 13);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(25, 25);
-            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox8.TabIndex = 29;
-            this.pictureBox8.TabStop = false;
-            // 
             // chart1
             // 
             this.chart1.BackColor = System.Drawing.Color.Transparent;
@@ -759,16 +689,6 @@
             this.label15.TabIndex = 24;
             this.label15.Text = "Critical Stock Alert";
             this.label15.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(10, 10);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(32, 19);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 26;
-            this.pictureBox2.TabStop = false;
             // 
             // guna2DataGridView2
             // 
@@ -911,16 +831,6 @@
             this.label14.Text = "Notifications";
             this.label14.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(10, 10);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(32, 19);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox3.TabIndex = 27;
-            this.pictureBox3.TabStop = false;
-            // 
             // panelMenu
             // 
             this.panelMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
@@ -937,6 +847,192 @@
             this.panelMenu.Name = "panelMenu";
             this.panelMenu.Size = new System.Drawing.Size(198, 734);
             this.panelMenu.TabIndex = 25;
+            // 
+            // panelLogo
+            // 
+            this.panelLogo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(52)))));
+            this.panelLogo.Controls.Add(this.label21);
+            this.panelLogo.Controls.Add(this.pictureBox1);
+            this.panelLogo.Controls.Add(this.label20);
+            this.panelLogo.Controls.Add(this.label19);
+            this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelLogo.Location = new System.Drawing.Point(0, 0);
+            this.panelLogo.Name = "panelLogo";
+            this.panelLogo.Size = new System.Drawing.Size(198, 113);
+            this.panelLogo.TabIndex = 0;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic);
+            this.label21.ForeColor = System.Drawing.Color.White;
+            this.label21.Location = new System.Drawing.Point(51, 74);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(76, 14);
+            this.label21.TabIndex = 3;
+            this.label21.Text = "Version 1.0.01";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.BackColor = System.Drawing.Color.Transparent;
+            this.label20.Font = new System.Drawing.Font("Outfit Thin SemiBold", 20.25F, System.Drawing.FontStyle.Bold);
+            this.label20.ForeColor = System.Drawing.Color.White;
+            this.label20.Location = new System.Drawing.Point(48, 41);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(129, 34);
+            this.label20.TabIndex = 1;
+            this.label20.Text = "rderMAX";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Outfit Thin Medium", 9F, System.Drawing.FontStyle.Bold);
+            this.label19.ForeColor = System.Drawing.Color.White;
+            this.label19.Location = new System.Drawing.Point(13, 27);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(168, 15);
+            this.label19.TabIndex = 0;
+            this.label19.Text = "New Bernales Hardware Store";
+            // 
+            // panelTitleBar
+            // 
+            this.panelTitleBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.panelTitleBar.Controls.Add(this.btnCloseChildForm);
+            this.panelTitleBar.Controls.Add(this.lblTitle);
+            this.panelTitleBar.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelTitleBar.Location = new System.Drawing.Point(198, 0);
+            this.panelTitleBar.Name = "panelTitleBar";
+            this.panelTitleBar.Size = new System.Drawing.Size(926, 43);
+            this.panelTitleBar.TabIndex = 26;
+            this.panelTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseDown);
+            // 
+            // lblTitle
+            // 
+            this.lblTitle.BackColor = System.Drawing.Color.Transparent;
+            this.lblTitle.Font = new System.Drawing.Font("Outfit Thin", 24F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(253, 3);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(411, 40);
+            this.lblTitle.TabIndex = 0;
+            this.lblTitle.Text = "Dashboard";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
+            this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lblTitle_MouseDown);
+            // 
+            // gunaPanel1
+            // 
+            this.gunaPanel1.BackColor = System.Drawing.Color.Black;
+            this.gunaPanel1.Controls.Add(this.TimeDate);
+            this.gunaPanel1.Controls.Add(this.txt_Role);
+            this.gunaPanel1.Controls.Add(this.txt_Name);
+            this.gunaPanel1.Controls.Add(this.label18);
+            this.gunaPanel1.Controls.Add(this.label17);
+            this.gunaPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.gunaPanel1.Location = new System.Drawing.Point(198, 710);
+            this.gunaPanel1.Name = "gunaPanel1";
+            this.gunaPanel1.Size = new System.Drawing.Size(926, 24);
+            this.gunaPanel1.TabIndex = 27;
+            // 
+            // TimeDate
+            // 
+            this.TimeDate.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.TimeDate.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F);
+            this.TimeDate.ForeColor = System.Drawing.Color.White;
+            this.TimeDate.Location = new System.Drawing.Point(639, 1);
+            this.TimeDate.Name = "TimeDate";
+            this.TimeDate.Size = new System.Drawing.Size(287, 23);
+            this.TimeDate.TabIndex = 32;
+            this.TimeDate.Text = "label21";
+            this.TimeDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txt_Role
+            // 
+            this.txt_Role.AutoSize = true;
+            this.txt_Role.Font = new System.Drawing.Font("Outfit Thin SemiBold", 11.25F, System.Drawing.FontStyle.Bold);
+            this.txt_Role.ForeColor = System.Drawing.Color.White;
+            this.txt_Role.Location = new System.Drawing.Point(366, 3);
+            this.txt_Role.Name = "txt_Role";
+            this.txt_Role.Size = new System.Drawing.Size(40, 19);
+            this.txt_Role.TabIndex = 31;
+            this.txt_Role.Text = "Role";
+            // 
+            // txt_Name
+            // 
+            this.txt_Name.AutoSize = true;
+            this.txt_Name.Font = new System.Drawing.Font("Outfit Thin SemiBold", 11.25F, System.Drawing.FontStyle.Bold);
+            this.txt_Name.ForeColor = System.Drawing.Color.White;
+            this.txt_Name.Location = new System.Drawing.Point(52, 3);
+            this.txt_Name.Name = "txt_Name";
+            this.txt_Name.Size = new System.Drawing.Size(50, 19);
+            this.txt_Name.TabIndex = 30;
+            this.txt_Name.Text = "Name";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F);
+            this.label18.ForeColor = System.Drawing.Color.White;
+            this.label18.Location = new System.Drawing.Point(285, 5);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(85, 16);
+            this.label18.TabIndex = 29;
+            this.label18.Text = "Designation :";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F);
+            this.label17.ForeColor = System.Drawing.Color.White;
+            this.label17.Location = new System.Drawing.Point(6, 5);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(49, 16);
+            this.label17.TabIndex = 28;
+            this.label17.Text = "Name :";
+            // 
+            // panelDesktopPane
+            // 
+            this.panelDesktopPane.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.panelDesktopPane.Location = new System.Drawing.Point(198, 43);
+            this.panelDesktopPane.Name = "panelDesktopPane";
+            this.panelDesktopPane.Size = new System.Drawing.Size(926, 667);
+            this.panelDesktopPane.TabIndex = 28;
+            this.panelDesktopPane.Visible = false;
+            this.panelDesktopPane.Paint += new System.Windows.Forms.PaintEventHandler(this.panelDesktopPane_Paint);
+            // 
+            // btnCloseChildForm
+            // 
+            this.btnCloseChildForm.AnimationHoverSpeed = 0.07F;
+            this.btnCloseChildForm.AnimationSpeed = 0.03F;
+            this.btnCloseChildForm.BackColor = System.Drawing.Color.Transparent;
+            this.btnCloseChildForm.BaseColor = System.Drawing.Color.Transparent;
+            this.btnCloseChildForm.BorderColor = System.Drawing.Color.Black;
+            this.btnCloseChildForm.CheckedBaseColor = System.Drawing.Color.Gray;
+            this.btnCloseChildForm.CheckedBorderColor = System.Drawing.Color.Transparent;
+            this.btnCloseChildForm.CheckedForeColor = System.Drawing.Color.White;
+            this.btnCloseChildForm.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.CheckedImage")));
+            this.btnCloseChildForm.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnCloseChildForm.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnCloseChildForm.FocusedColor = System.Drawing.Color.Empty;
+            this.btnCloseChildForm.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnCloseChildForm.ForeColor = System.Drawing.Color.White;
+            this.btnCloseChildForm.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.Image")));
+            this.btnCloseChildForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btnCloseChildForm.ImageSize = new System.Drawing.Size(35, 35);
+            this.btnCloseChildForm.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
+            this.btnCloseChildForm.Location = new System.Drawing.Point(879, 5);
+            this.btnCloseChildForm.Name = "btnCloseChildForm";
+            this.btnCloseChildForm.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(151)))), ((int)(((byte)(143)))), ((int)(((byte)(255)))));
+            this.btnCloseChildForm.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnCloseChildForm.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnCloseChildForm.OnHoverImage = null;
+            this.btnCloseChildForm.OnHoverLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
+            this.btnCloseChildForm.OnPressedColor = System.Drawing.Color.Black;
+            this.btnCloseChildForm.Radius = 15;
+            this.btnCloseChildForm.Size = new System.Drawing.Size(35, 35);
+            this.btnCloseChildForm.TabIndex = 9;
+            this.btnCloseChildForm.Click += new System.EventHandler(this.close_Click);
             // 
             // btnClock
             // 
@@ -1068,30 +1164,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // panelLogo
-            // 
-            this.panelLogo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(52)))));
-            this.panelLogo.Controls.Add(this.label21);
-            this.panelLogo.Controls.Add(this.pictureBox1);
-            this.panelLogo.Controls.Add(this.label20);
-            this.panelLogo.Controls.Add(this.label19);
-            this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelLogo.Location = new System.Drawing.Point(0, 0);
-            this.panelLogo.Name = "panelLogo";
-            this.panelLogo.Size = new System.Drawing.Size(198, 113);
-            this.panelLogo.TabIndex = 0;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Calibri", 9F, System.Drawing.FontStyle.Italic);
-            this.label21.ForeColor = System.Drawing.Color.White;
-            this.label21.Location = new System.Drawing.Point(51, 74);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(76, 14);
-            this.label21.TabIndex = 3;
-            this.label21.Text = "Version 1.0.01";
-            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
@@ -1103,167 +1175,95 @@
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
-            // label20
+            // pictureBox3
             // 
-            this.label20.AutoSize = true;
-            this.label20.BackColor = System.Drawing.Color.Transparent;
-            this.label20.Font = new System.Drawing.Font("Outfit Thin SemiBold", 20.25F, System.Drawing.FontStyle.Bold);
-            this.label20.ForeColor = System.Drawing.Color.White;
-            this.label20.Location = new System.Drawing.Point(48, 41);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(129, 34);
-            this.label20.TabIndex = 1;
-            this.label20.Text = "rderMAX";
+            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
+            this.pictureBox3.Location = new System.Drawing.Point(10, 10);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(32, 19);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox3.TabIndex = 27;
+            this.pictureBox3.TabStop = false;
             // 
-            // label19
+            // pictureBox2
             // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Outfit Thin Medium", 9F, System.Drawing.FontStyle.Bold);
-            this.label19.ForeColor = System.Drawing.Color.White;
-            this.label19.Location = new System.Drawing.Point(13, 27);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(168, 15);
-            this.label19.TabIndex = 0;
-            this.label19.Text = "New Bernales Hardware Store";
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(10, 10);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(32, 19);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox2.TabIndex = 26;
+            this.pictureBox2.TabStop = false;
             // 
-            // panelTitleBar
+            // pictureBox8
             // 
-            this.panelTitleBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.panelTitleBar.Controls.Add(this.btnCloseChildForm);
-            this.panelTitleBar.Controls.Add(this.lblTitle);
-            this.panelTitleBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelTitleBar.Location = new System.Drawing.Point(198, 0);
-            this.panelTitleBar.Name = "panelTitleBar";
-            this.panelTitleBar.Size = new System.Drawing.Size(926, 43);
-            this.panelTitleBar.TabIndex = 26;
-            this.panelTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTitleBar_MouseDown);
+            this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
+            this.pictureBox8.Location = new System.Drawing.Point(23, 13);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(25, 25);
+            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox8.TabIndex = 29;
+            this.pictureBox8.TabStop = false;
             // 
-            // btnCloseChildForm
+            // pictureBox6
             // 
-            this.btnCloseChildForm.AnimationHoverSpeed = 0.07F;
-            this.btnCloseChildForm.AnimationSpeed = 0.03F;
-            this.btnCloseChildForm.BackColor = System.Drawing.Color.Transparent;
-            this.btnCloseChildForm.BaseColor = System.Drawing.Color.Transparent;
-            this.btnCloseChildForm.BorderColor = System.Drawing.Color.Black;
-            this.btnCloseChildForm.CheckedBaseColor = System.Drawing.Color.Gray;
-            this.btnCloseChildForm.CheckedBorderColor = System.Drawing.Color.Transparent;
-            this.btnCloseChildForm.CheckedForeColor = System.Drawing.Color.White;
-            this.btnCloseChildForm.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.CheckedImage")));
-            this.btnCloseChildForm.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnCloseChildForm.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnCloseChildForm.FocusedColor = System.Drawing.Color.Empty;
-            this.btnCloseChildForm.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnCloseChildForm.ForeColor = System.Drawing.Color.White;
-            this.btnCloseChildForm.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.Image")));
-            this.btnCloseChildForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.btnCloseChildForm.ImageSize = new System.Drawing.Size(35, 35);
-            this.btnCloseChildForm.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
-            this.btnCloseChildForm.Location = new System.Drawing.Point(879, 5);
-            this.btnCloseChildForm.Name = "btnCloseChildForm";
-            this.btnCloseChildForm.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(151)))), ((int)(((byte)(143)))), ((int)(((byte)(255)))));
-            this.btnCloseChildForm.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnCloseChildForm.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnCloseChildForm.OnHoverImage = null;
-            this.btnCloseChildForm.OnHoverLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
-            this.btnCloseChildForm.OnPressedColor = System.Drawing.Color.Black;
-            this.btnCloseChildForm.Radius = 15;
-            this.btnCloseChildForm.Size = new System.Drawing.Size(35, 35);
-            this.btnCloseChildForm.TabIndex = 9;
-            this.btnCloseChildForm.Click += new System.EventHandler(this.close_Click);
+            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
+            this.pictureBox6.Location = new System.Drawing.Point(145, 15);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(27, 27);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox6.TabIndex = 29;
+            this.pictureBox6.TabStop = false;
             // 
-            // lblTitle
+            // pictureBox5
             // 
-            this.lblTitle.BackColor = System.Drawing.Color.Transparent;
-            this.lblTitle.Font = new System.Drawing.Font("Outfit Thin", 24F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.White;
-            this.lblTitle.Location = new System.Drawing.Point(253, 3);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(411, 40);
-            this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "Dashboard";
-            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblTitle.Click += new System.EventHandler(this.lblTitle_Click);
-            this.lblTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lblTitle_MouseDown);
+            this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
+            this.pictureBox5.Location = new System.Drawing.Point(145, 15);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(30, 30);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox5.TabIndex = 29;
+            this.pictureBox5.TabStop = false;
             // 
-            // gunaPanel1
+            // pictureBox4
             // 
-            this.gunaPanel1.BackColor = System.Drawing.Color.Black;
-            this.gunaPanel1.Controls.Add(this.TimeDate);
-            this.gunaPanel1.Controls.Add(this.txt_Role);
-            this.gunaPanel1.Controls.Add(this.txt_Name);
-            this.gunaPanel1.Controls.Add(this.label18);
-            this.gunaPanel1.Controls.Add(this.label17);
-            this.gunaPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.gunaPanel1.Location = new System.Drawing.Point(198, 710);
-            this.gunaPanel1.Name = "gunaPanel1";
-            this.gunaPanel1.Size = new System.Drawing.Size(926, 24);
-            this.gunaPanel1.TabIndex = 27;
+            this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
+            this.pictureBox4.Location = new System.Drawing.Point(145, 15);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(30, 30);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox4.TabIndex = 28;
+            this.pictureBox4.TabStop = false;
             // 
-            // TimeDate
+            // pictureBox7
             // 
-            this.TimeDate.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.TimeDate.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F);
-            this.TimeDate.ForeColor = System.Drawing.Color.White;
-            this.TimeDate.Location = new System.Drawing.Point(639, 1);
-            this.TimeDate.Name = "TimeDate";
-            this.TimeDate.Size = new System.Drawing.Size(287, 23);
-            this.TimeDate.TabIndex = 32;
-            this.TimeDate.Text = "label21";
-            this.TimeDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.pictureBox7.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox7.Image")));
+            this.pictureBox7.Location = new System.Drawing.Point(145, 15);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(30, 30);
+            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox7.TabIndex = 29;
+            this.pictureBox7.TabStop = false;
             // 
-            // txt_Role
+            // pictureBox10
             // 
-            this.txt_Role.AutoSize = true;
-            this.txt_Role.Font = new System.Drawing.Font("Outfit Thin SemiBold", 11.25F, System.Drawing.FontStyle.Bold);
-            this.txt_Role.ForeColor = System.Drawing.Color.White;
-            this.txt_Role.Location = new System.Drawing.Point(366, 3);
-            this.txt_Role.Name = "txt_Role";
-            this.txt_Role.Size = new System.Drawing.Size(40, 19);
-            this.txt_Role.TabIndex = 31;
-            this.txt_Role.Text = "Role";
+            this.pictureBox10.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox10.Image")));
+            this.pictureBox10.Location = new System.Drawing.Point(20, 15);
+            this.pictureBox10.Name = "pictureBox10";
+            this.pictureBox10.Size = new System.Drawing.Size(25, 25);
+            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox10.TabIndex = 31;
+            this.pictureBox10.TabStop = false;
             // 
-            // txt_Name
+            // pictureBox9
             // 
-            this.txt_Name.AutoSize = true;
-            this.txt_Name.Font = new System.Drawing.Font("Outfit Thin SemiBold", 11.25F, System.Drawing.FontStyle.Bold);
-            this.txt_Name.ForeColor = System.Drawing.Color.White;
-            this.txt_Name.Location = new System.Drawing.Point(52, 3);
-            this.txt_Name.Name = "txt_Name";
-            this.txt_Name.Size = new System.Drawing.Size(50, 19);
-            this.txt_Name.TabIndex = 30;
-            this.txt_Name.Text = "Name";
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F);
-            this.label18.ForeColor = System.Drawing.Color.White;
-            this.label18.Location = new System.Drawing.Point(285, 5);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(85, 16);
-            this.label18.TabIndex = 29;
-            this.label18.Text = "Designation :";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F);
-            this.label17.ForeColor = System.Drawing.Color.White;
-            this.label17.Location = new System.Drawing.Point(6, 5);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(49, 16);
-            this.label17.TabIndex = 28;
-            this.label17.Text = "Name :";
-            // 
-            // panelDesktopPane
-            // 
-            this.panelDesktopPane.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.panelDesktopPane.Location = new System.Drawing.Point(198, 43);
-            this.panelDesktopPane.Name = "panelDesktopPane";
-            this.panelDesktopPane.Size = new System.Drawing.Size(926, 667);
-            this.panelDesktopPane.TabIndex = 28;
-            this.panelDesktopPane.Visible = false;
-            this.panelDesktopPane.Paint += new System.Windows.Forms.PaintEventHandler(this.panelDesktopPane_Paint);
+            this.pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
+            this.pictureBox9.Location = new System.Drawing.Point(20, 15);
+            this.pictureBox9.Name = "pictureBox9";
+            this.pictureBox9.Size = new System.Drawing.Size(25, 25);
+            this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox9.TabIndex = 30;
+            this.pictureBox9.TabStop = false;
             // 
             // Dashboard
             // 
@@ -1292,51 +1292,51 @@
             this.Text = "Form1";
             this.gunaShadowPanel1.ResumeLayout(false);
             this.gunaShadowPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
             this.gunaCircleProgressBar1.ResumeLayout(false);
             this.gunaShadowPanel2.ResumeLayout(false);
             this.gunaShadowPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
             this.gunaCircleProgressBar2.ResumeLayout(false);
             this.gunaShadowPanel3.ResumeLayout(false);
             this.gunaShadowPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             this.gunaElipsePanel1.ResumeLayout(false);
             this.gunaElipsePanel1.PerformLayout();
             this.gunaShadowPanel4.ResumeLayout(false);
             this.gunaShadowPanel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.gunaElipsePanel2.ResumeLayout(false);
             this.gunaElipsePanel2.PerformLayout();
             this.gunaShadowPanel5.ResumeLayout(false);
             this.gunaShadowPanel5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
             this.gunaElipsePanel3.ResumeLayout(false);
             this.gunaElipsePanel3.PerformLayout();
             this.gunaShadowPanel6.ResumeLayout(false);
             this.gunaShadowPanel6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             this.gunaElipsePanel4.ResumeLayout(false);
             this.gunaElipsePanel4.PerformLayout();
             this.gunaShadowPanel7.ResumeLayout(false);
             this.gunaShadowPanel7.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.gunaShadowPanel8.ResumeLayout(false);
             this.gunaShadowPanel8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView1)).EndInit();
             this.gunaShadowPanel9.ResumeLayout(false);
             this.gunaShadowPanel9.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.panelMenu.ResumeLayout(false);
             this.panelLogo.ResumeLayout(false);
             this.panelLogo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelTitleBar.ResumeLayout(false);
             this.gunaPanel1.ResumeLayout(false);
             this.gunaPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

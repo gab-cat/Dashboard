@@ -150,6 +150,12 @@
     <Compile Include="Clock.Designer.cs">
       <DependentUpon>Clock.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClockTimeCard.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClockTimeCard.Designer.cs">
+      <DependentUpon>ClockTimeCard.cs</DependentUpon>
+    </Compile>
     <Compile Include="CollectionFolder\FormMaintenance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -325,6 +331,9 @@
     <EmbeddedResource Include="Clock.resx">
       <DependentUpon>Clock.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ClockTimeCard.resx">
+      <DependentUpon>ClockTimeCard.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CollectionFolder\FormMaintenance.resx">
       <DependentUpon>FormMaintenance.cs</DependentUpon>
     </EmbeddedResource>
@@ -440,6 +449,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="login1.ico" />
+    <None Include="Resources\icons8-triangle-arrow-24.png" />
     <None Include="Resources\icons8-play-30.png" />
     <None Include="Resources\icons8-stop-50.png" />
     <None Include="Resources\bin.png" />
