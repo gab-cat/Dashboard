@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
@@ -39,14 +40,20 @@ namespace Dashboard
         public int customer_id;
         private string role;
         private MySqlConnection connection = DatabaseHelper.GetOpenConnection();
+        private MySqlConnection async_connection = DatabaseHelper.GetAsyncConnection();
         Clock clock = null;
-        public Dashboard(string firstName, string lastName, string role)
+        private CancellationTokenSource cancellationTokenSource;
+        private string employee_name;
+        bool isHandleCreated = false;
+
+        public Dashboard(string firstName, string lastName, string role, string employee_name)
         {
             
             InitializeComponent();
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 25, 25));
             userData(firstName, lastName, role);
             dailySales(); charts(); criticalStock();
+            this.employee_name = employee_name;
             username = firstName + " " + lastName;
             random = new Random();
             btnCloseChildForm.Visible = false;
@@ -56,7 +63,7 @@ namespace Dashboard
 
             label15.BringToFront();
 
-            
+            StartBackgroundTask();
         }
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -66,6 +73,69 @@ namespace Dashboard
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
 
+        private async void StartBackgroundTask()
+        {
+            cancellationTokenSource = new CancellationTokenSource();
+            await Task.Run(async () =>
+            {
+                while (!cancellationTokenSource.Token.IsCancellationRequested)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(10)); // Wait for 10 seconds
+
+                    try
+                    {
+                        await CheckActiveSessionStatus();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            }, cancellationTokenSource.Token);
+        }
+
+        private async Task CheckActiveSessionStatus()
+        {
+            using (MySqlConnection connection = async_connection)
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
+                string selectQuery = "SELECT active_session FROM logins WHERE username = @username";
+                MySqlCommand cmd = new MySqlCommand(selectQuery, connection);
+                cmd.Parameters.AddWithValue("@username", employee_name);
+
+                object result = await cmd.ExecuteScalarAsync();
+                if (result != null && result != DBNull.Value)
+                {
+                    bool activeSession = (bool)result;
+
+                    // Check if the form's handle is created and it's necessary to invoke UI operations
+                    if (this.IsHandleCreated && !activeSession)
+                    {
+                        this.BeginInvoke(new MethodInvoker(delegate
+                        {
+                            CloseFormAndShowLogin();
+                        }));
+                    }
+                }
+            }
+        }
+
+        private void CloseFormAndShowLogin()
+        {
+            this.Hide(); // Close the form
+            if (clock != null)
+            {
+                clock.Close();
+            }
+            ShowLoadingForm(username);
+            Login newlogin = new Login(connection); // Ensure 'connection' is accessible here
+            this.Close();
+            newlogin.ShowDialog();
+        }
 
         private void userData(string firstName, string lastName, string role)
         {
@@ -124,17 +194,6 @@ namespace Dashboard
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -195,13 +254,6 @@ namespace Dashboard
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -339,18 +391,43 @@ namespace Dashboard
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Are you sure you want to exit?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                this.Close(); // Close the form
-                ShowLoadingForm(username);
-                Login newlogin = new Login();
+                // Update active_session to 0
+                try
+                {
+                    await UpdateActiveSessionToZero();
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions appropriately
+                    Console.WriteLine(ex.Message);
+                }
 
-                newlogin.ShowDialog();
+                CloseFormAndShowLogin();
             }
+        }
+
+        private async Task UpdateActiveSessionToZero()
+        {
+            using (MySqlConnection connection = async_connection)
+            {
+                if (connection.State != ConnectionState.Open) 
+                {
+                    await connection.OpenAsync();
+                }
+                
+                string updateQuery = "UPDATE logins SET active_session = 0 WHERE username = @username";
+                MySqlCommand cmd = new MySqlCommand(updateQuery, connection);
+                cmd.Parameters.AddWithValue("@username", employee_name);
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            if (async_connection != null) async_connection.Close();
         }
 
         private void ShowLoadingForm(string firstName)
@@ -366,6 +443,8 @@ namespace Dashboard
                 timer.Stop();
             };
             timer.Start();
+
+            async_connection.CloseAsync();
 
             loadingForm.ShowDialog();
         }
@@ -554,7 +633,7 @@ namespace Dashboard
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                OpenChildForm(new Forms.FormMaintenance(username, role), sender);
+                OpenChildForm(new Forms.FormMaintenance(username, role, connection), sender);
                 lblTitle.Text = "Maintenance";
                 btnOrder.Enabled = false;
                 btnPay.Enabled = false;
@@ -595,11 +674,36 @@ namespace Dashboard
             
             if (clock == null)
             {
-                clock = new Clock();
+                clock = new Clock(employee_name, role);
             }
 
             clock.Show();
 
+        }
+
+        private void Dashboard_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            using (MySqlConnection connection = async_connection)
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.OpenAsync();
+                }
+                
+                string updateQuery = "UPDATE logins SET active_session = 0 WHERE username = @username";
+                MySqlCommand cmd = new MySqlCommand(updateQuery, connection);
+                cmd.Parameters.AddWithValue("@username", employee_name);
+
+                cmd.ExecuteNonQueryAsync();
+            }
+
+            if (async_connection != null) async_connection.Close();
+
+        }
+
+        private void Dashboard_Load(object sender, EventArgs e)
+        {
+            isHandleCreated = true;
         }
     }
 }

@@ -136,9 +136,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Twilio, Version=6.14.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Twilio.6.14.0\lib\net451\Twilio.dll</HintPath>
-    </Reference>
     <Reference Include="ZstdSharp, Version=0.7.1.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
       <HintPath>..\OrderMAX\packages\ZstdSharp.Port.0.7.1\lib\net461\ZstdSharp.dll</HintPath>
     </Reference>
@@ -150,11 +147,29 @@
     <Compile Include="Clock.Designer.cs">
       <DependentUpon>Clock.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClockMyDisputes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClockMyDisputes.Designer.cs">
+      <DependentUpon>ClockMyDisputes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClockReviewDisputes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClockReviewDisputes.Designer.cs">
+      <DependentUpon>ClockReviewDisputes.cs</DependentUpon>
+    </Compile>
     <Compile Include="ClockTimeCard.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ClockTimeCard.Designer.cs">
       <DependentUpon>ClockTimeCard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClockViewDispute.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClockViewDispute.Designer.cs">
+      <DependentUpon>ClockViewDispute.cs</DependentUpon>
     </Compile>
     <Compile Include="CollectionFolder\FormMaintenance.cs">
       <SubType>Form</SubType>
@@ -319,6 +334,7 @@
     <Compile Include="MtnMemoView.Designer.cs">
       <DependentUpon>MtnMemoView.cs</DependentUpon>
     </Compile>
+    <Compile Include="PasswordHashing.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\SearchCustomer.cs">
@@ -331,8 +347,17 @@
     <EmbeddedResource Include="Clock.resx">
       <DependentUpon>Clock.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ClockMyDisputes.resx">
+      <DependentUpon>ClockMyDisputes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClockReviewDisputes.resx">
+      <DependentUpon>ClockReviewDisputes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ClockTimeCard.resx">
       <DependentUpon>ClockTimeCard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClockViewDispute.resx">
+      <DependentUpon>ClockViewDispute.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CollectionFolder\FormMaintenance.resx">
       <DependentUpon>FormMaintenance.cs</DependentUpon>
@@ -449,6 +474,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="login1.ico" />
+    <None Include="Resources\warning.png" />
+    <None Include="Resources\icons8-eye-50.png" />
+    <None Include="Resources\icons8-eye-641.png" />
+    <None Include="Resources\icons8-closed-eye-50.png" />
+    <None Include="Resources\icons8-eye-64.png" />
+    <None Include="Resources\icons8-triangle-arrow-24 %281%29.png" />
     <None Include="Resources\icons8-triangle-arrow-24.png" />
     <None Include="Resources\icons8-play-30.png" />
     <None Include="Resources\icons8-stop-50.png" />

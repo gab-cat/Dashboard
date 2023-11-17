@@ -28,11 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Clock));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnClose = new Guna.UI.WinForms.GunaButton();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblSunday = new System.Windows.Forms.Label();
             this.lblTuesday = new System.Windows.Forms.Label();
@@ -43,6 +44,7 @@
             this.lblFriday = new System.Windows.Forms.Label();
             this.lblDate = new System.Windows.Forms.Label();
             this.lblClock = new System.Windows.Forms.Label();
+            this.btnCloseChildForm = new Guna.UI.WinForms.GunaAdvenceButton();
             this.label1 = new System.Windows.Forms.Label();
             this.timestampGrid = new Guna.UI.WinForms.GunaDataGridView();
             this.Activity = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -54,7 +56,7 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.lblOvertime = new System.Windows.Forms.Label();
             this.lblStartEnd = new System.Windows.Forms.Label();
-            this.lblBio = new System.Windows.Forms.Label();
+            this.lblBiobreak = new System.Windows.Forms.Label();
             this.lblPullout = new System.Windows.Forms.Label();
             this.lblUnscheduled = new System.Windows.Forms.Label();
             this.lblLunch = new System.Windows.Forms.Label();
@@ -64,21 +66,24 @@
             this.btnBreak1 = new Guna.UI.WinForms.GunaAdvenceTileButton();
             this.btnLunch = new Guna.UI.WinForms.GunaAdvenceTileButton();
             this.btnBreak2 = new Guna.UI.WinForms.GunaAdvenceTileButton();
-            this.btnBio = new Guna.UI.WinForms.GunaAdvenceTileButton();
+            this.btnBiobreak = new Guna.UI.WinForms.GunaAdvenceTileButton();
             this.btnPullout = new Guna.UI.WinForms.GunaAdvenceTileButton();
             this.btnOvertime = new Guna.UI.WinForms.GunaAdvenceTileButton();
             this.btnUnscheduled = new Guna.UI.WinForms.GunaAdvenceTileButton();
-            this.btnCloseChildForm = new Guna.UI.WinForms.GunaAdvenceButton();
-            this.btnClose = new Guna.UI.WinForms.GunaButton();
             this.btnTimeCard = new Guna.UI.WinForms.GunaButton();
             this.gunaButton4 = new Guna.UI.WinForms.GunaButton();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.MyDisputeIcon = new Guna.UI.WinForms.GunaCirclePictureBox();
+            this.ReviewDisputeIcon = new Guna.UI.WinForms.GunaCirclePictureBox();
+            this.btnReviewDispute = new Guna.UI.WinForms.GunaButton();
             this.panelDesktopPane = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.timestampGrid)).BeginInit();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MyDisputeIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReviewDisputeIcon)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -97,6 +102,34 @@
             this.panel1.Size = new System.Drawing.Size(518, 178);
             this.panel1.TabIndex = 0;
             this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
+            // 
+            // btnClose
+            // 
+            this.btnClose.AnimationHoverSpeed = 0.07F;
+            this.btnClose.AnimationSpeed = 0.03F;
+            this.btnClose.BackColor = System.Drawing.Color.Transparent;
+            this.btnClose.BaseColor = System.Drawing.Color.White;
+            this.btnClose.BorderColor = System.Drawing.Color.Black;
+            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnClose.FocusedColor = System.Drawing.Color.Empty;
+            this.btnClose.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnClose.Image = null;
+            this.btnClose.ImageSize = new System.Drawing.Size(20, 20);
+            this.btnClose.Location = new System.Drawing.Point(412, 150);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnClose.OnHoverBorderColor = System.Drawing.Color.DimGray;
+            this.btnClose.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnClose.OnHoverImage = null;
+            this.btnClose.OnPressedColor = System.Drawing.Color.Black;
+            this.btnClose.Radius = 5;
+            this.btnClose.Size = new System.Drawing.Size(103, 25);
+            this.btnClose.TabIndex = 13;
+            this.btnClose.Text = "Close Time Card";
+            this.btnClose.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btnClose.Visible = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // panel2
             // 
@@ -210,6 +243,39 @@
             this.lblClock.Text = "00:00:00";
             this.lblClock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnCloseChildForm
+            // 
+            this.btnCloseChildForm.AnimationHoverSpeed = 0.07F;
+            this.btnCloseChildForm.AnimationSpeed = 0.03F;
+            this.btnCloseChildForm.BackColor = System.Drawing.Color.Transparent;
+            this.btnCloseChildForm.BaseColor = System.Drawing.Color.Transparent;
+            this.btnCloseChildForm.BorderColor = System.Drawing.Color.Black;
+            this.btnCloseChildForm.CheckedBaseColor = System.Drawing.Color.Gray;
+            this.btnCloseChildForm.CheckedBorderColor = System.Drawing.Color.Transparent;
+            this.btnCloseChildForm.CheckedForeColor = System.Drawing.Color.White;
+            this.btnCloseChildForm.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.CheckedImage")));
+            this.btnCloseChildForm.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnCloseChildForm.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnCloseChildForm.FocusedColor = System.Drawing.Color.Empty;
+            this.btnCloseChildForm.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnCloseChildForm.ForeColor = System.Drawing.Color.White;
+            this.btnCloseChildForm.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.Image")));
+            this.btnCloseChildForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btnCloseChildForm.ImageSize = new System.Drawing.Size(35, 35);
+            this.btnCloseChildForm.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
+            this.btnCloseChildForm.Location = new System.Drawing.Point(480, 2);
+            this.btnCloseChildForm.Name = "btnCloseChildForm";
+            this.btnCloseChildForm.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(151)))), ((int)(((byte)(143)))), ((int)(((byte)(255)))));
+            this.btnCloseChildForm.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnCloseChildForm.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnCloseChildForm.OnHoverImage = null;
+            this.btnCloseChildForm.OnHoverLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
+            this.btnCloseChildForm.OnPressedColor = System.Drawing.Color.Black;
+            this.btnCloseChildForm.Radius = 15;
+            this.btnCloseChildForm.Size = new System.Drawing.Size(35, 35);
+            this.btnCloseChildForm.TabIndex = 10;
+            this.btnCloseChildForm.Click += new System.EventHandler(this.btnCloseChildForm_Click);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -227,21 +293,21 @@
             this.timestampGrid.AllowUserToDeleteRows = false;
             this.timestampGrid.AllowUserToResizeColumns = false;
             this.timestampGrid.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
-            this.timestampGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            this.timestampGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.timestampGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.timestampGrid.BackgroundColor = System.Drawing.Color.White;
             this.timestampGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.timestampGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.timestampGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.Desktop;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.timestampGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.Desktop;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.timestampGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.timestampGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Activity,
             this.StartTime,
@@ -249,22 +315,22 @@
             this.Limit,
             this.Duration,
             this.Remarks});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.timestampGrid.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.timestampGrid.DefaultCellStyle = dataGridViewCellStyle3;
             this.timestampGrid.EnableHeadersVisualStyles = false;
             this.timestampGrid.GridColor = System.Drawing.Color.White;
-            this.timestampGrid.Location = new System.Drawing.Point(8, 347);
+            this.timestampGrid.Location = new System.Drawing.Point(8, 331);
             this.timestampGrid.Name = "timestampGrid";
             this.timestampGrid.ReadOnly = true;
             this.timestampGrid.RowHeadersVisible = false;
             this.timestampGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.timestampGrid.Size = new System.Drawing.Size(502, 144);
+            this.timestampGrid.Size = new System.Drawing.Size(502, 160);
             this.timestampGrid.TabIndex = 13;
             this.timestampGrid.Theme = Guna.UI.WinForms.GunaDataGridViewPresetThemes.Guna;
             this.timestampGrid.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White;
@@ -336,7 +402,7 @@
             this.panel3.BackColor = System.Drawing.Color.Transparent;
             this.panel3.Controls.Add(this.lblOvertime);
             this.panel3.Controls.Add(this.lblStartEnd);
-            this.panel3.Controls.Add(this.lblBio);
+            this.panel3.Controls.Add(this.lblBiobreak);
             this.panel3.Controls.Add(this.lblPullout);
             this.panel3.Controls.Add(this.lblUnscheduled);
             this.panel3.Controls.Add(this.lblLunch);
@@ -346,7 +412,7 @@
             this.panel3.Controls.Add(this.btnBreak1);
             this.panel3.Controls.Add(this.btnLunch);
             this.panel3.Controls.Add(this.btnBreak2);
-            this.panel3.Controls.Add(this.btnBio);
+            this.panel3.Controls.Add(this.btnBiobreak);
             this.panel3.Controls.Add(this.btnPullout);
             this.panel3.Controls.Add(this.btnOvertime);
             this.panel3.Controls.Add(this.btnUnscheduled);
@@ -380,18 +446,18 @@
             this.lblStartEnd.TabIndex = 13;
             this.lblStartEnd.Text = "9 hrs";
             // 
-            // lblBio
+            // lblBiobreak
             // 
-            this.lblBio.AutoSize = true;
-            this.lblBio.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(86)))));
-            this.lblBio.Enabled = false;
-            this.lblBio.Font = new System.Drawing.Font("Outfit Thin Light", 8.25F);
-            this.lblBio.ForeColor = System.Drawing.SystemColors.AppWorkspace;
-            this.lblBio.Location = new System.Drawing.Point(46, 124);
-            this.lblBio.Name = "lblBio";
-            this.lblBio.Size = new System.Drawing.Size(37, 14);
-            this.lblBio.TabIndex = 19;
-            this.lblBio.Text = "5 mins";
+            this.lblBiobreak.AutoSize = true;
+            this.lblBiobreak.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(86)))));
+            this.lblBiobreak.Enabled = false;
+            this.lblBiobreak.Font = new System.Drawing.Font("Outfit Thin Light", 8.25F);
+            this.lblBiobreak.ForeColor = System.Drawing.SystemColors.AppWorkspace;
+            this.lblBiobreak.Location = new System.Drawing.Point(46, 124);
+            this.lblBiobreak.Name = "lblBiobreak";
+            this.lblBiobreak.Size = new System.Drawing.Size(37, 14);
+            this.lblBiobreak.TabIndex = 19;
+            this.lblBiobreak.Text = "5 mins";
             // 
             // lblPullout
             // 
@@ -596,39 +662,39 @@
             this.btnBreak2.Text = "Break 2";
             this.btnBreak2.Click += new System.EventHandler(this.btnBreak2_Click);
             // 
-            // btnBio
+            // btnBiobreak
             // 
-            this.btnBio.AnimationHoverSpeed = 0.07F;
-            this.btnBio.AnimationSpeed = 0.03F;
-            this.btnBio.BackColor = System.Drawing.Color.Transparent;
-            this.btnBio.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnBio.BorderColor = System.Drawing.Color.Black;
-            this.btnBio.CheckedBaseColor = System.Drawing.Color.DarkRed;
-            this.btnBio.CheckedBorderColor = System.Drawing.Color.DarkRed;
-            this.btnBio.CheckedForeColor = System.Drawing.Color.White;
-            this.btnBio.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnBio.CheckedImage")));
-            this.btnBio.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnBio.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnBio.Enabled = false;
-            this.btnBio.FocusedColor = System.Drawing.Color.Empty;
-            this.btnBio.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnBio.ForeColor = System.Drawing.Color.White;
-            this.btnBio.Image = ((System.Drawing.Image)(resources.GetObject("btnBio.Image")));
-            this.btnBio.ImageSize = new System.Drawing.Size(15, 15);
-            this.btnBio.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnBio.Location = new System.Drawing.Point(3, 75);
-            this.btnBio.Name = "btnBio";
-            this.btnBio.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnBio.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnBio.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnBio.OnHoverImage = null;
-            this.btnBio.OnHoverLineColor = System.Drawing.Color.DimGray;
-            this.btnBio.OnPressedColor = System.Drawing.Color.Black;
-            this.btnBio.Radius = 10;
-            this.btnBio.Size = new System.Drawing.Size(122, 66);
-            this.btnBio.TabIndex = 5;
-            this.btnBio.Text = "Bio Break";
-            this.btnBio.Click += new System.EventHandler(this.btnBio_Click);
+            this.btnBiobreak.AnimationHoverSpeed = 0.07F;
+            this.btnBiobreak.AnimationSpeed = 0.03F;
+            this.btnBiobreak.BackColor = System.Drawing.Color.Transparent;
+            this.btnBiobreak.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnBiobreak.BorderColor = System.Drawing.Color.Black;
+            this.btnBiobreak.CheckedBaseColor = System.Drawing.Color.DarkRed;
+            this.btnBiobreak.CheckedBorderColor = System.Drawing.Color.DarkRed;
+            this.btnBiobreak.CheckedForeColor = System.Drawing.Color.White;
+            this.btnBiobreak.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnBiobreak.CheckedImage")));
+            this.btnBiobreak.CheckedLineColor = System.Drawing.Color.DimGray;
+            this.btnBiobreak.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnBiobreak.Enabled = false;
+            this.btnBiobreak.FocusedColor = System.Drawing.Color.Empty;
+            this.btnBiobreak.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnBiobreak.ForeColor = System.Drawing.Color.White;
+            this.btnBiobreak.Image = ((System.Drawing.Image)(resources.GetObject("btnBiobreak.Image")));
+            this.btnBiobreak.ImageSize = new System.Drawing.Size(15, 15);
+            this.btnBiobreak.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnBiobreak.Location = new System.Drawing.Point(3, 75);
+            this.btnBiobreak.Name = "btnBiobreak";
+            this.btnBiobreak.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnBiobreak.OnHoverBorderColor = System.Drawing.Color.Black;
+            this.btnBiobreak.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnBiobreak.OnHoverImage = null;
+            this.btnBiobreak.OnHoverLineColor = System.Drawing.Color.DimGray;
+            this.btnBiobreak.OnPressedColor = System.Drawing.Color.Black;
+            this.btnBiobreak.Radius = 10;
+            this.btnBiobreak.Size = new System.Drawing.Size(122, 66);
+            this.btnBiobreak.TabIndex = 5;
+            this.btnBiobreak.Text = "Bio Break";
+            this.btnBiobreak.Click += new System.EventHandler(this.btnBio_Click);
             // 
             // btnPullout
             // 
@@ -732,67 +798,6 @@
             this.btnUnscheduled.Text = "Unscheduled";
             this.btnUnscheduled.Click += new System.EventHandler(this.btnUnscheduled_Click);
             // 
-            // btnCloseChildForm
-            // 
-            this.btnCloseChildForm.AnimationHoverSpeed = 0.07F;
-            this.btnCloseChildForm.AnimationSpeed = 0.03F;
-            this.btnCloseChildForm.BackColor = System.Drawing.Color.Transparent;
-            this.btnCloseChildForm.BaseColor = System.Drawing.Color.Transparent;
-            this.btnCloseChildForm.BorderColor = System.Drawing.Color.Black;
-            this.btnCloseChildForm.CheckedBaseColor = System.Drawing.Color.Gray;
-            this.btnCloseChildForm.CheckedBorderColor = System.Drawing.Color.Transparent;
-            this.btnCloseChildForm.CheckedForeColor = System.Drawing.Color.White;
-            this.btnCloseChildForm.CheckedImage = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.CheckedImage")));
-            this.btnCloseChildForm.CheckedLineColor = System.Drawing.Color.DimGray;
-            this.btnCloseChildForm.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnCloseChildForm.FocusedColor = System.Drawing.Color.Empty;
-            this.btnCloseChildForm.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnCloseChildForm.ForeColor = System.Drawing.Color.White;
-            this.btnCloseChildForm.Image = ((System.Drawing.Image)(resources.GetObject("btnCloseChildForm.Image")));
-            this.btnCloseChildForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.btnCloseChildForm.ImageSize = new System.Drawing.Size(35, 35);
-            this.btnCloseChildForm.LineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
-            this.btnCloseChildForm.Location = new System.Drawing.Point(480, 2);
-            this.btnCloseChildForm.Name = "btnCloseChildForm";
-            this.btnCloseChildForm.OnHoverBaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(151)))), ((int)(((byte)(143)))), ((int)(((byte)(255)))));
-            this.btnCloseChildForm.OnHoverBorderColor = System.Drawing.Color.Black;
-            this.btnCloseChildForm.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnCloseChildForm.OnHoverImage = null;
-            this.btnCloseChildForm.OnHoverLineColor = System.Drawing.Color.FromArgb(((int)(((byte)(66)))), ((int)(((byte)(58)))), ((int)(((byte)(170)))));
-            this.btnCloseChildForm.OnPressedColor = System.Drawing.Color.Black;
-            this.btnCloseChildForm.Radius = 15;
-            this.btnCloseChildForm.Size = new System.Drawing.Size(35, 35);
-            this.btnCloseChildForm.TabIndex = 10;
-            this.btnCloseChildForm.Click += new System.EventHandler(this.btnCloseChildForm_Click);
-            // 
-            // btnClose
-            // 
-            this.btnClose.AnimationHoverSpeed = 0.07F;
-            this.btnClose.AnimationSpeed = 0.03F;
-            this.btnClose.BackColor = System.Drawing.Color.Transparent;
-            this.btnClose.BaseColor = System.Drawing.Color.White;
-            this.btnClose.BorderColor = System.Drawing.Color.Black;
-            this.btnClose.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.btnClose.FocusedColor = System.Drawing.Color.Empty;
-            this.btnClose.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
-            this.btnClose.Image = null;
-            this.btnClose.ImageSize = new System.Drawing.Size(20, 20);
-            this.btnClose.Location = new System.Drawing.Point(73, 9);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.OnHoverBaseColor = System.Drawing.Color.DimGray;
-            this.btnClose.OnHoverBorderColor = System.Drawing.Color.DimGray;
-            this.btnClose.OnHoverForeColor = System.Drawing.Color.White;
-            this.btnClose.OnHoverImage = null;
-            this.btnClose.OnPressedColor = System.Drawing.Color.Black;
-            this.btnClose.Radius = 5;
-            this.btnClose.Size = new System.Drawing.Size(103, 25);
-            this.btnClose.TabIndex = 13;
-            this.btnClose.Text = "Close Time Card";
-            this.btnClose.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.btnClose.Visible = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
-            // 
             // btnTimeCard
             // 
             this.btnTimeCard.AnimationHoverSpeed = 0.07F;
@@ -806,7 +811,7 @@
             this.btnTimeCard.ForeColor = System.Drawing.Color.White;
             this.btnTimeCard.Image = null;
             this.btnTimeCard.ImageSize = new System.Drawing.Size(20, 20);
-            this.btnTimeCard.Location = new System.Drawing.Point(117, 4);
+            this.btnTimeCard.Location = new System.Drawing.Point(398, 4);
             this.btnTimeCard.Name = "btnTimeCard";
             this.btnTimeCard.OnHoverBaseColor = System.Drawing.Color.DimGray;
             this.btnTimeCard.OnHoverBorderColor = System.Drawing.Color.DimGray;
@@ -833,7 +838,7 @@
             this.gunaButton4.ForeColor = System.Drawing.Color.White;
             this.gunaButton4.Image = null;
             this.gunaButton4.ImageSize = new System.Drawing.Size(20, 20);
-            this.gunaButton4.Location = new System.Drawing.Point(14, 3);
+            this.gunaButton4.Location = new System.Drawing.Point(297, 4);
             this.gunaButton4.Name = "gunaButton4";
             this.gunaButton4.OnHoverBaseColor = System.Drawing.Color.DimGray;
             this.gunaButton4.OnHoverBorderColor = System.Drawing.Color.DimGray;
@@ -845,17 +850,76 @@
             this.gunaButton4.TabIndex = 12;
             this.gunaButton4.Text = "My Disputes";
             this.gunaButton4.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.gunaButton4.Click += new System.EventHandler(this.gunaButton4_Click);
             // 
             // panel4
             // 
             this.panel4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.panel4.BackColor = System.Drawing.Color.White;
+            this.panel4.Controls.Add(this.MyDisputeIcon);
+            this.panel4.Controls.Add(this.ReviewDisputeIcon);
+            this.panel4.Controls.Add(this.btnReviewDispute);
             this.panel4.Controls.Add(this.gunaButton4);
             this.panel4.Controls.Add(this.btnTimeCard);
-            this.panel4.Location = new System.Drawing.Point(287, 497);
+            this.panel4.Location = new System.Drawing.Point(8, 497);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(224, 36);
+            this.panel4.Size = new System.Drawing.Size(503, 36);
             this.panel4.TabIndex = 0;
+            // 
+            // MyDisputeIcon
+            // 
+            this.MyDisputeIcon.BackColor = System.Drawing.Color.Transparent;
+            this.MyDisputeIcon.BaseColor = System.Drawing.Color.Transparent;
+            this.MyDisputeIcon.Image = global::Dashboard.Properties.Resources.warning;
+            this.MyDisputeIcon.Location = new System.Drawing.Point(382, 0);
+            this.MyDisputeIcon.Name = "MyDisputeIcon";
+            this.MyDisputeIcon.Size = new System.Drawing.Size(20, 20);
+            this.MyDisputeIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.MyDisputeIcon.TabIndex = 15;
+            this.MyDisputeIcon.TabStop = false;
+            this.MyDisputeIcon.UseTransfarantBackground = true;
+            this.MyDisputeIcon.Visible = false;
+            // 
+            // ReviewDisputeIcon
+            // 
+            this.ReviewDisputeIcon.BackColor = System.Drawing.Color.Transparent;
+            this.ReviewDisputeIcon.BaseColor = System.Drawing.Color.Transparent;
+            this.ReviewDisputeIcon.Image = global::Dashboard.Properties.Resources.warning;
+            this.ReviewDisputeIcon.Location = new System.Drawing.Point(103, 0);
+            this.ReviewDisputeIcon.Name = "ReviewDisputeIcon";
+            this.ReviewDisputeIcon.Size = new System.Drawing.Size(20, 20);
+            this.ReviewDisputeIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.ReviewDisputeIcon.TabIndex = 14;
+            this.ReviewDisputeIcon.TabStop = false;
+            this.ReviewDisputeIcon.UseTransfarantBackground = true;
+            this.ReviewDisputeIcon.Visible = false;
+            // 
+            // btnReviewDispute
+            // 
+            this.btnReviewDispute.AnimationHoverSpeed = 0.07F;
+            this.btnReviewDispute.AnimationSpeed = 0.03F;
+            this.btnReviewDispute.BackColor = System.Drawing.Color.Transparent;
+            this.btnReviewDispute.BaseColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
+            this.btnReviewDispute.BorderColor = System.Drawing.Color.Black;
+            this.btnReviewDispute.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.btnReviewDispute.FocusedColor = System.Drawing.Color.Empty;
+            this.btnReviewDispute.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReviewDispute.ForeColor = System.Drawing.Color.White;
+            this.btnReviewDispute.Image = null;
+            this.btnReviewDispute.ImageSize = new System.Drawing.Size(20, 20);
+            this.btnReviewDispute.Location = new System.Drawing.Point(4, 4);
+            this.btnReviewDispute.Name = "btnReviewDispute";
+            this.btnReviewDispute.OnHoverBaseColor = System.Drawing.Color.DimGray;
+            this.btnReviewDispute.OnHoverBorderColor = System.Drawing.Color.DimGray;
+            this.btnReviewDispute.OnHoverForeColor = System.Drawing.Color.White;
+            this.btnReviewDispute.OnHoverImage = null;
+            this.btnReviewDispute.OnPressedColor = System.Drawing.Color.Black;
+            this.btnReviewDispute.Radius = 5;
+            this.btnReviewDispute.Size = new System.Drawing.Size(113, 29);
+            this.btnReviewDispute.TabIndex = 13;
+            this.btnReviewDispute.Text = "Review Disputes";
+            this.btnReviewDispute.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.btnReviewDispute.Click += new System.EventHandler(this.btnReviewDispute_Click);
             // 
             // panelDesktopPane
             // 
@@ -875,6 +939,7 @@
             this.Controls.Add(this.timestampGrid);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelDesktopPane);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Outfit Thin Light", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -890,6 +955,8 @@
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.MyDisputeIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ReviewDisputeIcon)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -915,11 +982,11 @@
         private Guna.UI.WinForms.GunaAdvenceTileButton btnPullout;
         private Guna.UI.WinForms.GunaAdvenceTileButton btnUnscheduled;
         private Guna.UI.WinForms.GunaAdvenceTileButton btnOvertime;
-        private Guna.UI.WinForms.GunaAdvenceTileButton btnBio;
+        private Guna.UI.WinForms.GunaAdvenceTileButton btnBiobreak;
         private Guna.UI.WinForms.GunaDataGridView timestampGrid;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label lblBio;
+        private System.Windows.Forms.Label lblBiobreak;
         private System.Windows.Forms.Label lblPullout;
         private System.Windows.Forms.Label lblUnscheduled;
         private System.Windows.Forms.Label lblLunch;
@@ -938,5 +1005,8 @@
         private Guna.UI.WinForms.GunaButton gunaButton4;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panelDesktopPane;
+        private Guna.UI.WinForms.GunaButton btnReviewDispute;
+        private Guna.UI.WinForms.GunaCirclePictureBox ReviewDisputeIcon;
+        private Guna.UI.WinForms.GunaCirclePictureBox MyDisputeIcon;
     }
 }

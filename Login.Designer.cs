@@ -34,6 +34,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.textBoxUsername = new System.Windows.Forms.TextBox();
+            this.btnPeek = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
@@ -49,6 +50,7 @@
             this.gunaLinePanel1 = new Guna.UI.WinForms.GunaLinePanel();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnPeek)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -111,9 +113,22 @@
             this.textBoxUsername.Size = new System.Drawing.Size(211, 21);
             this.textBoxUsername.TabIndex = 0;
             // 
+            // btnPeek
+            // 
+            this.btnPeek.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnPeek.Image = global::Dashboard.Properties.Resources.icons8_eye_50;
+            this.btnPeek.Location = new System.Drawing.Point(220, 13);
+            this.btnPeek.Name = "btnPeek";
+            this.btnPeek.Size = new System.Drawing.Size(25, 25);
+            this.btnPeek.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.btnPeek.TabIndex = 5;
+            this.btnPeek.TabStop = false;
+            this.btnPeek.Click += new System.EventHandler(this.btnPeek_Click);
+            // 
             // groupBox2
             // 
             this.groupBox2.BackColor = System.Drawing.Color.Transparent;
+            this.groupBox2.Controls.Add(this.btnPeek);
             this.groupBox2.Controls.Add(this.pictureBox2);
             this.groupBox2.Controls.Add(this.textBoxPassword);
             this.groupBox2.ForeColor = System.Drawing.Color.White;
@@ -337,6 +352,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.btnPeek)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
@@ -366,5 +382,6 @@
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label label6;
         private Guna.UI.WinForms.GunaLinePanel gunaLinePanel1;
+        private System.Windows.Forms.PictureBox btnPeek;
     }
 }

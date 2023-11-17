@@ -14,7 +14,6 @@ using MySql.Data.MySqlClient;
 using iTextSharp.text;
 using System.Diagnostics;
 using iTextSharp.text.pdf.parser.clipper;
-using Twilio.TwiML.Voice;
 
 namespace Dashboard
 {
@@ -24,7 +23,8 @@ namespace Dashboard
         private bool clockedIn = false;
         private bool activeButton = false;
         private bool break1, lunch, break2, bio, overtime, unsch, pullout= false;
-        private string employee_name = "admina";
+        private string employee_name;
+        private string role;
         private Form activeForm;
 
         private Color defaultColor = Color.FromArgb(51, 51, 76);
@@ -46,10 +46,13 @@ namespace Dashboard
                                                         );
 
 
-        public Clock()
+        public Clock(string employee_name, string role)
         {
             InitializeComponent();
             Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 25, 25));
+
+            this.employee_name = employee_name;
+            this.role = role;
 
             // Set up the timer to update the clock every second
             Timer timer = new Timer();
@@ -66,6 +69,48 @@ namespace Dashboard
 
             panelDesktopPane.Visible = false;
             panel4.Visible = true;
+
+            notificationRefresh();
+        }
+
+        public Clock()
+        {
+            InitializeComponent();
+            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 25, 25));
+
+
+            bool me = false;
+            if (me)
+            {
+                this.employee_name = "admin";
+                this.role = "Admin";
+            }
+            else
+            {
+                this.employee_name = "cashier.girly";
+                this.role = "Cashier";
+            }
+
+
+
+
+            // Set up the timer to update the clock every second
+            Timer timer = new Timer();
+            timer.Interval = 1000; // 1 second
+            timer.Tick += Timer_Tick;
+            timer.Start();
+
+            // Initial update of the clock and date
+            UpdateClock();
+            UpdateDate();
+            UpdateDayHighlight();
+
+            CheckClockOutStatus();
+
+            panelDesktopPane.Visible = false;
+            panel4.Visible = true;
+
+            notificationRefresh();
         }
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -116,6 +161,93 @@ namespace Dashboard
             }
         }
 
+        private void notificationRefresh()
+        {
+            int unreadCount = CountUnreadDisputesForUser(employee_name);
+            if (unreadCount > 0)
+            {
+                MyDisputeIcon.Visible = true;
+            }
+            else
+            {
+                MyDisputeIcon.Visible = false;
+            }
+
+            if (role == "Manager" || role == "Admin")
+            {
+                btnReviewDispute.Visible = true;
+                int count = CountPendingDisputesForSupervisor(employee_name);
+                if (count > 0)
+                {
+                    ReviewDisputeIcon.Visible = true;
+                }
+                else
+                {
+                    ReviewDisputeIcon.Visible = false;
+                }
+            }
+            else
+            {
+                btnReviewDispute.Visible = false;
+            }
+        }
+
+        private int CountPendingDisputesForSupervisor(string username)
+        {
+            int rowCount = 0;
+
+            using (connection)
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                string countQuery = "SELECT COUNT(*) FROM clock_disputes WHERE direct_supervisor = @username AND dispute_status = 'Pending'";
+
+                using (MySqlCommand cmd = new MySqlCommand(countQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@username", username);
+
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        rowCount = Convert.ToInt32(result);
+                    }
+                }
+            }
+
+            return rowCount;
+        }
+
+        private int CountUnreadDisputesForUser(string username)
+        {
+            int rowCount = 0;
+
+            using (connection)
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                string countQuery = "SELECT COUNT(*) FROM clock_disputes WHERE username = @username AND read_status = 0";
+
+                using (MySqlCommand cmd = new MySqlCommand(countQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@username", username);
+
+                    object result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        rowCount = Convert.ToInt32(result);
+                    }
+                }
+            }
+
+            return rowCount;
+        }
+
         private void btnCloseChildForm_Click(object sender, EventArgs e)
         {
             this.Hide();
@@ -132,7 +264,8 @@ namespace Dashboard
             if (clockedIn)
             {
                 if (activeButton) lblStartEnd.BackColor = Color.FromArgb(127, 37, 37);
-                if (!activeButton) lblStartEnd.BackColor = Color.DarkRed; 
+                if (!activeButton) lblStartEnd.BackColor = Color.DarkRed;
+                btnStartEnd.Image = Properties.Resources.icons8_stop_50;
             }
             else
             {
@@ -179,7 +312,7 @@ namespace Dashboard
             }
             else
             {
-                endShift();
+                
 
                 clockedIn = false;
                 disableButtons();
@@ -187,6 +320,8 @@ namespace Dashboard
                 btnStartEnd.Image = Properties.Resources.icons8_play_30;
                 lblStartEnd.BackColor = defaultColor;
                 btnStartEnd.Text = "Start Shift";
+
+                endShift();
             }
 
         }
@@ -302,7 +437,7 @@ namespace Dashboard
             var labelName = "lbl" + button.Name.Substring(3);
             var label = panel3.Controls[labelName] as Label;
 
-            if (!activeButton)
+            if (!activeButton && button.Name != btnStartEnd.Name)
             {
                 button.BaseColor = defaultColor; // replace with your default color
                 label.BackColor = defaultColor;
@@ -319,6 +454,7 @@ namespace Dashboard
             if (clockedIn)
             {
                 btnStartEnd.BaseColor = Color.DarkRed;
+                btnStartEnd.Image = Properties.Resources.icons8_stop_50;
                 if (!activeButton) lblStartEnd.BackColor = Color.DarkRed;
                 if (activeButton) lblStartEnd.BackColor = Color.FromArgb(127, 37, 37);
             }
@@ -326,6 +462,8 @@ namespace Dashboard
             {
                 btnStartEnd.BaseColor = defaultColor;
                 lblStartEnd.BackColor = Color.FromArgb(51, 51, 76);
+                lblStartEnd.Enabled = true;
+                btnStartEnd.Image = Properties.Resources.icons8_play_30;
             }
 
         }
@@ -483,14 +621,17 @@ namespace Dashboard
             var labelName = "lbl" + button.Name.Substring(3);
             var label = panel3.Controls[labelName] as Label;
 
+            string endTime = DateTime.Now.ToString("HH:mm");
+            UpdateClockOutRecord(activity, endTime, limit);
+
             // Update end time
             int activityRowIndex = GetRowIndex(activity);
             if (activityRowIndex >= 0)
             {
-                string endTime = DateTime.Now.ToString("HH:mm");
+                
                 timestampGrid.Rows[activityRowIndex].Cells["EndTime"].Value = endTime;
 
-                UpdateClockOutRecord(activity, endTime, limit);
+                
 
                 // Calculate duration
                 string startTimeStr = timestampGrid.Rows[activityRowIndex].Cells["StartTime"].Value.ToString();
@@ -575,7 +716,7 @@ namespace Dashboard
                 else
                 {
                     // Update the existing "Shift" record
-                    activity = activity.ToLower();
+                    activity = activity.ToLower().Replace(" ", "");
                     string updateQuery = $"UPDATE clockIns " +
                                          $"SET {activity.ToLower()}_start = @start, current_activity = @activity " +
                                          $"WHERE username = @username AND clockIn_date = @date";
@@ -602,8 +743,10 @@ namespace Dashboard
                 {
                     connection.Open();
                 }
-                
-                string updateQuery = $"UPDATE clockIns SET {activity.ToLower()}_end = @end, current_activity = null WHERE " +
+
+                activity = activity.ToLower().Replace(" ", "");
+
+                string updateQuery = $"UPDATE clockIns SET {activity}_end = @end, current_activity = null WHERE " +
                                      "username = @username AND clockIn_date = @date";
 
                 using (MySqlCommand cmd = new MySqlCommand(updateQuery, connection))
@@ -830,7 +973,7 @@ namespace Dashboard
                     case "Overtime":
                         overtime = endTime != "";
                         break;
-                    case "Unscheduled Break":
+                    case "Unscheduled":
                         unsch = endTime != "";
                         break;
                     case "Pull Out":
@@ -858,6 +1001,10 @@ namespace Dashboard
                 {
                     limitTime = TimeSpan.FromHours(9);
                 }
+                else if (activity == "Overtime")
+                {
+                    limitTime = TimeSpan.FromMinutes(0);
+                }
 
                 if (duration < limitTime)
                 {
@@ -865,7 +1012,7 @@ namespace Dashboard
                     string undertimeStr = undertime.ToString(@"hh\:mm");
                     timestampGrid.Rows[activityRowIndex].Cells["Remarks"].Value = $"Undertime: {undertimeStr}";
                 }
-                else if (limitTime < duration)
+                else if (limitTime < duration && activity != "Unscheduled Break" && activity != "Overtime" && activity != "Unscheduled" && activity != "Shift")
                 {
                     TimeSpan overtime = duration - limitTime;
                     string overtimeStr = overtime.ToString(@"hh\:mm");
@@ -888,7 +1035,7 @@ namespace Dashboard
         {"Break 2", "break2"},
         {"Bio Break", "biobreak"},
         {"Overtime", "overtime"},
-        {"Unscheduled Break", "unscheduled"},
+        {"Unscheduled", "unscheduled"},
         {"Pull Out", "pullout"}
     };
         }
@@ -903,7 +1050,7 @@ namespace Dashboard
         {"Break 2", "15 mins"},
         {"Bio Break", "5 mins"},
         {"Overtime", "4 hrs"},
-        {"Unscheduled Break", "N/A"},
+        {"Unscheduled", "N/A"},
         {"Pull Out", "30 mins"}
     };
 
@@ -922,7 +1069,7 @@ namespace Dashboard
             if (!activeButton) ActivityButton_Click(sender, e, "Break1", TimeSpan.FromMinutes(15), "15 mins");
             else
             {
-                EndActivityButton_Click(sender, e, "Break1", TimeSpan.FromMinutes(15));
+                EndActivityButton_Click(sender, e, "Break 1", TimeSpan.FromMinutes(15));
                 break1 = true;
             }
 
@@ -952,7 +1099,7 @@ namespace Dashboard
         private void btnTimeCard_Click(object sender, EventArgs e)
         {
 
-            Form childForm = new ClockTimeCard();
+            Form childForm = new ClockTimeCard(connection, employee_name);
             activeForm = childForm;
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
@@ -975,6 +1122,42 @@ namespace Dashboard
             panelDesktopPane.SendToBack();
 
             btnClose.Visible = false;
+
+            notificationRefresh();
+        }
+
+        private void gunaButton4_Click(object sender, EventArgs e)
+        {
+            Form childForm = new ClockMyDisputes(connection, employee_name);
+            activeForm = childForm;
+            childForm.TopLevel = false;
+            childForm.FormBorderStyle = FormBorderStyle.None;
+            childForm.Dock = DockStyle.Fill;
+            this.panelDesktopPane.Controls.Add(childForm);
+            this.panelDesktopPane.Tag = childForm;
+            this.panelDesktopPane.Visible = true;
+            this.panelDesktopPane.BringToFront();
+            childForm.BringToFront();
+            childForm.Show();
+
+            btnClose.Visible = true;
+        }
+
+        private void btnReviewDispute_Click(object sender, EventArgs e)
+        {
+            Form childForm = new ClockReviewDisputes(connection, employee_name);
+            activeForm = childForm;
+            childForm.TopLevel = false;
+            childForm.FormBorderStyle = FormBorderStyle.None;
+            childForm.Dock = DockStyle.Fill;
+            this.panelDesktopPane.Controls.Add(childForm);
+            this.panelDesktopPane.Tag = childForm;
+            this.panelDesktopPane.Visible = true;
+            this.panelDesktopPane.BringToFront();
+            childForm.BringToFront();
+            childForm.Show();
+
+            btnClose.Visible = true;
         }
 
         private void btnLunch_Click(object sender, EventArgs e)
@@ -1015,7 +1198,7 @@ namespace Dashboard
             if (!activeButton) ActivityButton_Click(sender, e, "Break2", TimeSpan.FromMinutes(15), "15 mins");
             else
             {
-                EndActivityButton_Click(sender, e, "Break2", TimeSpan.FromMinutes(15));
+                EndActivityButton_Click(sender, e, "Break 2", TimeSpan.FromMinutes(15));
                 break2 = true;
             }
 
@@ -1038,10 +1221,10 @@ namespace Dashboard
                 return;
             }
 
-            if (!activeButton) ActivityButton_Click(sender, e, "BioBreak", TimeSpan.FromMinutes(5), "5 mins");
+            if (!activeButton) ActivityButton_Click(sender, e, "Bio Break", TimeSpan.FromMinutes(5), "5 mins");
             else
             {
-                EndActivityButton_Click(sender, e, "BioBreak", TimeSpan.FromMinutes(5));
+                EndActivityButton_Click(sender, e, "Bio Break", TimeSpan.FromMinutes(5));
                 bio = true;
             }
 
@@ -1117,10 +1300,10 @@ namespace Dashboard
                 return;
             }
 
-            if (!activeButton) ActivityButton_Click(sender, e, "PullOut", TimeSpan.FromMinutes(30), "30 mins");
+            if (!activeButton) ActivityButton_Click(sender, e, "Pull Out", TimeSpan.FromMinutes(30), "30 mins");
             else
             {
-                EndActivityButton_Click(sender, e, "PullOut", TimeSpan.FromMinutes(30));
+                EndActivityButton_Click(sender, e, "Pull Out", TimeSpan.FromMinutes(30));
                 pullout = true;
             }
 

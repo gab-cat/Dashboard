@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dashboard.CollectionFolder;
+using System.Collections;
 
 namespace Dashboard.Forms
 {
@@ -18,11 +19,13 @@ namespace Dashboard.Forms
     {
         private string employee_name;
         private string role;
-        public FormMaintenance(string employee_name, string role)
+        MySqlConnection async_connection;
+        public FormMaintenance(string employee_name, string role, MySqlConnection async_connection)
         {
             InitializeComponent();
             this.employee_name = employee_name;
             this.role = role;
+            this.async_connection = async_connection;
             LoadEmployeeData();
         }
 
@@ -118,6 +121,52 @@ namespace Dashboard.Forms
             }
         }
 
+        private void checkActiveSession(string username)
+        {
+            string selectQuery = "SELECT active_session, active_since FROM logins WHERE username = @username";
+
+            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            {
+                try
+                {
+                    using (MySqlCommand command = new MySqlCommand(selectQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Username", username);
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int activeSession = reader.GetInt32("active_session");
+                                TimeSpan activeSince = reader.GetTimeSpan("active_since");
+
+                                if (activeSession == 1)
+                                {
+                                    lblLogIn.Visible = true;
+                                    lblTime.Visible = true;
+                                    lblTime.Text = "Timestamp: " + activeSince.ToString(); // Modify as needed
+                                    btnForceLogout.Visible = true;
+                                    btnForceLogout.Enabled = true;
+                                }
+                                else
+                                {
+                                    lblLogIn.Visible = false;
+                                    lblTime.Visible = false;
+
+                                    btnForceLogout.Visible = false;
+                                    btnForceLogout.Enabled = false;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
         private void EmployeeGrid_SelectionChanged(object sender, EventArgs e)
         {
             if (!chkNewProfile.Checked)
@@ -160,6 +209,7 @@ namespace Dashboard.Forms
                         btnResetPassword.Enabled = true;
                     }
 
+                    checkActiveSession(txtUsername.Text);
                 }
             }
 
@@ -286,7 +336,7 @@ namespace Dashboard.Forms
 
         private string GenerateRandomPassword(int length)
         {
-            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+=<>?";
+            const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$";
             var random = new Random();
             var password = new string(Enumerable.Repeat(validChars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
@@ -326,6 +376,7 @@ namespace Dashboard.Forms
         {
             string username = txtUsername.Text;
             string password = GenerateRandomPassword(8); // Randomly generated password
+            string salt = PasswordHashing.GenerateSalt(); // Generate a new salt for the password
             string firstName = txtFirstName.Text;
             string lastName = txtLastName.Text;
             string role = txtRole.Text;
@@ -333,9 +384,11 @@ namespace Dashboard.Forms
             string supervisor = txtSupervisor.Text;
             int status = 1; // Temporary password is set to 1
 
+            string hashedPassword = PasswordHashing.HashString(password, salt);
+
             // Construct your SQL query and execute it
-            string query = "INSERT INTO logins (username, password, first_name, last_name, role, employee_email, direct_supervisor, employee_status) " +
-                           $"VALUES (@username, @password, @firstName, @lastName, @role, @emailAddress, @supervisor, @status)";
+            string query = "INSERT INTO logins (username, password, salt, first_name, last_name, role, employee_email, direct_supervisor, employee_status) " +
+                           $"VALUES (@username, @password, @salt, @firstName, @lastName, @role, @emailAddress, @supervisor, @status)";
 
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
@@ -343,7 +396,8 @@ namespace Dashboard.Forms
                 {
                     // Use parameters to prevent SQL injection
                     command.Parameters.AddWithValue("@username", username);
-                    command.Parameters.AddWithValue("@password", password);
+                    command.Parameters.AddWithValue("@password", hashedPassword);
+                    command.Parameters.AddWithValue("@salt", salt);
                     command.Parameters.AddWithValue("@firstName", firstName);
                     command.Parameters.AddWithValue("@lastName", lastName);
                     command.Parameters.AddWithValue("@role", role);
@@ -561,16 +615,21 @@ namespace Dashboard.Forms
         {
             // Generate a new random password
             string newPassword = GenerateRandomPassword(8);
+            string salt = PasswordHashing.GenerateSalt(); // Generate a new salt for the password
+
+            // Hash the new password with the generated salt
+            string hashedPassword = PasswordHashing.HashString(newPassword, salt);
 
             // Update the password and temporary_password in the database
-            string updateQuery = "UPDATE logins SET password = @password, temporary_password = 1, login_attempts = 0 WHERE username = @username";
+            string updateQuery = "UPDATE logins SET password = @password, salt = @salt, temporary_password = 1, login_attempts = 0 WHERE username = @username";
 
             using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
             {
                 using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
                 {
                     // Use parameters to prevent SQL injection
-                    command.Parameters.AddWithValue("@password", newPassword);
+                    command.Parameters.AddWithValue("@password", hashedPassword);
+                    command.Parameters.AddWithValue("@salt", salt);
                     command.Parameters.AddWithValue("@username", username);
 
                     try
@@ -624,6 +683,33 @@ namespace Dashboard.Forms
         {
             ServerConnections serverConnections = new ServerConnections(employee_name);
             serverConnections.Show();
+        }
+
+        private void btnForceLogout_Click(object sender, EventArgs e)
+        {
+
+            LoadingScreenManager.ShowLoadingScreen(() =>
+            {
+                using (MySqlConnection connection = async_connection)
+                {
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+
+                    string updateQuery = "UPDATE logins SET active_session = 0 WHERE username = @username";
+                    MySqlCommand cmd = new MySqlCommand(updateQuery, connection);
+                    cmd.Parameters.AddWithValue("@username", txtUsername.Text);
+
+                    cmd.ExecuteNonQuery();
+                }
+                lblLogIn.Visible = false;
+                lblTime.Visible = false;
+
+                btnForceLogout.Visible = false;
+                btnForceLogout.Enabled = false;
+            });
+
         }
     }
 }

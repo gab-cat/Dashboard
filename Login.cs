@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Security.Cryptography;
 
 namespace Dashboard
 {
@@ -37,6 +38,7 @@ namespace Dashboard
         private bool updatePasswordMenu = false;
         private string tempUsername;
         private int loginAttempts;
+        private bool peekActive;
         public Login()
         {
             InitializeComponent();
@@ -50,6 +52,21 @@ namespace Dashboard
             textBoxPassword.BackColor = color;
 
             connection = DatabaseHelper.GetOpenConnection();
+        }
+
+        public Login(MySqlConnection connection)
+        {
+            InitializeComponent();
+            Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 25, 25));
+
+            textBoxUsername.Focus();
+
+            textBoxUsername.Enabled = true;
+            textBoxUsername.BackColor = color;
+            textBoxPassword.Enabled = true;
+            textBoxPassword.BackColor = color;
+
+            this.connection = connection;
         }
 
         private void gunaButton1_Click(object sender, EventArgs e)
@@ -72,7 +89,9 @@ namespace Dashboard
             label2.Text = "Password must be at least 8 characters, has one uppercase letter, number and special character.";
             textBoxUsername.UseSystemPasswordChar = true;
             textBoxUsername.Focus();
-
+            btnPeek.Visible = false;
+            peekActive = false;
+            textBoxPassword.UseSystemPasswordChar = true;
         }
 
         private void normalLoginUI()
@@ -86,6 +105,10 @@ namespace Dashboard
             textBoxPassword.Text = string.Empty;
             textBoxUsername.UseSystemPasswordChar = false;
             textBoxUsername.Focus();
+            btnPeek.Visible = true;
+            peekActive = false;
+            btnPeek.Image = Properties.Resources.icons8_eye_50;
+            textBoxPassword.UseSystemPasswordChar = true;
         }
 
         private async void button1_Click(object sender, EventArgs e)
@@ -153,7 +176,7 @@ namespace Dashboard
 
 
 
-                        Dashboard form1 = new Dashboard(firstName, lastName, role);
+                        Dashboard form1 = new Dashboard(firstName, lastName, role, enteredUsername);
 
                         this.Hide();
                         ShowLoadingForm(firstName);
@@ -165,6 +188,7 @@ namespace Dashboard
                     {
                         // Login failed
                         // loginAttempts--;
+                        int loginAttempts = 5 - this.loginAttempts;
                         if (loginAttempts > 3)
                         {
                             incorrect.Text = "Your entered credentials is incorrect. Please try again.";
@@ -209,6 +233,9 @@ namespace Dashboard
         {
             try
             {
+                string salt = PasswordHashing.GenerateSalt(); // Generate a new salt for the password
+                string hashedPassword = PasswordHashing.HashString(newPassword, salt);
+
                 // Check if the new password meets the validation requirements
                 if (!IsNewPasswordValid(newPassword))
                 {
@@ -221,13 +248,13 @@ namespace Dashboard
                     return;
                 }
 
-
-                // SQL statement to update the password and set temporary_password to 0
-                string updateQuery = "UPDATE logins SET password = @Password, temporary_password = 0 WHERE username = @Username";
+                // SQL statement to update the password and salt in the database
+                string updateQuery = "UPDATE logins SET password = @Password, salt = @Salt, temporary_password = 0 WHERE username = @Username";
 
                 using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
                 {
-                    command.Parameters.AddWithValue("@Password", newPassword);
+                    command.Parameters.AddWithValue("@Password", hashedPassword);
+                    command.Parameters.AddWithValue("@Salt", salt);
                     command.Parameters.AddWithValue("@Username", username);
 
                     int rowsAffected = command.ExecuteNonQuery();
@@ -270,49 +297,68 @@ namespace Dashboard
         {
             try
             {
-                if (connection == null)
+                if (connection.State != ConnectionState.Open)
                 {
-                    return false;
+                    connection.Open();
                 }
 
                 // SQL statement to check for the username and password, as well as additional conditions in the 'logins' table
-                string query = "SELECT COUNT(*) FROM logins WHERE BINARY username = @username AND BINARY password = @password AND employee_status = 1";
+                string query = "SELECT password, salt, COUNT(*) FROM logins WHERE BINARY username = @username AND employee_status = 1";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@username", username);
-                command.Parameters.AddWithValue("@password", password);
 
-                int count = Convert.ToInt32(command.ExecuteScalar());
-
-                if (count > 0)
+                using (MySqlDataReader reader = command.ExecuteReader())
                 {
-                    ResetLoginAttempts(username);
-                    string tempPasswordQuery = "SELECT temporary_password FROM logins WHERE username = @username";
-                    MySqlCommand tempPasswordCommand = new MySqlCommand(tempPasswordQuery, connection);
-                    tempPasswordCommand.Parameters.AddWithValue("@username", username);
-                    int tempPassword = Convert.ToInt32(tempPasswordCommand.ExecuteScalar());
-
-                    if (tempPassword == 1)
+                    if (reader.Read())
                     {
-                        updatePasswordMenu = true;
+                        string hashedPasswordFromDB = reader.GetString(0);
+                        string salt = reader.GetString(1);
+                        int count = reader.GetInt32(2);
+                        reader.Close();
+
+                        bool passwordMatch = PasswordHashing.VerifyPassword(password, hashedPasswordFromDB, salt);
+
+                        if (passwordMatch)
+                        {
+                            Console.WriteLine("Password is correct");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Password is not correct");
+                        }
+
+
+                        if (passwordMatch)
+                        {
+                            ResetLoginAttempts(username);
+                            string tempPasswordQuery = "SELECT temporary_password FROM logins WHERE username = @username";
+                            MySqlCommand tempPasswordCommand = new MySqlCommand(tempPasswordQuery, connection);
+                            tempPasswordCommand.Parameters.AddWithValue("@username", username);
+                            int tempPassword = Convert.ToInt32(tempPasswordCommand.ExecuteScalar());
+
+                            if (tempPassword == 1)
+                            {
+                                updatePasswordMenu = true;
+                            }
+                        }
+                        else
+                        {
+                            // Failed login, increment login attempts
+                            IncrementLoginAttempts(username);
+
+                            // Check if login attempts exceed a limit
+                            this.loginAttempts = GetLoginAttempts(username);
+                            if (loginAttempts >= 5)
+                            {
+                                LockAccount(username);
+                                MessageBox.Show("This profile is locked due to multiple failed attempts. " +
+                                    "Reach out to your supervisor to reset your password.", "Account Locked", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+
+                        return passwordMatch; // If passwordMatch is true, a matching record was found
                     }
                 }
-
-                else
-                {
-                    // Failed login, increment login attempts
-                    IncrementLoginAttempts(username);
-
-                    // Check if login attempts exceed a limit
-                    int loginAttempts = GetLoginAttempts(username);
-                    if (loginAttempts >= 5)
-                    {
-                        LockAccount(username);
-                        MessageBox.Show("This profile is locked due to multiple failed attempts. " +
-                            "Reach out to your supervisor to reset your password.", "Account Locked", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-
-                return count > 0; // If count > 0, a matching record was found
             }
             catch (Exception ex)
             {
@@ -321,6 +367,8 @@ namespace Dashboard
                 incorrect.Text = "Server cannot be reached. \nPlease check your connection and restart the app.";
                 return false;
             }
+
+            return false;
         }
 
         private void IncrementLoginAttempts(string username)
@@ -335,6 +383,8 @@ namespace Dashboard
         private int GetLoginAttempts(string username)
         {
             // Retrieve the current login attempts count
+
+
             string query = "SELECT login_attempts FROM logins WHERE username = @username";
             MySqlCommand command = new MySqlCommand(query, connection);
             command.Parameters.AddWithValue("@username", username);
@@ -356,9 +406,15 @@ namespace Dashboard
         private void ResetLoginAttempts(string username)
         {
             // Reset the login attempts for the user
-            string resetQuery = "UPDATE logins SET login_attempts = 0 WHERE username = @username";
+            if (connection.State != ConnectionState.Open)
+            {
+                connection.Open();
+            }
+
+            string resetQuery = "UPDATE logins SET login_attempts = 0, active_session = 1, active_since = @currentTime WHERE username = @username";
             MySqlCommand resetCommand = new MySqlCommand(resetQuery, connection);
             resetCommand.Parameters.AddWithValue("@username", username);
+            resetCommand.Parameters.AddWithValue("@currentTime", DateTime.Now.TimeOfDay);
             resetCommand.ExecuteNonQuery();
         }
 
@@ -399,13 +455,13 @@ namespace Dashboard
             string role = null;
 
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
                 try
                 {
-                    if (connection == null)
+                    if (connection.State != ConnectionState.Open)
                     {
-                        return (firstName, lastName, role);
+                        connection.Open();
                     }
 
                     // SQL statement to retrieve the user details based on the username
@@ -461,6 +517,23 @@ namespace Dashboard
                 connection.Close();
                 connection.Dispose();
             }
+        }
+
+        private void btnPeek_Click(object sender, EventArgs e)
+        {
+            if (!peekActive)
+            {
+                peekActive = true;
+                btnPeek.Image = Properties.Resources.icons8_closed_eye_50;
+                textBoxPassword.UseSystemPasswordChar = false;
+            }
+            else
+            {
+                peekActive = false;
+                btnPeek.Image = Properties.Resources.icons8_eye_50;
+                textBoxPassword.UseSystemPasswordChar = true;
+            }
+            
         }
     }
 }

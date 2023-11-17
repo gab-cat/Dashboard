@@ -33,7 +33,7 @@ namespace Dashboard
         private const int ProgressBarMaximum = 100; 
         private CustomProgressBar customProgressBar1;
         bool isDatabaseConnected = false;
-
+        private MySqlConnection connection;
 
         public Initializer2()
         {
@@ -54,6 +54,8 @@ namespace Dashboard
             Controls.Add(customProgressBar1);
             customProgressBar1.BringToFront();
             richTextBox1.GotFocus += (sender, e) => { richTextBox1.Parent.Focus(); };
+
+            this.connection = DatabaseHelper.GetOpenConnection();
         }
 
         private async void Initializer_Shown(object sender, EventArgs e)
@@ -70,7 +72,7 @@ namespace Dashboard
             try
             {
                 // Perform the database connection check here
-                using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                using (connection)
                 {
                     if (connection == null) 
                     {
@@ -112,7 +114,7 @@ namespace Dashboard
                         // DatabaseHelper.CloseConnection(connection);
                         this.Hide();
 
-                        Login loginForm = new Login();
+                        Login loginForm = new Login(connection);
                         loginForm.Show();
                     }
                     else

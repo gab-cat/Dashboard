@@ -117,35 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="icons8-stop-50" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-stop-50.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnDeny.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAFgSURBVEhLxZZdTsJAFIULuAVdBi5A0KjEtRlAjI/uQn03
+        JhoexJ+4CVyDPtXv3F5jazu0pUW/5GQ6M/feA3R+iP6dOI676ADN0DN6R5/eqn+G9lHHU+pB4gl6RVV4
+        QSNPLYfgHjpV5hpcoi0vVYwC0I2iG3CNel4yD5MXFtacmZfMwoTeQZsce+kEBrSK9PLa5A113cJMtExD
+        9NFd8phD47vJYyFDtzCT82SskAe0g26t98M9KhpPM3ULM3lKxoLoE297K373Qyzcwky0g8v4Ljz2tsxA
+        LN3CTHRUVGHs8TKqwocZCDp/8k029U4e3cJMdJqGCK2i0KpLYz+vQUfHdQjtg9An1viqfTJwCzPpIN0P
+        bbJA2XuGgZFNtcehl87CxKqdX4eJl8zDpC4s3QdNuELh+0QoAG3uZkxD8B6aK7MC2mdHnloPErXqhmiK
+        tFqWSEeQWvUnaIDW+7fSHlH0BUgDyySrLeQLAAAAAElFTkSuQmCC
+</value>
   </data>
-  <data name="icons8-triangle-arrow-24 (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-triangle-arrow-24 (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icons8-closed-eye-50" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-closed-eye-50.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icons8-eye-64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-eye-64.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icons8-eye-50" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-eye-50.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icons8-triangle-arrow-24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-triangle-arrow-24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bin" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\bin.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icons8-eye-641" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-eye-641.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="icons8-play-30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icons8-play-30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="warning" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\warning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="btnApprove.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAACxIAAAsSAdLdfvwAAAGLSURBVEhLxZbNLgNhFIZbdQmCnYuQ2ChSGls3ZCuRtCpW
+        YokbwAWIjYT6SaxILKkIN+AnjOc9c5KazrSdaUc8yZOZ8/2dTubM97Xw7wRBMIIL2MBLfMJ3vyrewHks
+        +pRsMHEZrzENV1j1qf1hcAnXNXMAdnDUl0pGA/BIo4fgEEu+ZBw6t2zY8DR8ySh06B3kyZIvHUKDqijt
+        S+7kC/fC2wiqvnbVEahMB0XlXQlvY8x5CkuyGbZl5hbH8N6iOHVPYUkuwrZMfOIMbluUTNNTWBJ9wUm8
+        4kt4G2MNVSzfFiXT8hSWRFtFEgc4hXcWtbnBcXywqDtvnqLnk4h9nMAzi4LgA6dx16LePHqKVO9ET6Rf
+        foKruIJpOPcUlkS7aT+OUYkm8VkNKah5Ckui7ToNeuIse1vZU1iSIuoLzZMmRs8ZGqrWlR8VXzoKHYN+
+        +Z2030UndOrA0nkwDKrE7ueJ0AD8u5PxNwyexVPNTIGqbtGnZoOJqro5rKOqpYXagnRVXMMyDvZvJT8K
+        hR87adVC7ro7lwAAAABJRU5ErkJggg==
+</value>
   </data>
 </root>
