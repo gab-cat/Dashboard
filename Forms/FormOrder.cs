@@ -25,7 +25,8 @@ namespace Dashboard.Forms
         private string join_date;
         private string username;
         private string role;
-      
+        private MySqlConnection connection;
+
         public int CustomerId
         {
             get { return customerId; }
@@ -34,12 +35,13 @@ namespace Dashboard.Forms
                 customerId = value;
             }
         }
-        public FormOrder(int customer_id, string userName, string Role)
+        public FormOrder(int customer_id, string userName, string Role, MySqlConnection connection)
         {
             InitializeComponent();
             CustomerId = customer_id;
             username = userName;
             role = Role;
+            this.connection = connection;
             loadCustomerProfile();
 
 
@@ -55,8 +57,12 @@ namespace Dashboard.Forms
         }
         private void getCustomerInfo(int customer_id)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     string query = "SELECT customer_id, first_name, last_name, contact_email, contact_phone, address, join_date " +
@@ -98,13 +104,6 @@ namespace Dashboard.Forms
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
-                }
             }
 
             label2.Text = first_name + " " + last_name;
@@ -122,11 +121,14 @@ namespace Dashboard.Forms
 
         private void loadIndicators(int customer_id)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
-                    // Query to retrieve indicator values based on customer ID
                     string query = "SELECT professional_firm, sms, email, phone " +
                                    "FROM indicators WHERE customer_id = @customerId";
 
@@ -138,7 +140,7 @@ namespace Dashboard.Forms
                         {
                             if (reader.Read()) 
                             {
-                                // Check checkboxes based on indicator values (1 or 0)
+
                                 chkProfessional.Checked = Convert.ToInt32(reader["professional_firm"]) == 1;
                                 chkSMS.Checked = Convert.ToInt32(reader["sms"]) == 1;
                                 chkEmail.Checked = Convert.ToInt32(reader["email"]) == 1;
@@ -163,13 +165,6 @@ namespace Dashboard.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -260,8 +255,12 @@ namespace Dashboard.Forms
 
         private void loadMemos(int customerId)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     string query = "SELECT time_date, reason, employee_name, memo_text FROM memos WHERE customer_id = @customer_id ORDER BY time_date DESC;";
@@ -272,27 +271,23 @@ namespace Dashboard.Forms
 
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            // Clear existing rows and columns in the DataGridView.
                             dataGridViewMemos.Rows.Clear();
                             dataGridViewMemos.Columns.Clear();
 
-                            // Add columns to the DataGridView.
                             dataGridViewMemos.Columns.Add("time_date", "Date and Time");
                             dataGridViewMemos.Columns.Add("reason", "Reason");
                             dataGridViewMemos.Columns.Add("employee_name", "Employee Name");
 
                             while (reader.Read())
                             {
-                                // Extract memo details here.
                                 DateTime timeDate = reader.GetDateTime("time_date");
                                 string reason = reader.GetString("reason");
                                 string employeeName = reader.GetString("employee_name");
                                 string memoText = reader.GetString("memo_text");
 
-                                // Add the memo details to the DataGridView.
                                 dataGridViewMemos.Rows.Add(timeDate, reason, employeeName);
 
-                                // Store the memo text in the DataGridView's Tag property for later retrieval.
+
                                 dataGridViewMemos.Rows[dataGridViewMemos.Rows.Count - 1].Tag = memoText;
                                 txtMemo.Text = "Memo: \n" + memoText;
                             }
@@ -302,13 +297,6 @@ namespace Dashboard.Forms
                 catch (MySqlException ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -332,8 +320,12 @@ namespace Dashboard.Forms
 
         private void CalculatePaymentSummary(int customerId)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     string query = @"
@@ -374,14 +366,7 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
+                    Console.WriteLine(ex.ToString());
                 }
             }
         }
@@ -402,7 +387,7 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                UpdateCustomer update = new UpdateCustomer(CustomerId, username);
+                UpdateCustomer update = new UpdateCustomer(CustomerId, username, connection);
                 update.Show(); 
             });
         }
@@ -428,8 +413,12 @@ namespace Dashboard.Forms
 
         private void LoadSalesHistoryForCustomer(int customerId)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     string query = "SELECT sale_date AS 'Date', sale_id AS 'Sales ID', " +
@@ -446,15 +435,12 @@ namespace Dashboard.Forms
 
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            // Create a DataTable to hold the sales data
                             DataTable salesTable = new DataTable();
                             salesTable.Load(reader);
 
-                            // Create a BindingSource and bind it to the DataTable
                             BindingSource salesBindingSource = new BindingSource();
                             salesBindingSource.DataSource = salesTable;
 
-                            // Bind the DataGridView to the BindingSource
                             salesData.DataSource = salesBindingSource;
 
                             salesData.Columns["Total"].DefaultCellStyle.Format = "C2";
@@ -472,13 +458,6 @@ namespace Dashboard.Forms
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
-                }
             }
         }
 
@@ -486,7 +465,6 @@ namespace Dashboard.Forms
 
         private void cancelOrder()
         {
-            // Check if a row is selected in the DataGridView
             if (salesData.SelectedRows.Count > 0)
             {
                 DataGridViewRow selectedRow = salesData.SelectedRows[0];
@@ -503,79 +481,115 @@ namespace Dashboard.Forms
 
                     if (result == DialogResult.Yes)
                     {
-                        int saleId = Convert.ToInt32(selectedRow.Cells["Sales ID"].Value);
-                        
-
-                        // Get the list of products and quantities for the cancelled order
-                        List<Tuple<int, int>> productsToReturn = new List<Tuple<int, int>>();
-                        List<string> paymentIdsToRefund = new List<string>();
-
-                        using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                        MySqlTransaction transaction = null;
+                        try
                         {
-                            // Fetch the products and quantities from the sale_items table
-                            string selectItemsQuery = "SELECT product_id, quantity_sold FROM sale_items WHERE sale_id = @saleId";
-                            MySqlCommand selectItemsCommand = new MySqlCommand(selectItemsQuery, connection);
-                            selectItemsCommand.Parameters.AddWithValue("@saleId", saleId);
-
-                            using (MySqlDataReader reader = selectItemsCommand.ExecuteReader())
+                            transaction = connection.BeginTransaction();
+                            if (connection.State != ConnectionState.Open)
                             {
-                                while (reader.Read())
+                                connection.Open();
+                            }
+
+
+                            int saleId = Convert.ToInt32(selectedRow.Cells["Sales ID"].Value);
+
+
+                            // Get the list of products and quantities for the cancelled order
+                            List<Tuple<int, int>> productsToReturn = new List<Tuple<int, int>>();
+                            List<string> paymentIdsToRefund = new List<string>();
+
+                            using (connection)
+                            {
+                                if (connection.State != ConnectionState.Open)
                                 {
-                                    int productId = reader.GetInt32("product_id");
-                                    int quantitySold = reader.GetInt32("quantity_sold");
-                                    productsToReturn.Add(new Tuple<int, int>(productId, quantitySold));
+                                    connection.Open();
+                                }
+
+
+
+                                string selectItemsQuery = "SELECT product_id, quantity_sold FROM sale_items WHERE sale_id = @saleId";
+                                MySqlCommand selectItemsCommand = new MySqlCommand(selectItemsQuery, connection);
+                                selectItemsCommand.Parameters.AddWithValue("@saleId", saleId);
+
+                                using (MySqlDataReader reader = selectItemsCommand.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        int productId = reader.GetInt32("product_id");
+                                        int quantitySold = reader.GetInt32("quantity_sold");
+                                        productsToReturn.Add(new Tuple<int, int>(productId, quantitySold));
+                                    }
                                 }
                             }
-                        }
 
 
-                        // Execute an SQL query to update the payment_status to "Cancelled"
-                        using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
-                        {
-                            string updateQuery = "UPDATE sales SET payment_status = 'Cancelled' WHERE sale_id = @saleId";
-                            MySqlCommand command = new MySqlCommand(updateQuery, connection);
-                            command.Parameters.AddWithValue("@saleId", saleId);
-
-                            command.ExecuteNonQuery();
-                        }
-
-
-                        // Remove the related rows from the sale_items table
-                        using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
-                        {
-                            string deleteItemsQuery = "DELETE FROM sale_items WHERE sale_id = @saleId";
-                            MySqlCommand deleteItemsCommand = new MySqlCommand(deleteItemsQuery, connection);
-                            deleteItemsCommand.Parameters.AddWithValue("@saleId", saleId);
-
-                            deleteItemsCommand.ExecuteNonQuery();
-                        }
-
-
-                        // Return the stock for each product
-                        foreach (var productTuple in productsToReturn)
-                        {
-                            int productId = productTuple.Item1;
-                            int quantitySold = productTuple.Item2;
-
-                            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                            // Execute an SQL query to update the payment_status to "Cancelled"
+                            using (connection)
                             {
-                                string updateStockQuery = "UPDATE products SET quantity_in_stock = quantity_in_stock + @quantitySold WHERE product_id = @productId";
-                                MySqlCommand updateStockCommand = new MySqlCommand(updateStockQuery, connection);
-                                updateStockCommand.Parameters.AddWithValue("@quantitySold", quantitySold);
-                                updateStockCommand.Parameters.AddWithValue("@productId", productId);
+                                if (connection.State != ConnectionState.Open)
+                                {
+                                    connection.Open();
+                                }
+                                string updateQuery = "UPDATE sales SET payment_status = 'Cancelled' WHERE sale_id = @saleId";
+                                MySqlCommand command = new MySqlCommand(updateQuery, connection);
+                                command.Parameters.AddWithValue("@saleId", saleId);
 
-                                updateStockCommand.ExecuteNonQuery();
+                                command.ExecuteNonQuery();
                             }
+
+
+                            // Remove the related rows from the sale_items table
+                            using (connection)
+                            {
+                                if (connection.State != ConnectionState.Open)
+                                {
+                                    connection.Open();
+                                }
+                                string deleteItemsQuery = "DELETE FROM sale_items WHERE sale_id = @saleId";
+                                MySqlCommand deleteItemsCommand = new MySqlCommand(deleteItemsQuery, connection);
+                                deleteItemsCommand.Parameters.AddWithValue("@saleId", saleId);
+
+                                deleteItemsCommand.ExecuteNonQuery();
+                            }
+
+
+                            // Return the stock for each product
+                            foreach (var productTuple in productsToReturn)
+                            {
+                                int productId = productTuple.Item1;
+                                int quantitySold = productTuple.Item2;
+
+                                using (connection)
+                                {
+                                    if (connection.State != ConnectionState.Open)
+                                    {
+                                        connection.Open();
+                                    }
+                                    string updateStockQuery = "UPDATE products SET quantity_in_stock = quantity_in_stock + @quantitySold WHERE product_id = @productId";
+                                    MySqlCommand updateStockCommand = new MySqlCommand(updateStockQuery, connection);
+                                    updateStockCommand.Parameters.AddWithValue("@quantitySold", quantitySold);
+                                    updateStockCommand.Parameters.AddWithValue("@productId", productId);
+
+                                    updateStockCommand.ExecuteNonQuery();
+                                }
+                            }
+
+                            transaction.Commit();
+                            string memo_text = Environment.NewLine + "Order successfully cancelled for Sale ID " + saleId + Environment.NewLine + "Cancellation processed by " + username;
+                            LoadingScreenManager.ShowLoadingScreen(() =>
+                            {
+
+                                AddMemo memo = new AddMemo(customerId, username, "Order Cancellation", memo_text);
+                                memo.Show();
+                            });
+
+                            LoadSalesHistoryForCustomer(customerId);
                         }
-
-                        string memo_text = Environment.NewLine + "Order successfully cancelled for Sale ID " + saleId + Environment.NewLine + "Cancellation processed by " + username;
-                        LoadingScreenManager.ShowLoadingScreen(() =>
+                        catch (Exception e)
                         {
-                            AddMemo memo = new AddMemo(customerId, username, "Order Cancellation", memo_text);
-                            memo.Show();
-                        });
-
-                        LoadSalesHistoryForCustomer(customerId);
+                            transaction?.Rollback();
+                            MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
             }
@@ -587,8 +601,12 @@ namespace Dashboard.Forms
 
         private void LoadSaleItemsForSale(int salesId)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
 
@@ -610,11 +628,9 @@ namespace Dashboard.Forms
                             DataTable saleItemsTable = new DataTable();
                             saleItemsTable.Load(reader);
 
-                            // Create a BindingSource and bind it to the DataTable
                             BindingSource saleItemsBindingSource = new BindingSource();
                             saleItemsBindingSource.DataSource = saleItemsTable;
 
-                            // Bind the DataGridView to the BindingSource
                             saleItemsGrid.DataSource = saleItemsBindingSource;
 
                             saleItemsGrid.Columns["Unit Price"].DefaultCellStyle.Format = "C2";
@@ -633,13 +649,6 @@ namespace Dashboard.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -675,7 +684,7 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                PaymentHistory payment = new PaymentHistory(CustomerId, username);
+                PaymentHistory payment = new PaymentHistory(CustomerId, username, connection);
                 payment.Show(); 
             });
         }
@@ -688,7 +697,6 @@ namespace Dashboard.Forms
                 return;
             }
             
-            // Close or hide the Dashboard and FormOrder forms
             Dashboard dashboardForm = Application.OpenForms["Dashboard"] as Dashboard;
             if (dashboardForm != null)
             {
@@ -701,8 +709,7 @@ namespace Dashboard.Forms
                 formOrderForm.Hide(); 
             }
 
-            // Show the POS form
-            POS newpos = new POS(customerId, username, role);
+            POS newpos = new POS(customerId, username, role, connection);
             newpos.Show();
         }
 
@@ -723,11 +730,14 @@ namespace Dashboard.Forms
 
         private bool IsPastDue(int customerId)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
-                    // Query to get the earliest sale's status for the given customer
                     string query = "SELECT payment_status, sale_date " +
                                    "FROM sales " +
                                    "WHERE customer_id = @customer_id " +
@@ -743,8 +753,6 @@ namespace Dashboard.Forms
                             if (reader.Read())
                             {
                                 DateTime saleDate = reader.GetDateTime("sale_date");
-
-                                // Check if the sale is past due (7 days after sale_date)
                                 if (DateTime.Now > saleDate.AddDays(7))
                                 {
                                     return true; // The sale is past due
@@ -755,9 +763,8 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-
+                    Console.WriteLine(ex.ToString());
                 }
-
                 return false; 
             }
         }

@@ -16,23 +16,29 @@ namespace Dashboard
 
         public int SelectedCustomerId { get; private set; }
         private string employee_name;
-        private string connectionString = "datasource=sql12.freesqldatabase.com;port=3306;username=sql12647212;password=31a2n6pHbR;database=sql12647212;";
-        public SearchCustomer(string EmployeeName)
+        private MySqlConnection connection;
+        public SearchCustomer(string EmployeeName, MySqlConnection connection)
         {
             InitializeComponent();
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox1.SelectedIndex = 0;
             employee_name = EmployeeName;
+            this.connection = connection;
             textBox1.Focus();
         }
 
         private void DisplayCustomers()
         {
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
+
                     string query = "SELECT customer_id, first_name, last_name, contact_email, contact_phone, address FROM customers";
 
                     using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -55,13 +61,6 @@ namespace Dashboard
                 {
                     MessageBox.Show("Error: " + ex.Message);
                 }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
-                }
             }
 
         }
@@ -80,9 +79,12 @@ namespace Dashboard
         {
             try
             {
-                using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                using (connection)
                 {
-
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
                     string selectedFilter = comboBox1.SelectedItem.ToString();
                     string searchKeyword = textBox1.Text.Trim();
 
@@ -184,7 +186,7 @@ namespace Dashboard
         private void button2_Click(object sender, EventArgs e)
         {
             this.Close();
-            NewCustomer newcx = new NewCustomer(employee_name);
+            NewCustomer newcx = new NewCustomer(employee_name, connection);
             newcx.Show();
         }
 

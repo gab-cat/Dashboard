@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -16,11 +17,13 @@ namespace Dashboard.Forms
     {
         private int customer_id;
         private string employee_name;
-        public PaymentHistory(int CustomerId, string EmployeeName)
+        private MySqlConnection connection;
+        public PaymentHistory(int CustomerId, string EmployeeName, MySqlConnection connection)
         {   
             InitializeComponent();
             customer_id = CustomerId;
             employee_name = EmployeeName;
+            this.connection = connection;
             LoadPaymentDataForCustomer(customer_id);
             this.Focus();
         }
@@ -28,8 +31,12 @@ namespace Dashboard.Forms
         private void loadPaymentData(int customerId)
         {
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     string query = "SELECT payment_id AS 'Transaction ID', payment_date AS 'Date', payment_amount AS 'Amount', payment_method AS 'Method' " +
@@ -44,15 +51,12 @@ namespace Dashboard.Forms
 
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            // Create a DataTable to hold the payment data
                             DataTable paymentTable = new DataTable();
                             paymentTable.Load(reader);
 
-                            // Create a BindingSource and bind it to the DataTable
                             BindingSource paymentBindingSource = new BindingSource();
                             paymentBindingSource.DataSource = paymentTable;
 
-                            // Bind the DataGridView to the BindingSource
                             paymentData.DataSource = paymentBindingSource;
                         }
                     }
@@ -60,13 +64,6 @@ namespace Dashboard.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -77,15 +74,17 @@ namespace Dashboard.Forms
             string payment_date = paymentData.SelectedRows[0].Cells["Date"].Value.ToString();
             string method = paymentData.SelectedRows[0].Cells["Method"].Value.ToString();
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 MySqlTransaction transaction = null;
                 try
                 {
-                    // Begin a transaction to ensure data consistency
                     transaction = connection.BeginTransaction();
 
-                    // Update the payments table to set payment_method to 'Refunded'
                     string updatePaymentsQuery = "UPDATE payments SET payment_method = 'Refunded' WHERE payment_id = @payment_id";
                     using (MySqlCommand updatePaymentsCommand = new MySqlCommand(updatePaymentsQuery, connection, transaction))
                     {
@@ -158,17 +157,9 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-                    // Rollback the transaction to ensure data consistency
                     transaction?.Rollback();
 
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }

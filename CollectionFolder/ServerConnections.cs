@@ -16,10 +16,12 @@ namespace Dashboard.CollectionFolder
     public partial class ServerConnections : Form
     {
         private string employee_name;
-        public ServerConnections(string employee_name)
+        MySqlConnection connection;
+        public ServerConnections(string employee_name, MySqlConnection connection)
         {
             InitializeComponent();
             this.employee_name = employee_name;
+            this.connection = connection;
             LoadActiveProcesses();
         }
 
@@ -30,7 +32,7 @@ namespace Dashboard.CollectionFolder
 
         private void LoadActiveProcesses()
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
                 string query = "SHOW PROCESSLIST"; 
 
@@ -86,7 +88,7 @@ namespace Dashboard.CollectionFolder
 
         private void KillProcessById(int processId)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
                 string query = "KILL " + processId; // MySQL command to kill a process by ID
 
@@ -98,7 +100,7 @@ namespace Dashboard.CollectionFolder
                     }
                     catch (Exception ex)
                     {
-                        // Handle any errors or exceptions here
+                        Console.WriteLine(ex.Message);
                     }
                 }
             }
@@ -106,7 +108,7 @@ namespace Dashboard.CollectionFolder
 
         private void btnKillAll_Click(object sender, EventArgs e)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
                 string query = "SHOW PROCESSLIST"; // MySQL command to show active processes
 

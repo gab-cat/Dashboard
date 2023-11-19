@@ -120,6 +120,7 @@ namespace Dashboard
                     else
                     {
                         // User did not agree, exit the application
+                        this.connection.Dispose();
                         Application.Exit();
                     }
                 }

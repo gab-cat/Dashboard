@@ -17,7 +17,8 @@ namespace Dashboard
         private bool changesMade = false;
         private List<string> changeMemos = new List<string>();
         private string employee_name, username,first_name, last_name, designation, email, supervisor, role;
-        public UpdateEmployee(string EmployeeName, string role, string username, string first_name, string last_name, string designation, string email, string supervisor )
+        MySqlConnection connection;
+        public UpdateEmployee(string EmployeeName, string role, string username, string first_name, string last_name, string designation, string email, string supervisor, MySqlConnection connection )
         {
             InitializeComponent();
             employee_name = EmployeeName;
@@ -28,6 +29,7 @@ namespace Dashboard
             this.email = email;
             this.supervisor = supervisor;
             this.role = role;
+            this.connection = connection;
 
             string fullName = first_name + " " + last_name;
 
@@ -142,8 +144,17 @@ namespace Dashboard
                            "employee_email = @email, direct_supervisor = @supervisor " +
                            "WHERE username = @username";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+
+            using (this.connection)
             {
+
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                MySqlTransaction transaction = null;
+
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
                     // Use parameters to prevent SQL injection
@@ -157,9 +168,12 @@ namespace Dashboard
 
                     try
                     {
+                        transaction = connection.BeginTransaction();
+
                         int rowsAffected = command.ExecuteNonQuery();
                         if (rowsAffected > 0)
                         {
+                            transaction.Commit();
                             string changeSummaryMemo = string.Join("\n", changeMemos);
 
                             LoadingScreenManager.ShowLoadingScreen(() =>
@@ -177,6 +191,7 @@ namespace Dashboard
                     }
                     catch (Exception ex)
                     {
+                        transaction?.Rollback();
                         MessageBox.Show("An error occurred while updating the employee information: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }

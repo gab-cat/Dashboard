@@ -222,35 +222,48 @@ namespace Dashboard
                     connection.Open();
                 }
 
+                MySqlTransaction transaction = null;
+
                 string updateQuery = "UPDATE clock_disputes " +
                                         "SET dispute_status = 'Denied', read_status = 0, response = @response " +
                                         "WHERE dispute_id = @disputeID";
-
-                using (MySqlCommand cmd = new MySqlCommand(updateQuery, connection))
+                try
                 {
-                    cmd.Parameters.AddWithValue("@disputeID", disputeID);
-                    cmd.Parameters.AddWithValue("@response", response);
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                    transaction = connection.BeginTransaction();
 
-                    if (rowsAffected > 0)
+                    using (MySqlCommand cmd = new MySqlCommand(updateQuery, connection))
                     {
-                        txtStatus.Visible = true;
-                        txtStatus.Text = "DENIED";
-                        txtStatus.ForeColor = Color.DarkRed;
+                        cmd.Parameters.AddWithValue("@disputeID", disputeID);
+                        cmd.Parameters.AddWithValue("@response", response);
+                        int rowsAffected = cmd.ExecuteNonQuery();
 
-                        btnDeny.Visible = false;
-                        btnApprove.Visible = false;
-                        txtResponse.BackColor = SystemColors.ButtonFace;
+                        if (rowsAffected > 0)
+                        {
+                            transaction.Commit();
+                            txtStatus.Visible = true;
+                            txtStatus.Text = "DENIED";
+                            txtStatus.ForeColor = Color.DarkRed;
 
-                        txtResponse.Text = response;
-                        txtResponse.TabStop = false;
-                        txtResponse.Focus();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to update dispute status.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            btnDeny.Visible = false;
+                            btnApprove.Visible = false;
+                            txtResponse.BackColor = SystemColors.ButtonFace;
+
+                            txtResponse.Text = response;
+                            txtResponse.TabStop = false;
+                            txtResponse.Focus();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to update dispute status.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    transaction?.Rollback();
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                
             }
         }
 
@@ -287,37 +300,48 @@ namespace Dashboard
                 {
                     connection.Open();
                 }
+                MySqlTransaction transaction = null;
 
                 string updateQuery = "UPDATE clock_disputes " +
                                      "SET dispute_status = 'Approved', read_status = 0, response = @response " +
                                      "WHERE dispute_id = @disputeID";
-
-                using (MySqlCommand cmd = new MySqlCommand(updateQuery, connection))
+                try
                 {
-                    cmd.Parameters.AddWithValue("@disputeID", disputeID);
-                    cmd.Parameters.AddWithValue("@response", response);
-                    int rowsAffected = cmd.ExecuteNonQuery();
+                    transaction = connection.BeginTransaction();
 
-                    if (rowsAffected > 0)
+                    using (MySqlCommand cmd = new MySqlCommand(updateQuery, connection))
                     {
-                        txtStatus.Visible = true;
-                        txtStatus.Text = "APPROVED";
-                        txtStatus.ForeColor = Color.DarkGreen;
+                        cmd.Parameters.AddWithValue("@disputeID", disputeID);
+                        cmd.Parameters.AddWithValue("@response", response);
+                        int rowsAffected = cmd.ExecuteNonQuery();
 
-                        btnDeny.Visible = false;
-                        btnApprove.Visible = false;
-                        txtResponse.BackColor = SystemColors.ButtonFace;
+                        if (rowsAffected > 0)
+                        {
+                            transaction.Commit();
+                            txtStatus.Visible = true;
+                            txtStatus.Text = "APPROVED";
+                            txtStatus.ForeColor = Color.DarkGreen;
 
-                        txtResponse.Text = response;
-                        txtResponse.TabStop = false;
-                        txtResponse.Focus();
+                            btnDeny.Visible = false;
+                            btnApprove.Visible = false;
+                            txtResponse.BackColor = SystemColors.ButtonFace;
+
+                            txtResponse.Text = response;
+                            txtResponse.TabStop = false;
+                            txtResponse.Focus();
 
 
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to update dispute status.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("Failed to update dispute status.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    transaction?.Rollback();
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -331,45 +355,61 @@ namespace Dashboard
                     connection.Open();
                 }
 
+                MySqlTransaction transaction = null;
+
                 string getActivityQuery = "SELECT CONCAT(activity, start_end) AS columnName FROM clock_disputes WHERE dispute_id = @disputeId";
 
-                using (MySqlCommand getActivityCmd = new MySqlCommand(getActivityQuery, connection))
+                try
                 {
-                    getActivityCmd.Parameters.AddWithValue("@disputeId", disputeId);
+                    transaction = connection.BeginTransaction();
 
-                    string columnName = getActivityCmd.ExecuteScalar()?.ToString();
-
-                    if (columnName != null)
+                    using (MySqlCommand getActivityCmd = new MySqlCommand(getActivityQuery, connection))
                     {
-                        string updateClockInsQuery =
-                            "UPDATE clockIns AS ci " +
-                            $"INNER JOIN clock_disputes AS cd ON ci.username = cd.username AND ci.clockIn_date = cd.requested_date " +
-                            $"SET ci.{columnName} = cd.requested_time " +
-                            $"WHERE ci.username = @username AND cd.dispute_id = @disputeId";
+                        getActivityCmd.Parameters.AddWithValue("@disputeId", disputeId);
 
-                        using (MySqlCommand cmd = new MySqlCommand(updateClockInsQuery, connection))
+                        string columnName = getActivityCmd.ExecuteScalar()?.ToString();
+
+                        if (columnName != null)
                         {
-                            cmd.Parameters.AddWithValue("@username", txtEmpID.Text);
-                            cmd.Parameters.AddWithValue("@disputeId", disputeId);
-                            int rowsAffected = cmd.ExecuteNonQuery();
+                            string updateClockInsQuery =
+                                "UPDATE clockIns AS ci " +
+                                $"INNER JOIN clock_disputes AS cd ON ci.username = cd.username AND ci.clockIn_date = cd.requested_date " +
+                                $"SET ci.{columnName} = cd.requested_time " +
+                                $"WHERE ci.username = @username AND cd.dispute_id = @disputeId";
 
-                            if (rowsAffected > 0)
+                            using (MySqlCommand cmd = new MySqlCommand(updateClockInsQuery, connection))
                             {
-                                MessageBox.Show("Dispute is approved and requested time stamp is updated accordingly.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                return true;
-                            }
-                            else
-                            {
-                                MessageBox.Show($"Failed to update ClockIns table. {columnName} {txtEmpID} {disputeId}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                return false;
+                                cmd.Parameters.AddWithValue("@username", txtEmpID.Text);
+                                cmd.Parameters.AddWithValue("@disputeId", disputeId);
+                                int rowsAffected = cmd.ExecuteNonQuery();
+
+                                if (rowsAffected > 0)
+                                {
+                                    transaction.Commit();
+                                    MessageBox.Show("Dispute is approved and requested time stamp is updated accordingly.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    return true;
+                                }
+                                else
+                                {
+                                    transaction?.Rollback();
+                                    MessageBox.Show($"Failed to update ClockIns table. {columnName} {txtEmpID} {disputeId}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    return false;
+                                }
                             }
                         }
+                        else
+                        {
+                            transaction?.Rollback();
+                            MessageBox.Show("Failed to retrieve column name.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return false;
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show("Failed to retrieve column name.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return false;
-                    }
+                }
+                catch (Exception ex)
+                {
+                    transaction?.Rollback();
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
             }
         }

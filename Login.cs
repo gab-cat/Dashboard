@@ -75,6 +75,9 @@ namespace Dashboard
 
             if (result == DialogResult.Yes)
             {
+                DatabaseHelper.CloseConnection(this.connection);
+
+
                 Application.Exit();
             }
         }
@@ -182,6 +185,12 @@ namespace Dashboard
                         ShowLoadingForm(firstName);
 
                         form1.Show();
+
+                        if (connection != null)
+                        {
+                            connection.Close();
+                            connection.Dispose();
+                        }
                         this.Close();
                     }
                     else
@@ -233,10 +242,9 @@ namespace Dashboard
         {
             try
             {
-                string salt = PasswordHashing.GenerateSalt(); // Generate a new salt for the password
+                string salt = PasswordHashing.GenerateSalt(); 
                 string hashedPassword = PasswordHashing.HashString(newPassword, salt);
 
-                // Check if the new password meets the validation requirements
                 if (!IsNewPasswordValid(newPassword))
                 {
                     MessageBox.Show("New password must meet the following requirements:\n" +
@@ -248,8 +256,12 @@ namespace Dashboard
                     return;
                 }
 
-                // SQL statement to update the password and salt in the database
                 string updateQuery = "UPDATE logins SET password = @Password, salt = @Salt, temporary_password = 0 WHERE username = @Username";
+
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
 
                 using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
                 {
@@ -534,6 +546,15 @@ namespace Dashboard
                 textBoxPassword.UseSystemPasswordChar = true;
             }
             
+        }
+
+        private void Login_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (connection != null)
+            {
+                connection.Dispose();
+                connection.Close();
+            }
         }
     }
 }

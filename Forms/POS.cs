@@ -71,8 +71,9 @@ namespace Dashboard.Forms
         private DataTable orderDataTable; 
         private int sale_id;
         private bool isDiscountApplied = false;
+        private MySqlConnection connection;
 
-        public POS(int CustomerId, string EmployeeName, string Role)
+        public POS(int CustomerId, string EmployeeName, string Role, MySqlConnection connection)
         {
             InitializeComponent();
             orderGrid.AutoGenerateColumns = true;
@@ -81,6 +82,7 @@ namespace Dashboard.Forms
             customer_id = CustomerId;
             employee_name = EmployeeName;
             role = Role;
+            this.connection = connection;
 
             txt_Name.Text = EmployeeName;
             txt_Role.Text = Role;
@@ -147,7 +149,7 @@ namespace Dashboard.Forms
             DataGridViewButtonColumn btnXColumn = (DataGridViewButtonColumn)orderGrid.Columns["btnXColumn"];
             btnXColumn.DisplayIndex = orderGrid.Columns.Count - 1;
 
-            AddItems addItems = new AddItems(productStockData);
+            AddItems addItems = new AddItems(productStockData, connection);
             addItems.PendingOrder = AddItems.pendingOrder;
             // Subscribe to the ItemAdded event
             addItems.ItemAdded += AddItems_ItemAdded;
@@ -290,34 +292,38 @@ namespace Dashboard.Forms
                 if (result == DialogResult.Yes)
                 {
 
-                    using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                    using (connection)
                     {
-                        using (MySqlTransaction transaction = connection.BeginTransaction())
+                        if (connection.State != ConnectionState.Open)
                         {
-                            try
+                            connection.Open();
+                        }
+                        MySqlTransaction transaction = null;
+
+                        try
+                        {
+                        transaction = connection.BeginTransaction();
+
+                        // Check if a sale_id has been generated
+                        if (sale_id > 0)
                             {
-                                // Check if a sale_id has been generated
-                                if (sale_id > 0)
-                                {
-                                    string deleteQuery = "DELETE FROM sales WHERE sale_id = @sale_id";
-                                    MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection, transaction);
-                                    deleteCommand.Parameters.AddWithValue("@sale_id", sale_id);
-                                    deleteCommand.ExecuteNonQuery();
-                                }
-                                transaction.Commit();
+                                string deleteQuery = "DELETE FROM sales WHERE sale_id = @sale_id";
+                                MySqlCommand deleteCommand = new MySqlCommand(deleteQuery, connection, transaction);
+                                deleteCommand.Parameters.AddWithValue("@sale_id", sale_id);
+                                deleteCommand.ExecuteNonQuery();
                             }
-                            catch (Exception ex)
-                            {
-                                transaction.Rollback();
-                                MessageBox.Show("An error occurred while canceling the transaction: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            }
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction?.Rollback();
+                            MessageBox.Show("An error occurred while canceling the transaction: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
             }
             this.Close();
 
-            // Show the previously hidden Dashboard and FormOrder forms
             Dashboard dashboardForm = Application.OpenForms["Dashboard"] as Dashboard;
             if (dashboardForm != null)
             {
@@ -338,7 +344,7 @@ namespace Dashboard.Forms
         }
         private void GenerateTransactionID()
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
                 using (MySqlTransaction transaction = connection.BeginTransaction())
                 {
@@ -576,8 +582,12 @@ namespace Dashboard.Forms
 
         private bool CheckAuthentication(string username, string password)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 string query = "SELECT COUNT(*) FROM logins WHERE username = @username AND password = @password";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@username", username);
@@ -591,8 +601,12 @@ namespace Dashboard.Forms
 
         private string GetUserRole(string username)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 string query = "SELECT role FROM logins WHERE username = @username";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 command.Parameters.AddWithValue("@username", username);
@@ -719,8 +733,13 @@ namespace Dashboard.Forms
         private void CreateOrder(int customerId, string employeeName)
         {
             orderCreated = true;
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
                 using (MySqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
@@ -1346,8 +1365,12 @@ namespace Dashboard.Forms
             contact_email = "";
             address = "";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     string query = "SELECT first_name, last_name, contact_email, contact_phone, address " +
@@ -1377,13 +1400,6 @@ namespace Dashboard.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }

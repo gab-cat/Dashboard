@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dashboard.CollectionFolder;
 using System.Collections;
+using System.Transactions;
 
 namespace Dashboard.Forms
 {
@@ -19,13 +20,18 @@ namespace Dashboard.Forms
     {
         private string employee_name;
         private string role;
-        MySqlConnection async_connection;
-        public FormMaintenance(string employee_name, string role, MySqlConnection async_connection)
+        private string username;
+        MySqlConnection connection;
+        private ServerConnections serverConnectionsForm;
+        private MtnMemoView memoViewForm;
+        public FormMaintenance(string employee_name, string role, MySqlConnection connection, string username)
         {
             InitializeComponent();
             this.employee_name = employee_name;
+            this.username = username;
+            Console.WriteLine(username + " " + role);
             this.role = role;
-            this.async_connection = async_connection;
+            this.connection = connection;
             LoadEmployeeData();
         }
 
@@ -80,7 +86,11 @@ namespace Dashboard.Forms
         private void LoadEmployeeData()
         {
             // Define your SQL query to retrieve employee data
-            string query = @"SELECT
+            string query = null;
+
+            if (role == "Admin")
+            {
+                query = @"SELECT
                             l.username AS Username,
                             l.first_name AS 'First Name',
                             l.last_name AS 'Last Name',
@@ -97,13 +107,46 @@ namespace Dashboard.Forms
                             logins AS d ON l.direct_supervisor = d.username
                         ORDER BY
                             l.username";
-
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            }
+            else
             {
+                query = @"SELECT
+                    l.username AS Username,
+                    l.first_name AS 'First Name',
+                    l.last_name AS 'Last Name',
+                    CASE
+                        WHEN l.employee_status = 1 THEN 'ACTIVE'
+                        ELSE 'INACTIVE'
+                    END AS Status,
+                    l.role AS Role,
+                    l.employee_email AS 'Employee Email',
+                    CONCAT(d.first_name, ' ', d.last_name) AS 'Direct Supervisor'
+                FROM
+                    logins AS l
+                LEFT JOIN
+                    logins AS d ON l.direct_supervisor = d.username
+                WHERE
+                    l.direct_supervisor = @username
+                ORDER BY
+                    l.username";
+
+            }
+
+            using (connection)
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
+                        if (role != "Admin")
+                        {
+                            command.Parameters.AddWithValue("@username", username);
+                        }
+
                         using (MySqlDataAdapter adapter = new MySqlDataAdapter(command))
                         {
                             DataTable employeeData = new DataTable();
@@ -125,8 +168,12 @@ namespace Dashboard.Forms
         {
             string selectQuery = "SELECT active_session, active_since FROM logins WHERE username = @username";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     using (MySqlCommand command = new MySqlCommand(selectQuery, connection))
@@ -175,7 +222,6 @@ namespace Dashboard.Forms
                 {
                     DataGridViewRow selectedRow = EmployeeGrid.SelectedRows[0];
 
-                    // Populate the textboxes with the selected employee's data
                     txtUsername.Text = selectedRow.Cells["Username"].Value.ToString();
                     txtFirstName.Text = selectedRow.Cells["First Name"].Value.ToString();
                     txtLastName.Text = selectedRow.Cells["Last Name"].Value.ToString();
@@ -245,7 +291,6 @@ namespace Dashboard.Forms
                 {
                     DataGridViewRow selectedRow = EmployeeGrid.SelectedRows[0];
 
-                    // Populate the textboxes with the selected employee's data
                     txtUsername.Text = selectedRow.Cells["Username"].Value.ToString();
                     txtFirstName.Text = selectedRow.Cells["First Name"].Value.ToString();
                     txtLastName.Text = selectedRow.Cells["Last Name"].Value.ToString();
@@ -324,7 +369,6 @@ namespace Dashboard.Forms
 
         private void ClearTextboxes()
         {
-            // Clear the content of the textboxes
             txtUsername.Text = string.Empty;
             txtFirstName.Text = string.Empty;
             txtLastName.Text = string.Empty;
@@ -367,7 +411,7 @@ namespace Dashboard.Forms
             }
             else
             {
-                UpdateEmployee update = new UpdateEmployee(employee_name, role, txtUsername.Text, txtFirstName.Text, txtLastName.Text, txtRole.Text, txtEmailAddress.Text, txtSupervisor.Text);
+                UpdateEmployee update = new UpdateEmployee(employee_name, role, txtUsername.Text, txtFirstName.Text, txtLastName.Text, txtRole.Text, txtEmailAddress.Text, txtSupervisor.Text, connection);
                 update.ShowDialog();
             }
         }
@@ -382,7 +426,7 @@ namespace Dashboard.Forms
             string role = txtRole.Text;
             string emailAddress = txtEmailAddress.Text;
             string supervisor = txtSupervisor.Text;
-            int status = 1; // Temporary password is set to 1
+            int status = 1; 
 
             string hashedPassword = PasswordHashing.HashString(password, salt);
 
@@ -390,11 +434,17 @@ namespace Dashboard.Forms
             string query = "INSERT INTO logins (username, password, salt, first_name, last_name, role, employee_email, direct_supervisor, employee_status) " +
                            $"VALUES (@username, @password, @salt, @firstName, @lastName, @role, @emailAddress, @supervisor, @status)";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+                MySqlTransaction transaction = null;
+
                 using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    // Use parameters to prevent SQL injection
+
                     command.Parameters.AddWithValue("@username", username);
                     command.Parameters.AddWithValue("@password", hashedPassword);
                     command.Parameters.AddWithValue("@salt", salt);
@@ -407,6 +457,8 @@ namespace Dashboard.Forms
 
                     try
                     {
+                        transaction = connection.BeginTransaction();
+
                         command.ExecuteNonQuery();
 
                         // Send an email with the new user details
@@ -419,16 +471,17 @@ namespace Dashboard.Forms
 
 
 
-                        // Send the email
                         SendsEmail(emailAddress, emailSubject, emailBody + outro);
 
                         MaintenanceMemo nm = new MaintenanceMemo("System Profiles Manager" ,"New User Profile", systemText, 1);
                         nm.Hide();
 
+                        transaction.Commit();
                         LoadEmployeeData();
                     }
                     catch (Exception ex)
                     {
+                        transaction?.Rollback();
                         MessageBox.Show("An error occurred while creating a new profile: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -480,7 +533,6 @@ namespace Dashboard.Forms
                 DataGridViewRow selectedRow = EmployeeGrid.SelectedRows[0];
                 string usernameToDelete = selectedRow.Cells["Username"].Value.ToString();
 
-                // Confirm with the user before deleting
                 DialogResult result = MessageBox.Show("Are you sure you want to delete this employee?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
@@ -497,13 +549,20 @@ namespace Dashboard.Forms
         }
         private void DeleteEmployee(string username)
         {
-            // Define your SQL DELETE query
             string deleteQuery = "DELETE FROM logins WHERE username = @Username";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+                MySqlTransaction transaction = null;
+
                 try
                 {
+                    transaction = connection.BeginTransaction();
+
                     using (MySqlCommand command = new MySqlCommand(deleteQuery, connection))
                     {
                         command.Parameters.AddWithValue("@Username", username);
@@ -511,7 +570,7 @@ namespace Dashboard.Forms
 
                         if (rowsAffected > 0)
                         {
-
+                            transaction.Commit();
                             LoadEmployeeData();
                         }
                         else
@@ -522,6 +581,7 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
+                    transaction?.Rollback();
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -548,10 +608,7 @@ namespace Dashboard.Forms
                     }
 
 
-                    // Toggle the status (if 0, set to 1; if 1, set to 0)
                     int newStatus = currentStatus == 0 ? 1 : 0;
-
-                    // Update the status in the database
                     UpdateEmployeeStatus(username, newStatus);
                     if (newStatus == 1)
                     {
@@ -578,13 +635,19 @@ namespace Dashboard.Forms
 
         private void UpdateEmployeeStatus(string username, int newStatus)
         {
-            // Define your SQL UPDATE query to change the employee_status
             string updateQuery = "UPDATE logins SET employee_status = @Status WHERE username = @Username";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+                MySqlTransaction transaction = null;
+
                 try
                 {
+                    transaction = connection.BeginTransaction();
                     using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
                     {
                         command.Parameters.AddWithValue("@Status", newStatus);
@@ -594,58 +657,68 @@ namespace Dashboard.Forms
                         if (rowsAffected > 0)
                         {
                             string statusText = newStatus == 1 ? "Active" : "Inactive";
-                            
 
+
+                            transaction.Commit();
                             // Refresh the DataGridView to reflect the changes
                             LoadEmployeeData();
                         }
                         else
                         {
+                            transaction?.Rollback();
                             MessageBox.Show("Failed to update employee profile.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
+                    transaction?.Rollback();
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
         private void ResetPassword(string username, string emailAddress)
         {
-            // Generate a new random password
+            // Generate a new random password and salt
             string newPassword = GenerateRandomPassword(8);
-            string salt = PasswordHashing.GenerateSalt(); // Generate a new salt for the password
+            string salt = PasswordHashing.GenerateSalt();
 
             // Hash the new password with the generated salt
             string hashedPassword = PasswordHashing.HashString(newPassword, salt);
 
-            // Update the password and temporary_password in the database
             string updateQuery = "UPDATE logins SET password = @password, salt = @salt, temporary_password = 1, login_attempts = 0 WHERE username = @username";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (this.connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+                MySqlTransaction transaction = null;
+
                 using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
                 {
-                    // Use parameters to prevent SQL injection
                     command.Parameters.AddWithValue("@password", hashedPassword);
                     command.Parameters.AddWithValue("@salt", salt);
                     command.Parameters.AddWithValue("@username", username);
 
                     try
                     {
+                        transaction = connection.BeginTransaction();
+
                         command.ExecuteNonQuery();
 
-                        // Send an email with the new temporary password
+                        transaction.Commit();
+
                         string emailSubject = "Temporary Password Reset";
                         string emailBody = $"Your temporary password has been reset to: <strong>{newPassword}</strong>";
                         string outro = "<br><br><i>Please use the temporary password to log in at OrderMAX. Once logged in, you will be able to set up your own password.</i><br><i>This is a system-generated message. Do not reply.</i>";
 
-                        // Send the email
                         SendsEmail(emailAddress, emailSubject, emailBody + outro);
                     }
                     catch (Exception ex)
                     {
+                        transaction?.Rollback();
                         MessageBox.Show("An error occurred while resetting the password: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -661,7 +734,6 @@ namespace Dashboard.Forms
                 return;
             }
 
-                // Ask for confirmation before resetting the password
             DialogResult confirmationResult = MessageBox.Show($"Are you sure you want to reset the password for {txtFirstName.Text + " " + txtLastName.Text }?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirmationResult == DialogResult.Yes)
@@ -675,14 +747,30 @@ namespace Dashboard.Forms
 
         private void btnOpenLogs_Click(object sender, EventArgs e)
         {
-                MtnMemoView memoview = new MtnMemoView(employee_name);
-                memoview.Show();
+            if (memoViewForm != null && !memoViewForm.IsDisposed)
+            {
+                memoViewForm.Focus();
+                memoViewForm.BringToFront();
+            }
+            else
+            {
+                memoViewForm = new MtnMemoView(employee_name);
+                memoViewForm.Show();
+            }
         }
 
         private void btnServerConnections_Click(object sender, EventArgs e)
         {
-            ServerConnections serverConnections = new ServerConnections(employee_name);
-            serverConnections.Show();
+            if (serverConnectionsForm != null && !serverConnectionsForm.IsDisposed)
+            {
+                serverConnectionsForm.Focus();
+                serverConnectionsForm.BringToFront();
+            }
+            else
+            {
+                serverConnectionsForm = new ServerConnections(employee_name, connection);
+                serverConnectionsForm.Show();
+            }
         }
 
         private void btnForceLogout_Click(object sender, EventArgs e)
@@ -690,7 +778,7 @@ namespace Dashboard.Forms
 
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                using (MySqlConnection connection = async_connection)
+                using (MySqlConnection connection = this.connection)
                 {
                     if (connection.State != ConnectionState.Open)
                     {

@@ -15,6 +15,8 @@ namespace Dashboard.Forms
     {
         private int hiddenMemo;
         private string memoText;
+        private MySqlConnection connection = DatabaseHelper.GetMemoConnection();
+
         public MaintenanceMemo(string employee_name)
         {
             InitializeComponent();
@@ -84,10 +86,18 @@ namespace Dashboard.Forms
                 memoText = txtSystemText.Text + Environment.NewLine + Environment.NewLine + txtUserText.Text;
             }
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+                MySqlTransaction transaction = null;
+
                 try
                 {
+                    transaction = connection.BeginTransaction();
+
                     // Define the SQL query to insert a memo
                     string query = @"
                 INSERT INTO memos (customer_id, time_date, reason, employee_name, memo_text)
@@ -109,7 +119,13 @@ namespace Dashboard.Forms
                         {
                             if (rowsAffected > 0)
                             {
+                                transaction.Commit();
                                 MessageBox.Show("Memo inserted successfully. The form will now close.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                if (connection != null)
+                                {
+                                    connection.Dispose();
+                                    connection.Close();
+                                }
                                 this.Close();
                             }
                             else
@@ -128,6 +144,7 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
+                    transaction?.Rollback();
                     if (hiddenMemo != 1)
                     {
                         MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -138,9 +155,19 @@ namespace Dashboard.Forms
                 {
                     if (connection != null)
                     {
+                        connection.Dispose();
                         connection.Close();
                     }
                 }
+            }
+        }
+
+        private void MaintenanceMemo_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (connection != null)
+            {
+                connection.Dispose();
+                connection.Close();
             }
         }
     }

@@ -22,13 +22,15 @@ namespace Dashboard
         private bool originalSmsChecked;
         private bool originalEmailChecked;
         private bool originalPhoneChecked;
+        private MySqlConnection connection;
 
-        public UpdateCustomer(int customer_id, string employee_name)
+        public UpdateCustomer(int customer_id, string employee_name, MySqlConnection connection)
         {
             InitializeComponent();
             this.Focus();
             CustomerId = customer_id;
             EmployeeName = employee_name;
+            this.connection = connection;
             loadCustomerInfo(CustomerId);
             loadIndicators(CustomerId);
 
@@ -63,8 +65,12 @@ namespace Dashboard
         private void loadCustomerInfo(int customer_id)
         {
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     // Query to retrieve customer information based on customer ID
@@ -102,20 +108,18 @@ namespace Dashboard
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
-                }
             }
         }
 
         private void loadIndicators(int customer_id)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
                 try
                 {
                     // Query to retrieve indicator values based on customer ID
@@ -152,13 +156,6 @@ namespace Dashboard
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
-                }
             }
         }
 
@@ -171,10 +168,18 @@ namespace Dashboard
             string phone = txtPhone.Text;
             string email = txtEmail.Text;
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                MySqlTransaction transaction = null;
                 try
                 {
+                    transaction = connection.BeginTransaction();
+
                     // Check if the customer already exists based on customer ID
                     string checkExistingQuery = "SELECT COUNT(*) FROM customers WHERE customer_id = @customerId";
                     using (MySqlCommand checkExistingCommand = new MySqlCommand(checkExistingQuery, connection))
@@ -236,6 +241,7 @@ namespace Dashboard
                                         memoText.AppendLine("Customer ID: " + CustomerId);
                                         memoText.AppendLine(string.Join("\n", changedFields));
 
+                                        transaction.Commit();
                                         AddMemo updateProfile = new AddMemo(CustomerId, EmployeeName, "Updated Profile", memoText.ToString());
                                         updateProfile.ShowDialog();
                                         this.Close();
@@ -259,14 +265,8 @@ namespace Dashboard
                 }
                 catch (Exception ex)
                 {
+                    transaction?.Rollback();
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -280,10 +280,18 @@ namespace Dashboard
                 StringBuilder user_text = new StringBuilder();
                 StringBuilder user_text1 = new StringBuilder();
 
-                using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                using (connection)
                 {
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+                    MySqlTransaction transaction = null;
+
                     try
                     {
+                        transaction = connection.BeginTransaction();
+
                         string checkExistingQuery = "SELECT indicator_id, professional_firm, sms, email, phone FROM indicators WHERE customer_id = @customerId";
                         using (MySqlCommand checkExistingCommand = new MySqlCommand(checkExistingQuery, connection))
                         {
@@ -337,6 +345,7 @@ namespace Dashboard
 
                                     if (rowsAffected > 0)
                                     {
+                                        transaction.Commit();
                                         AddMemo updateIndicators = new AddMemo(CustomerId, EmployeeName, "Updated Indicators", user_text.ToString());
                                         updateIndicators.ShowDialog();
                                         this.Close();
@@ -370,6 +379,7 @@ namespace Dashboard
 
                                     if (rowsInserted > 0)
                                     {
+                                        transaction.Commit();
                                         AddMemo newIndicators = new AddMemo(CustomerId, EmployeeName, "Added Indicators", user_text1.ToString());
                                         newIndicators.ShowDialog();
                                         this.Close();
@@ -384,14 +394,8 @@ namespace Dashboard
                     }
                     catch (Exception ex)
                     {
+                        transaction?.Rollback();
                         MessageBox.Show("An error occurred while updating indicators: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    finally
-                    {
-                        if (connection != null)
-                        {
-                            connection.Close();
-                        }
                     }
                 }
             }

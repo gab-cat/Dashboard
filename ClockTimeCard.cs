@@ -299,6 +299,8 @@ namespace Dashboard
 
         private void sendDispute(string startEnd, DateTime originalTime)
         {
+            MySqlTransaction transaction = null;
+
             try
             {
                 string directSupervisor = GetDirectSupervisor(employeeName); // Implement method to get direct supervisor
@@ -325,6 +327,8 @@ namespace Dashboard
                         connection.Open();
                     }
 
+                    transaction = connection.BeginTransaction();
+
                     string insertQuery = "INSERT INTO clock_disputes (username, direct_supervisor, read_status, activity, original_time, requested_time, start_end, reason, dispute_status, requested_date) " +
                                          "VALUES (@username, @directSupervisor, @readStatus, @activity, @originalTime, @requestedTime, @startEnd, @reason, @disputeStatus, @requestedDate)";
 
@@ -345,6 +349,7 @@ namespace Dashboard
 
                         if (rowsAffected > 0)
                         {
+                            transaction.Commit();
                             MessageBox.Show("Your request has been sent. Kindly wait for the request to be reviewed by your manager. You will be notified once this is approved or denied", "Request Processed", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             rbEnd.Checked = false;
                             rbStart.Checked = false;
@@ -354,6 +359,7 @@ namespace Dashboard
                         }
                         else
                         {
+                            transaction?.Rollback();
                             MessageBox.Show("Failed to send the request. Please try again.", "Request Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
@@ -361,6 +367,7 @@ namespace Dashboard
             }
             catch (Exception ex)
             {
+                transaction?.Rollback();
                 MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

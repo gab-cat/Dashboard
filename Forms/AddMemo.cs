@@ -13,6 +13,7 @@ namespace Dashboard.Forms
 {
     public partial class AddMemo : Form
     {
+        MySqlConnection connection = DatabaseHelper.GetMemoConnection();
 
         public AddMemo(int customer_id, string employee_name)
         {
@@ -54,12 +55,19 @@ namespace Dashboard.Forms
                 MessageBox.Show("Please select a reason and provide memo text.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+                MySqlTransaction transaction = null;
+
                 try
                 {
-                    // Define the SQL query to insert a memo
+                    transaction = connection.BeginTransaction();
+
                     string query = @"
                 INSERT INTO memos (customer_id, time_date, reason, employee_name, memo_text)
                 VALUES (@customer_id, @time_date, @reason, @employee_name, @memo_text);
@@ -67,21 +75,24 @@ namespace Dashboard.Forms
 
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        // Set parameters for the query
+
                         command.Parameters.AddWithValue("@customer_id", int.Parse(txtCustomerID.Text));
                         command.Parameters.AddWithValue("@time_date", DateTime.Parse(txtTimeStamp.Text));
                         command.Parameters.AddWithValue("@reason", txtreason.Text);
                         command.Parameters.AddWithValue("@employee_name", txtEmployee.Text);
                         command.Parameters.AddWithValue("@memo_text", txtUserText.Text);
 
-                        // Execute the query
                         int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
                         {
                             MessageBox.Show("Memo inserted successfully. The form will now close.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            // Close the form
+                            transaction.Commit();
+                            if (connection != null)
+                            {
+                                connection.Dispose();
+                                connection.Close();
+                            }
                             this.Close();
                         }
                         else
@@ -89,19 +100,31 @@ namespace Dashboard.Forms
                             MessageBox.Show("Failed to insert memo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
+                   
 
                 }
                 catch (Exception ex)
                 {
+                    transaction.Rollback();
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
                     if (connection != null)
                     {
+                        connection.Dispose();
                         connection.Close();
                     }
                 }
+            }
+        }
+
+        private void AddMemo_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (connection != null)
+            {
+                connection.Dispose();
+                connection.Close();
             }
         }
     }

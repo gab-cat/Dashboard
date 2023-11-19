@@ -47,7 +47,8 @@ namespace Dashboard.Forms
 
         private DataTable orderDataTable = new DataTable();
         public event EventHandler<ItemAddedEventArgs> ItemAdded;
-        public AddItems(Dictionary<string, int> productStockData)
+        private MySqlConnection connection;
+        public AddItems(Dictionary<string, int> productStockData, MySqlConnection connection)
         {
             InitializeComponent();
 
@@ -62,6 +63,7 @@ namespace Dashboard.Forms
 
             pendingOrder = LoadPendingOrderFromFile();
             this.productStockData = productStockData;
+            this.connection = connection;
 
             comboBoxFilter.SelectedIndex = 0;
         }
@@ -77,8 +79,12 @@ namespace Dashboard.Forms
             string query = "SELECT product_id, product_name, description, selling_price, quantity_in_stock " +
                            "FROM products";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 using (MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection))
                 {
                     DataTable dataTable = new DataTable();
@@ -250,8 +256,12 @@ namespace Dashboard.Forms
                 query += $"WHERE product_name LIKE '%{searchTerm}%'";
             }
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 using (MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection))
                 {
                     DataTable dataTable = new DataTable();

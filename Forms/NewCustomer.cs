@@ -15,10 +15,12 @@ namespace Dashboard
     public partial class NewCustomer : Form
     {
         private string employee_name;
-        public NewCustomer(string EmployeeName)
+        MySqlConnection connection;
+        public NewCustomer(string EmployeeName, MySqlConnection connection)
         {
             InitializeComponent();
             employee_name = EmployeeName;
+            this.connection = connection;
         }
 
         private void addCustomer()
@@ -29,10 +31,19 @@ namespace Dashboard
             string phone = txtPhone.Text;
             string email = txtEmail.Text;
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                MySqlTransaction transaction = null;
+
                 try
                 {
+                    transaction = connection.BeginTransaction();
+
                     string query = "INSERT INTO customers (address, first_name, last_name, contact_phone, contact_email, join_date) " +
                                    "VALUES (@address, @first_name, @last_name, @phone, @email, NOW()); SELECT LAST_INSERT_ID();";
 
@@ -63,10 +74,11 @@ namespace Dashboard
 
                             LoadingScreenManager.ShowLoadingScreen(() =>
                             {
+                                transaction.Commit();
                                 AddMemo newCustomer = new AddMemo(customerId, employee_name, "New Customer", confirmationMessage);
                                 newCustomer.ShowDialog();
                             });
-
+                            
                             this.Close();
                         }
                         else
@@ -77,19 +89,10 @@ namespace Dashboard
                 }
                 catch (Exception ex)
                 {
+                    transaction?.Rollback();
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
-                }
             }
-
-
- 
         }
 
 

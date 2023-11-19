@@ -19,10 +19,12 @@ namespace Dashboard
         private int productId;
         private bool changesMade = false;
         private decimal originalSellingPrice;
-        public UpdateItem(string EmployeeName, int productId)
+        private MySqlConnection connection;
+        public UpdateItem(string EmployeeName, int productId, MySqlConnection connection)
         {
             InitializeComponent();
             employee_name = EmployeeName;
+            this.connection = connection;
 
             LoadCategoryAndSupplierData();
             LoadProductDetails(productId); // Load product details for editing
@@ -241,10 +243,17 @@ namespace Dashboard
             critical_quantity = @criticalStock
         WHERE product_id = @productId";
 
-                using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                using (connection)
                 {
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+                    MySqlTransaction transaction = null;
                     try
                     {
+                        transaction = connection.BeginTransaction();
+
                         using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
                         {
                             // Add parameters to the SQL command
@@ -262,6 +271,7 @@ namespace Dashboard
 
                             if (rowsAffected > 0)
                             {
+                                transaction.Commit();
                                 MessageBox.Show("Product updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 this.Close();
                             }
@@ -273,6 +283,7 @@ namespace Dashboard
                     }
                     catch (Exception ex)
                     {
+                        transaction?.Rollback();
                         MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -293,12 +304,18 @@ namespace Dashboard
         INSERT INTO price_history (product_id, effective_date, price, user_text, employee_name)
         VALUES (@productId, @effectiveDate, @price, @userText, @employeeName)";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+                MySqlTransaction transaction = null;
                 try
                 {
                     using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
                     {
+                        transaction = connection.BeginTransaction();
                         // Add parameters to the SQL command
                         command.Parameters.AddWithValue("@productId", productId);
                         command.Parameters.AddWithValue("@effectiveDate", DateTime.Now); // Use the current date and time as the effective date
@@ -311,10 +328,12 @@ namespace Dashboard
 
                         if (rowsAffected > 0)
                         {
+                            transaction.Commit();
                             MessageBox.Show("Price history entry added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
                         {
+                            transaction?.Rollback();
                             MessageBox.Show("Failed to add the price history entry.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
@@ -342,10 +361,16 @@ namespace Dashboard
             string categoryQuery = "SELECT DISTINCT category FROM products";
             string supplierQuery = "SELECT DISTINCT supplier_id FROM products";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
                 try
                 {
+
                     // Fetch unique categories
                     using (MySqlCommand categoryCommand = new MySqlCommand(categoryQuery, connection))
                     {
@@ -392,8 +417,13 @@ namespace Dashboard
         FROM products
         WHERE product_id = @productId";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
                 try
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))

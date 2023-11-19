@@ -15,10 +15,13 @@ namespace Dashboard
     public partial class NewItem : Form
     {
         private string employee_name;
-        public NewItem(string EmployeeName)
+        MySqlConnection connection;
+        public NewItem(string EmployeeName, MySqlConnection connection)
         {
             InitializeComponent();
             employee_name = EmployeeName;
+            this.connection = connection;
+
             LoadCategoryAndSupplierData();
         }
 
@@ -58,10 +61,17 @@ namespace Dashboard
         INSERT INTO products (product_name, description, category, supplier_id, cost_price, selling_price, quantity_in_stock, critical_quantity)
         VALUES (@productName, @description, @category, @supplierID, @costPrice, @sellingPrice, 0, @criticalStock)";
 
-                using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                using (connection)
                 {
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+                    MySqlTransaction transaction = null;
+
                     try
                     {
+                        transaction = connection.BeginTransaction();
                         using (MySqlCommand command = new MySqlCommand(insertQuery, connection))
                         {
                             // Add parameters to the SQL command
@@ -78,6 +88,7 @@ namespace Dashboard
 
                             if (rowsAffected > 0)
                             {
+                                transaction.Commit();
                                 string systemMemo = $"New Product {productName} {Environment.NewLine}Added by {employee_name}. Effective as of {DateTime.Now}.";
                                 AddInvMemo addmemo = new AddInvMemo(employee_name, "New Product", systemMemo);
                                 addmemo.Show();
@@ -91,6 +102,7 @@ namespace Dashboard
                     }
                     catch (Exception ex)
                     {
+                        transaction?.Rollback();
                         MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
@@ -113,8 +125,13 @@ namespace Dashboard
             string categoryQuery = "SELECT DISTINCT category FROM products";
             string supplierQuery = "SELECT DISTINCT supplier_id FROM products";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection )
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
                 try
                 {
                     // Fetch unique categories

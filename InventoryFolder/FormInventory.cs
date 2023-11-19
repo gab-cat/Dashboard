@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using System.Windows.Forms;
 
 namespace Dashboard.Forms
@@ -20,12 +21,15 @@ namespace Dashboard.Forms
         private DataTable originalProductData;
         private DataTable priceHistoryTable;
         private DataTable memoDataTable;
+        private MySqlConnection connection;
 
-        public FormInventory(string employee_name, string role)
+        public FormInventory(string employee_name, string role, MySqlConnection connection)
         {
             InitializeComponent();
             this.employee_name = employee_name;
             this.role = role;
+            this.connection = connection;
+
             LoadProductData();
 
             loadMemos();
@@ -170,8 +174,13 @@ namespace Dashboard.Forms
              ELSE 1
            END ASC, product_id ASC"; // Order by critical quantity condition and then by Product ID in ascending order
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
                 try
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -206,8 +215,12 @@ namespace Dashboard.Forms
              ELSE 1
            END ASC, product_id ASC"; // Order by critical quantity condition and then by Product ID in ascending order
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -244,7 +257,7 @@ namespace Dashboard.Forms
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                NewItem form = new NewItem(employee_name);
+                NewItem form = new NewItem(employee_name, connection);
                 form.Show();
             });
         }
@@ -265,10 +278,16 @@ namespace Dashboard.Forms
                         // Create an SQL DELETE statement
                         string deleteQuery = "DELETE FROM products WHERE product_id = @productID";
 
-                        using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                        using (connection)
                         {
+                            if (connection.State != ConnectionState.Open)
+                            {
+                                connection.Open();
+                            }
+                            MySqlTransaction transaction = null;
                             try
                             {
+                                transaction = connection.BeginTransaction();
                                 using (MySqlCommand command = new MySqlCommand(deleteQuery, connection))
                                 {
                                     command.Parameters.AddWithValue("@productID", selectedProductID);
@@ -276,6 +295,7 @@ namespace Dashboard.Forms
 
                                     if (rowsAffected > 0)
                                     {
+                                        transaction.Commit();
                                         string systemMemo = $"Product ID {selectedProductID} ({productName}) was deleted.";
                                         AddInvMemo addmemo = new AddInvMemo(employee_name, "Delete Product", systemMemo);
                                         addmemo.Show();
@@ -288,6 +308,7 @@ namespace Dashboard.Forms
                             }
                             catch (Exception ex)
                             {
+                                transaction?.Rollback();
                                 MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             }
                         }
@@ -435,7 +456,7 @@ namespace Dashboard.Forms
                     int selectedProductID = Convert.ToInt32(ProductGrid.SelectedRows[0].Cells["Product ID"].Value);
 
                     // Create an instance of the UpdateItem form and pass the selected product ID
-                    UpdateItem updateForm = new UpdateItem(employee_name, selectedProductID);
+                    UpdateItem updateForm = new UpdateItem(employee_name, selectedProductID, connection);
 
                     // Show the UpdateItem form as a dialog
                     updateForm.Show();
@@ -459,8 +480,12 @@ namespace Dashboard.Forms
         WHERE product_id = @productId
         ORDER BY effective_date DESC"; // Order by effective_date in descending order
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -603,8 +628,12 @@ namespace Dashboard.Forms
             memoDataTable.Columns.Add("employee_name", typeof(string));
             memoDataTable.Columns.Add("memo_text", typeof(string)); // Add "memo_text" column
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     string query = "SELECT time_date, reason, employee_name, memo_text FROM memos WHERE customer_id = @customer_id ORDER BY time_date DESC;";
@@ -644,13 +673,6 @@ namespace Dashboard.Forms
                 catch (MySqlException ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -768,10 +790,17 @@ namespace Dashboard.Forms
             // Define your SQL update query to update the product stock
             string updateQuery = "UPDATE products SET quantity_in_stock = @afterStock WHERE product_id = @productID";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                MySqlTransaction transaction = null;
                 try
                 {
+                    transaction = connection.BeginTransaction();
                     using (MySqlCommand command = new MySqlCommand(updateQuery, connection))
                     {
                         // Set parameters for the update query
@@ -783,8 +812,7 @@ namespace Dashboard.Forms
 
                         if (rowsAffected > 0)
                         {
-                            // Update successful
-
+                            transaction.Commit();
                         }
                         else
                         {
@@ -795,6 +823,7 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
+                    transaction?.Rollback();
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

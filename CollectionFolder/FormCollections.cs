@@ -20,6 +20,8 @@ using System.Net.Mail;
 using System.Net;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using System.Diagnostics;
+using System.Transactions;
+using System.Runtime.Remoting.Messaging;
 
 namespace Dashboard.Forms
 {
@@ -31,10 +33,11 @@ namespace Dashboard.Forms
         private bool pastdue;
         private decimal total_amount_due;
         private decimal change;
+        private MySqlConnection connection;
         List<int> saleIds = new List<int>();
 
 
-        public FormCollections(string employee_name, string role)
+        public FormCollections(string employee_name, string role, MySqlConnection connection)
         {
             InitializeComponent();
             // loadIndicators(customerId);
@@ -42,6 +45,7 @@ namespace Dashboard.Forms
 
             this.employee_name = employee_name;
             this.role = role;
+            this.connection = connection;
 
             txtEmployee.Text = employee_name;
             txtPaymentDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
@@ -116,8 +120,12 @@ namespace Dashboard.Forms
         {
             try
             {
-                using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+                using (connection)
                 {
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
 
                     string selectedFilter = cboxFilter.SelectedItem.ToString();
                     string searchKeyword = txtSearchTerm.Text.Trim();
@@ -182,9 +190,6 @@ namespace Dashboard.Forms
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
-
-
-
         }
 
         private void txtSearchTerm_KeyDown(object sender, KeyEventArgs e)
@@ -257,8 +262,13 @@ namespace Dashboard.Forms
 
         private bool IsPastDue(int customerId)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     // Query to get the earliest sale's status for the given customer
@@ -289,17 +299,8 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-
+                    MessageBox.Show(ex.ToString());
                 }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
-                }
-
-
                 return false; 
             }
         }
@@ -307,8 +308,12 @@ namespace Dashboard.Forms
         {
             decimal totalPastDueAmount = 0;
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     string query = "SELECT total_amount " +
@@ -335,14 +340,7 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -365,8 +363,13 @@ namespace Dashboard.Forms
 
         private void CalculatePaymentSummary(int customerId)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
                 try
                 {
                     string query = @"
@@ -407,22 +410,19 @@ namespace Dashboard.Forms
                 }
                 catch (Exception ex)
                 {
-
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
         private void loadIndicators(int customer_id)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     // Query to retrieve indicator values based on customer ID
@@ -443,32 +443,20 @@ namespace Dashboard.Forms
                                 chkEmail.Checked = Convert.ToInt32(reader["email"]) == 1;
                                 chkPhone.Checked = Convert.ToInt32(reader["phone"]) == 1;
                             }
-                            else
-                            {
-
-                            }
-
-                            if (IsPastDue(customerId))
-                            {
-                                chkPastDue.Checked = true; // Check the checkbox if past due
-                            }
-                            else
-                            {
-                                chkPastDue.Checked = false; // Uncheck the checkbox if not past due
-                            }
+                        }
+                        if (IsPastDue(customerId))
+                        {
+                            chkPastDue.Checked = true; // Check the checkbox if past due
+                        }
+                        else
+                        {
+                            chkPastDue.Checked = false; // Uncheck the checkbox if not past due
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -488,7 +476,7 @@ namespace Dashboard.Forms
 
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                PaymentHistory payment = new PaymentHistory(customerId, employee_name);
+                PaymentHistory payment = new PaymentHistory(customerId, employee_name, connection);
                 payment.Show(); 
             });
         }
@@ -503,7 +491,7 @@ namespace Dashboard.Forms
 
             LoadingScreenManager.ShowLoadingScreen(() =>
             { 
-                UpdateCustomer update = new UpdateCustomer(customerId, employee_name);
+                UpdateCustomer update = new UpdateCustomer(customerId, employee_name, connection);
                 update.Show(); 
             });
         }
@@ -545,8 +533,13 @@ namespace Dashboard.Forms
             saleIds.Clear();
             totalAmounts.Clear();
             cboxSaleID.DataSource = null;
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
                 try
                 {
                     // Query to retrieve sale IDs and total amount due for pending sales of the selected customer
@@ -588,13 +581,6 @@ namespace Dashboard.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -730,56 +716,57 @@ namespace Dashboard.Forms
         }
         private void SendPaymentToDatabase(int customerId, int saleId, decimal paymentAmount, string paymentMethod)
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                MySqlTransaction transaction = null;
+
                 try
                 {
-                    using (MySqlTransaction transaction = connection.BeginTransaction())
+                    transaction = connection.BeginTransaction();
+
+                    // Step 1: Update sale status to "Paid"
+                    string updateQuery = "UPDATE sales SET payment_status = 'Completed' WHERE sale_id = @saleId";
+
+                    using (MySqlCommand updateCommand = new MySqlCommand(updateQuery, connection, transaction))
                     {
-                        // Step 1: Update sale status to "Paid"
-                        string updateQuery = "UPDATE sales SET payment_status = 'Completed' WHERE sale_id = @saleId";
-
-                        using (MySqlCommand updateCommand = new MySqlCommand(updateQuery, connection, transaction))
-                        {
-                            updateCommand.Parameters.AddWithValue("@saleId", saleId);
-                            updateCommand.ExecuteNonQuery();
-                        }
-
-                        // Step 2: Insert a new payment row
-                        string insertQuery = @"
-                    INSERT INTO payments (customer_id, sales_id, payment_date, payment_amount, payment_method, payment_id)
-                    VALUES (@customerId, @saleId, @paymentDate, @paymentAmount, @paymentMethod, @paymentId)";
-
-                        using (MySqlCommand insertCommand = new MySqlCommand(insertQuery, connection, transaction))
-                        {
-                            // Generate the payment ID (current date + 4 random digits)
-                            string paymentId = DateTime.Now.ToString("yyyyMMdd") + new Random().Next(0000, 9999).ToString();
-                            txtPaymentID.Text = paymentId;
-
-                            // Set parameters for the insert query
-                            insertCommand.Parameters.AddWithValue("@customerId", customerId);
-                            insertCommand.Parameters.AddWithValue("@saleId", saleId);
-                            insertCommand.Parameters.AddWithValue("@paymentDate", DateTime.Now);
-                            insertCommand.Parameters.AddWithValue("@paymentAmount", paymentAmount);
-                            insertCommand.Parameters.AddWithValue("@paymentMethod", paymentMethod);
-                            insertCommand.Parameters.AddWithValue("@paymentId", paymentId);
-
-                            insertCommand.ExecuteNonQuery();
-                        }
-                        transaction.Commit();
-                        GenerateReceiptPDF(customerId, txtPaymentID.Text, txtName.Text, saleId.ToString(), DateTime.Now, paymentAmount, paymentMethod, txtCashCredit.Text, txtChange.Text, employee_name);
+                        updateCommand.Parameters.AddWithValue("@saleId", saleId);
+                        updateCommand.ExecuteNonQuery();
                     }
+
+                    // Step 2: Insert a new payment row
+                    string insertQuery = @"
+                INSERT INTO payments (customer_id, sales_id, payment_date, payment_amount, payment_method, payment_id)
+                VALUES (@customerId, @saleId, @paymentDate, @paymentAmount, @paymentMethod, @paymentId)";
+
+                    using (MySqlCommand insertCommand = new MySqlCommand(insertQuery, connection, transaction))
+                    {
+                        // Generate the payment ID (current date + 4 random digits)
+                        string paymentId = DateTime.Now.ToString("yyyyMMdd") + new Random().Next(0000, 9999).ToString();
+                        txtPaymentID.Text = paymentId;
+
+                        // Set parameters for the insert query
+                        insertCommand.Parameters.AddWithValue("@customerId", customerId);
+                        insertCommand.Parameters.AddWithValue("@saleId", saleId);
+                        insertCommand.Parameters.AddWithValue("@paymentDate", DateTime.Now);
+                        insertCommand.Parameters.AddWithValue("@paymentAmount", paymentAmount);
+                        insertCommand.Parameters.AddWithValue("@paymentMethod", paymentMethod);
+                        insertCommand.Parameters.AddWithValue("@paymentId", paymentId);
+
+                        insertCommand.ExecuteNonQuery();
+                    }
+                    transaction.Commit();
+                    GenerateReceiptPDF(customerId, txtPaymentID.Text, txtName.Text, saleId.ToString(), DateTime.Now, paymentAmount, paymentMethod, txtCashCredit.Text, txtChange.Text, employee_name);
+
                 }
                 catch (Exception ex)
                 {
+                    transaction?.Rollback();
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -1318,8 +1305,12 @@ namespace Dashboard.Forms
         LEFT JOIN customers c ON p.customer_id = c.customer_id
         WHERE p.payment_id = @paymentId";
 
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     using (MySqlCommand command = new MySqlCommand(query, connection))
@@ -1362,13 +1353,6 @@ namespace Dashboard.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }

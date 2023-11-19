@@ -44,7 +44,8 @@ namespace Dashboard
         Clock clock = null;
         private CancellationTokenSource cancellationTokenSource;
         private string employee_name;
-        bool isHandleCreated = false;
+        private bool isHandleCreated = false;
+        private string usernamed;
 
         public Dashboard(string firstName, string lastName, string role, string employee_name)
         {
@@ -54,10 +55,11 @@ namespace Dashboard
             userData(firstName, lastName, role);
             dailySales(); charts(); criticalStock();
             this.employee_name = employee_name;
+
             username = firstName + " " + lastName;
             random = new Random();
             btnCloseChildForm.Visible = false;
-            this.Text = string.Empty;
+            this.Text = "Dashboard";
             this.ControlBox = false;
             this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
 
@@ -133,6 +135,14 @@ namespace Dashboard
             }
             ShowLoadingForm(username);
             Login newlogin = new Login(connection); // Ensure 'connection' is accessible here
+
+            if (async_connection != null)
+            {
+                async_connection.DisposeAsync();
+                async_connection.CloseAsync();
+            }
+
+
             this.Close();
             newlogin.ShowDialog();
         }
@@ -153,8 +163,12 @@ namespace Dashboard
 
         private void dailySales()
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
                     string sqlQuery = "SELECT DATE_FORMAT(payment_date, '%m-%d') AS date, SUM(payment_amount) AS total_sales FROM payments WHERE payment_date BETWEEN DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND CURDATE() GROUP BY DATE_FORMAT(payment_date, '%m-%d')";
@@ -220,11 +234,14 @@ namespace Dashboard
 
         private void charts()
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
-
                     DateTime currentDate = DateTime.Now;
                     int currentMonth = currentDate.Month;
                     int currentYear = currentDate.Year;
@@ -329,8 +346,12 @@ namespace Dashboard
 
         private void criticalStock()
         {
-            using (MySqlConnection connection = DatabaseHelper.GetOpenConnection())
+            using (connection)
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
                 try
                 {
 
@@ -354,13 +375,6 @@ namespace Dashboard
                 catch (Exception ex)
                 {
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connection != null)
-                    {
-                        connection.Close();
-                    }
                 }
             }
         }
@@ -427,7 +441,7 @@ namespace Dashboard
 
                 await cmd.ExecuteNonQueryAsync();
             }
-            if (async_connection != null) async_connection.Close();
+
         }
 
         private void ShowLoadingForm(string firstName)
@@ -444,7 +458,12 @@ namespace Dashboard
             };
             timer.Start();
 
-            async_connection.CloseAsync();
+
+            if (async_connection != null)
+            {
+                async_connection.DisposeAsync();
+                async_connection.CloseAsync();
+            }
 
             loadingForm.ShowDialog();
         }
@@ -576,14 +595,14 @@ namespace Dashboard
         private void btnOrder_Click(object sender, EventArgs e)
         {
 
-                SearchCustomer search = new SearchCustomer(username);
+                SearchCustomer search = new SearchCustomer(username, connection);
                 if (search.ShowDialog() == DialogResult.OK)
                 {
                     LoadingScreenManager.ShowLoadingScreen(() =>
                     {
                         int customer_id = search.SelectedCustomerId;
                         // Pass the customer_id to the FormOrder constructor
-                        OpenChildFormOrder(new Forms.FormOrder(customer_id, username, role), sender, customer_id, username); // Provide customer_id here
+                        OpenChildFormOrder(new Forms.FormOrder(customer_id, username, role, connection), sender, customer_id, username); // Provide customer_id here
                         lblTitle.Text = "Create Order";
 
                         btnPay.Enabled = false;
@@ -599,7 +618,7 @@ namespace Dashboard
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                OpenChildForm(new Forms.FormCollections(username, role), sender);
+                OpenChildForm(new Forms.FormCollections(username, role, connection), sender);
                     lblTitle.Text = "Collections";
                     btnOrder.Enabled = false;
                     btnInventory.Enabled = false;
@@ -613,7 +632,7 @@ namespace Dashboard
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                OpenChildForm(new Forms.FormInventory(username, role), sender);
+                OpenChildForm(new Forms.FormInventory(username, role, connection), sender);
                 lblTitle.Text = "Inventory Manager";
                 btnOrder.Enabled = false;
                 btnPay.Enabled = false;
@@ -633,7 +652,7 @@ namespace Dashboard
         {
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                OpenChildForm(new Forms.FormMaintenance(username, role, connection), sender);
+                OpenChildForm(new Forms.FormMaintenance(username, role, connection, employee_name), sender);
                 lblTitle.Text = "Maintenance";
                 btnOrder.Enabled = false;
                 btnPay.Enabled = false;
@@ -697,7 +716,11 @@ namespace Dashboard
                 cmd.ExecuteNonQueryAsync();
             }
 
-            if (async_connection != null) async_connection.Close();
+            if (async_connection != null)
+            {
+                async_connection.DisposeAsync();
+                async_connection.CloseAsync();
+            }
 
         }
 

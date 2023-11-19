@@ -11,22 +11,6 @@ namespace Dashboard
     {
         private const int SaltSize = 32; // Size of the salt in bytes
 
-        public static (string hashedPassword, string salt) HashPassword(string password)
-        {
-            // Generate a random salt
-            byte[] saltBytes = new byte[SaltSize];
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(saltBytes);
-            }
-            string salt = Convert.ToBase64String(saltBytes);
-
-            // Combine the password and salt and hash it
-            string hashedPassword = HashString(password, salt);
-
-            return (hashedPassword, salt);
-        }
-
         public static string HashString(string password, string salt)
         {
             byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
