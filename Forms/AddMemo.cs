@@ -13,7 +13,7 @@ namespace Dashboard.Forms
 {
     public partial class AddMemo : Form
     {
-        MySqlConnection connection = DatabaseHelper.GetMemoConnection();
+        private MySqlConnection connection = DatabaseHelper.GetMemoConnection();
 
         public AddMemo(int customer_id, string employee_name)
         {

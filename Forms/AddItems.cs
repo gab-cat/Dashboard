@@ -26,6 +26,7 @@ namespace Dashboard.Forms
         private Dictionary<string, int> productStockData;
         public static Dictionary<string, int> pendingOrder = new Dictionary<string, int>(); // Track pending order quantities
 
+
         // Save the pending order data to a JSON file
         private void SavePendingOrderToFile(Dictionary<string, int> pendingOrder)
         {
@@ -66,6 +67,7 @@ namespace Dashboard.Forms
             this.connection = connection;
 
             comboBoxFilter.SelectedIndex = 0;
+            this.KeyPreview = true;
         }
 
         private void AddItems_Load(object sender, EventArgs e)
@@ -243,17 +245,16 @@ namespace Dashboard.Forms
             string filter = comboBoxFilter.SelectedItem.ToString();
             string searchTerm = txtSearchTerm.Text.Trim();
 
-            // Create a SQL query to retrieve the data based on the selected filter and search term
-            string query = "SELECT product_id, product_name, description, selling_price, quantity_in_stock " +
-                           "FROM products ";
+            // Use parameterized query to prevent SQL injection
+            string query = "SELECT product_id, product_name, description, selling_price, quantity_in_stock FROM products ";
 
-            if (filter == "Product ID")
+            if (comboBoxFilter.SelectedIndex == 0)
             {
-                query += $"WHERE product_id = '{searchTerm}'";
+                query += "WHERE product_id = @searchTerm";
             }
-            else if (filter == "Name")
+            else if (comboBoxFilter.SelectedIndex == 1)
             {
-                query += $"WHERE product_name LIKE '%{searchTerm}%'";
+                query += "WHERE product_name LIKE @searchTerm"; 
             }
 
             using (connection)
@@ -262,49 +263,82 @@ namespace Dashboard.Forms
                 {
                     connection.Open();
                 }
-                using (MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection))
+
+                try
                 {
-                    DataTable dataTable = new DataTable();
-                    adapter.Fill(dataTable);
-
-                    // Add a row number column at the first position
-                    dataTable.Columns.Add("#", typeof(int));
-                    for (int i = 0; i < dataTable.Rows.Count; i++)
+                    using (MySqlDataAdapter adapter = new MySqlDataAdapter(query, connection))
                     {
-                        dataTable.Rows[i]["#"] = i + 1;
+                        if (comboBoxFilter.SelectedIndex == 0)
+                        {
+                            adapter.SelectCommand.Parameters.AddWithValue("@searchTerm", $"{searchTerm}");
+                        }
+                        else if (comboBoxFilter.SelectedIndex == 1)
+                        {
+                            adapter.SelectCommand.Parameters.AddWithValue("@searchTerm", $"%{searchTerm}%");
+                        }
+
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        // Add a row number column at the first position
+                        dataTable.Columns.Add("#", typeof(int));
+                        for (int i = 0; i < dataTable.Rows.Count; i++)
+                        {
+                            dataTable.Rows[i]["#"] = i + 1;
+                        }
+
+                        // Bind the DataTable to the DataGridView
+                        dataGridView1.DataSource = dataTable;
+
+                        // Move the '#' column to the first position
+                        dataGridView1.Columns["#"].DisplayIndex = 0;
+
+                        // Set specific widths for columns
+
+                        dataGridView1.Columns["#"].Width = 30;
+                        dataGridView1.Columns["product_id"].Width = 70;
+                        dataGridView1.Columns["product_name"].Width = 130;
+                        dataGridView1.Columns["description"].Width = 290;
+                        dataGridView1.Columns["selling_price"].Width = 70;
+                        dataGridView1.Columns["quantity_in_stock"].Width = 50;
+
+                        dataGridView1.Columns["#"].HeaderText = "#";
+                        dataGridView1.Columns["product_id"].HeaderText = "Product ID";
+                        dataGridView1.Columns["product_name"].HeaderText = "Item";
+                        dataGridView1.Columns["description"].HeaderText = "Description";
+                        dataGridView1.Columns["selling_price"].HeaderText = "Price";
+                        dataGridView1.Columns["quantity_in_stock"].HeaderText = "Stock";
+
+                        DataGridViewButtonColumn btnAddColumn = (DataGridViewButtonColumn)dataGridView1.Columns["btnAddColumn"];
+                        btnAddColumn.DisplayIndex = dataGridView1.Columns.Count - 1;
+
+                        dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DimGray;
+                        dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+
+                        dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.Orange;
+                        dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
                     }
-
-                    // Bind the DataTable to the DataGridView
-                    dataGridView1.DataSource = dataTable;
-
-                    // Move the '#' column to the first position
-                    dataGridView1.Columns["#"].DisplayIndex = 0;
-
-                    // Set specific widths for columns
-
-                    dataGridView1.Columns["#"].Width = 30; 
-                    dataGridView1.Columns["product_id"].Width = 70; 
-                    dataGridView1.Columns["product_name"].Width = 130; 
-                    dataGridView1.Columns["description"].Width = 290; 
-                    dataGridView1.Columns["selling_price"].Width = 70; 
-                    dataGridView1.Columns["quantity_in_stock"].Width = 50; 
-
-                    dataGridView1.Columns["#"].HeaderText = "#"; 
-                    dataGridView1.Columns["product_id"].HeaderText = "Product ID"; 
-                    dataGridView1.Columns["product_name"].HeaderText = "Item"; 
-                    dataGridView1.Columns["description"].HeaderText = "Description"; 
-                    dataGridView1.Columns["selling_price"].HeaderText = "Price"; 
-                    dataGridView1.Columns["quantity_in_stock"].HeaderText = "Stock"; 
-
-                    DataGridViewButtonColumn btnAddColumn = (DataGridViewButtonColumn)dataGridView1.Columns["btnAddColumn"];
-                    btnAddColumn.DisplayIndex = dataGridView1.Columns.Count - 1;
-
-                    dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.DimGray;
-                    dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-
-                    dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.Orange; 
-                    dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.White; 
                 }
+                catch  (Exception ex)
+                {
+                    MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void txtSearchTerm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                searchButton.PerformClick();
+            }
+        }
+
+        private void AddItems_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
             }
         }
     }

@@ -72,12 +72,11 @@ namespace Dashboard
 
                             MessageBox.Show(confirmationMessage, "Confirmation", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                            LoadingScreenManager.ShowLoadingScreen(() =>
-                            {
-                                transaction.Commit();
-                                AddMemo newCustomer = new AddMemo(customerId, employee_name, "New Customer", confirmationMessage);
-                                newCustomer.ShowDialog();
-                            });
+
+                            transaction.Commit();
+                            AddMemo newCustomer = new AddMemo(customerId, employee_name, "New Customer", confirmationMessage);
+                            newCustomer.ShowDialog();
+
                             
                             this.Close();
                         }
@@ -98,6 +97,20 @@ namespace Dashboard
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (String.IsNullOrEmpty(txtFirstname.Text.Trim()) || String.IsNullOrEmpty(txtLastname.Text.Trim()) ||
+                String.IsNullOrEmpty(txtPhone.Text.Trim()) || String.IsNullOrEmpty(txtEmail.Text.Trim()) )
+            {
+                MessageBox.Show("Customer information fields cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (String.IsNullOrEmpty(txt1.Text.Trim()) || String.IsNullOrEmpty(txt2.Text.Trim()) || String.IsNullOrEmpty(txt3.Text.Trim())
+                || String.IsNullOrEmpty(txt4.Text.Trim()) || String.IsNullOrEmpty(txt5.Text.Trim()))
+            {
+                MessageBox.Show("Customer Address information fields cannot be empty.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 addCustomer();

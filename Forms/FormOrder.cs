@@ -424,10 +424,12 @@ namespace Dashboard.Forms
                     string query = "SELECT sale_date AS 'Date', sale_id AS 'Sales ID', " +
                                    "employee_name AS 'Employee', " +
                                    "total_amount AS 'Total', " +
+                                   "discount AS 'Discount', " + // Include the discount column in the query
                                    "payment_status AS 'Status' " +
                                    "FROM sales " +
                                    "WHERE customer_id = @customer_id " +
                                    "ORDER BY sale_date DESC";
+
 
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
@@ -484,12 +486,13 @@ namespace Dashboard.Forms
                         MySqlTransaction transaction = null;
                         try
                         {
-                            transaction = connection.BeginTransaction();
+                            
                             if (connection.State != ConnectionState.Open)
                             {
                                 connection.Open();
                             }
 
+                            transaction = connection.BeginTransaction();
 
                             int saleId = Convert.ToInt32(selectedRow.Cells["Sales ID"].Value);
 
@@ -574,6 +577,11 @@ namespace Dashboard.Forms
                                 }
                             }
 
+
+                            if (connection.State != ConnectionState.Open)
+                            {
+                                connection.Open();
+                            }
                             transaction.Commit();
                             string memo_text = Environment.NewLine + "Order successfully cancelled for Sale ID " + saleId + Environment.NewLine + "Cancellation processed by " + username;
                             LoadingScreenManager.ShowLoadingScreen(() =>
@@ -632,6 +640,7 @@ namespace Dashboard.Forms
                             saleItemsBindingSource.DataSource = saleItemsTable;
 
                             saleItemsGrid.DataSource = saleItemsBindingSource;
+                            salesData.Columns["Discount"].Visible = false;
 
                             saleItemsGrid.Columns["Unit Price"].DefaultCellStyle.Format = "C2";
                             saleItemsGrid.Columns["Unit Price"].DefaultCellStyle.FormatProvider = CultureInfo.GetCultureInfo("en-PH");
@@ -669,6 +678,27 @@ namespace Dashboard.Forms
             grossAmount.Text = "₱ " + totalAmount.ToString("N2"); 
             double vatable_amount = totalAmount / 1.12;
             double vat_amount = vatable_amount * 0.12;
+
+            
+            double discount = Convert.ToDouble(salesData.SelectedRows[0].Cells["Discount"].Value);
+            if (discount > 0)
+            {
+                txtDiscount.Text = "₱ " + discount.ToString("N2");
+                double originalAmount = totalAmount + discount;
+                txtOriginalAmount.Text = "₱ " + originalAmount.ToString("N2");
+                txtOriginalAmount.Visible = true;
+                txtDiscount.Visible = true;
+                label12.Visible = true;
+                label13.Visible = true;
+            }
+            else
+            {
+                txtOriginalAmount.Visible = false;
+                txtDiscount.Visible = false;
+                label12.Visible = false;
+                label13.Visible = false;
+            }
+
 
             vatableAmount.Text = "₱ " + vatable_amount.ToString("N2"); 
             VAT.Text = "₱ " +  vat_amount.ToString("N2"); 

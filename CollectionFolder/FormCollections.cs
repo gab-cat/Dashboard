@@ -34,13 +34,13 @@ namespace Dashboard.Forms
         private decimal total_amount_due;
         private decimal change;
         private MySqlConnection connection;
+        private bool fromPOS = false;
         List<int> saleIds = new List<int>();
 
 
         public FormCollections(string employee_name, string role, MySqlConnection connection)
         {
             InitializeComponent();
-            // loadIndicators(customerId);
             txtSearchTerm.Focus();
 
             this.employee_name = employee_name;
@@ -53,8 +53,27 @@ namespace Dashboard.Forms
             cboxFilter.SelectedIndex = 0;
 
             ConfigureListView();
+        }
+
+        public FormCollections(string employee_name, string role, MySqlConnection connection, int customerId, int orderId)
+        {
+            InitializeComponent();
+            fromPOS = true;
+            txtSearchTerm.Focus();
+            this.employee_name = employee_name;
+            this.role = role;
+            this.connection = connection;
+            txtEmployee.Text = employee_name;
+            txtPaymentDate.Text = DateTime.Now.ToString("yyyy-MM-dd");
+
+            ConfigureListView();
+
+            txtSearchTerm.Text = customerId.ToString();
+            cboxFilter.SelectedIndex = 2;
+            searchCX();
 
         }
+
         private void LoadTheme()
         {
             chkPastDue.CheckedOnColor = ThemeColor.SecondaryColor;
@@ -185,6 +204,7 @@ namespace Dashboard.Forms
                     }
                 }
                 ConfigureDataGridViewColumns();
+
             }
             catch (Exception ex)
             {
@@ -257,6 +277,13 @@ namespace Dashboard.Forms
                 LoadSaleIDsAndAmountDue(customerId);
                 clearPaymentInfo();
                 PopulateListViewForCustomer(customerId, comboBox1.SelectedItem.ToString());
+
+                if (fromPOS)
+                {
+                    int salesIdIndex = saleIds.Count() - 1;
+                    cboxSaleID.SelectedIndex = salesIdIndex;
+                    fromPOS = false;
+                }
             }
         }
 
@@ -575,6 +602,11 @@ namespace Dashboard.Forms
                             {
                                 txtAmountDue.Text = "₱ 0.00"; // No pending sales found
                             }
+                            if (fromPOS)
+                            {
+                                int salesIdIndex = saleIds.Count() - 1;
+                                cboxSaleID.SelectedIndex = salesIdIndex;
+                            }
                         }
                     }
                 }
@@ -703,6 +735,10 @@ namespace Dashboard.Forms
                     SendPaymentConfirmation();
 
                     btnSubmitPayment.Enabled = false;
+
+                    txtSearchTerm.Text = customerId.ToString();
+                    cboxFilter.SelectedIndex = 2;
+                    searchCX();
                 }
                 else
                 {
@@ -1367,7 +1403,7 @@ namespace Dashboard.Forms
 
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                GetPaymentInfo(txtPaymentSearch.Text);
+                GetPaymentInfo(txtPaymentSearch.Text.Trim());
             });
         }
 

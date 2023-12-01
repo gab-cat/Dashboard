@@ -106,7 +106,6 @@ namespace Dashboard
                             await Task.Delay(ProgressBarFillDuration / (ProgressBarMaximum / 2));
                         }
 
-
                         label4.Text = "Initializing software  .   .   .";
                         await Task.Delay(1000);
 

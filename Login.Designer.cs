@@ -112,12 +112,14 @@
             this.textBoxUsername.Name = "textBoxUsername";
             this.textBoxUsername.Size = new System.Drawing.Size(211, 21);
             this.textBoxUsername.TabIndex = 0;
+            this.textBoxUsername.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxUsername_KeyDown);
             // 
             // btnPeek
             // 
+            this.btnPeek.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(9)))), ((int)(((byte)(19)))), ((int)(((byte)(31)))));
             this.btnPeek.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnPeek.Image = global::Dashboard.Properties.Resources.icons8_eye_50;
-            this.btnPeek.Location = new System.Drawing.Point(220, 13);
+            this.btnPeek.Location = new System.Drawing.Point(221, 13);
             this.btnPeek.Name = "btnPeek";
             this.btnPeek.Size = new System.Drawing.Size(25, 25);
             this.btnPeek.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -260,7 +262,6 @@
             this.label3.Size = new System.Drawing.Size(168, 15);
             this.label3.TabIndex = 11;
             this.label3.Text = "New Bernales Hardware Store";
-            this.label3.UseWaitCursor = true;
             // 
             // guna2HtmlLabel1
             // 
@@ -285,7 +286,6 @@
             this.label5.Size = new System.Drawing.Size(76, 14);
             this.label5.TabIndex = 12;
             this.label5.Text = "Version 1.0.01";
-            this.label5.UseWaitCursor = true;
             // 
             // pictureBox3
             // 
@@ -297,7 +297,6 @@
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox3.TabIndex = 10;
             this.pictureBox3.TabStop = false;
-            this.pictureBox3.UseWaitCursor = true;
             // 
             // label6
             // 
@@ -310,7 +309,6 @@
             this.label6.Size = new System.Drawing.Size(105, 54);
             this.label6.TabIndex = 9;
             this.label6.Text = "rder";
-            this.label6.UseWaitCursor = true;
             // 
             // gunaLinePanel1
             // 

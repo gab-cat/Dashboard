@@ -114,6 +114,15 @@ namespace Dashboard
             textBoxPassword.UseSystemPasswordChar = true;
         }
 
+        private Task<(string, string, string)> GetUserDetailsFromDatabaseAsync(string enteredUsername)
+        {
+            // Simulated synchronous method returning tuple
+            (string firstName, string lastName, string role) userDetails = GetUserDetailsFromDatabase(enteredUsername);
+
+            // Wrap the tuple in a completed Task
+            return Task.FromResult(userDetails);
+        }
+
         private async void button1_Click(object sender, EventArgs e)
         {
             string enteredUsername = textBoxUsername.Text;
@@ -137,6 +146,7 @@ namespace Dashboard
                     textBoxUsername.BackColor = inactive;
                     textBoxPassword.Enabled = false;
                     textBoxPassword.BackColor = inactive;
+                    btnPeek.Visible = false; 
 
                     await Task.Delay(1000);
                     MessageBox.Show("Username or Password is missing! Please try again.");
@@ -145,6 +155,10 @@ namespace Dashboard
                     textBoxUsername.BackColor = color;
                     textBoxPassword.Enabled = true;
                     textBoxPassword.BackColor = color;
+                    btnPeek.Visible = true;
+                    peekActive = false;
+                    textBoxPassword.UseSystemPasswordChar = true;
+                    btnPeek.Image = Properties.Resources.icons8_eye_50;
 
                     return;
                 }
@@ -154,9 +168,16 @@ namespace Dashboard
                     textBoxUsername.BackColor = inactive;
                     textBoxPassword.Enabled = false;
                     textBoxPassword.BackColor = inactive;
+                    btnPeek.Visible = false;
+                    peekActive = false;
+                    textBoxPassword.UseSystemPasswordChar = true;
+                    btnPeek.Image = Properties.Resources.icons8_eye_50;
+
                     await Task.Delay(1000);
                     if (CheckLogin(enteredUsername, enteredPassword))
                     {
+                        incorrect.Visible = false;
+
                         if (updatePasswordMenu)
                         {
 
@@ -170,20 +191,31 @@ namespace Dashboard
                             passwordChangeUI();
                             return;
                         }
-                            
-
-
-                        
+                        /*
                         (string firstName, string lastName, string role) = GetUserDetailsFromDatabase(enteredUsername);
-                        // connection.Close();
-
-
-
                         Dashboard form1 = new Dashboard(firstName, lastName, role, enteredUsername);
 
+                        
                         this.Hide();
                         ShowLoadingForm(firstName);
 
+                        form1.Show();
+                        */
+
+                        // Asynchronously fetch user details and wait for both tasks to complete
+                        Task<(string, string, string)> userDetailsTask = GetUserDetailsFromDatabaseAsync(enteredUsername);
+                        await Task.WhenAll(userDetailsTask);
+
+                        // Retrieve user details
+                        (string firstName, string lastName, string role) = await userDetailsTask;
+
+                        Dashboard form1 = new Dashboard(firstName, lastName, role, enteredUsername);
+
+                        // Hide the current form and show loading form
+                        this.Hide();
+                        ShowLoadingForm(firstName);
+
+                        // Show the Dashboard form
                         form1.Show();
 
                         if (connection != null)
@@ -221,6 +253,10 @@ namespace Dashboard
                         textBoxUsername.BackColor = inactive;
                         textBoxPassword.Enabled = false;
                         textBoxPassword.BackColor = inactive;
+                        btnPeek.Visible = false;
+                        peekActive = false;
+                        textBoxPassword.UseSystemPasswordChar = true;
+                        btnPeek.Image = Properties.Resources.icons8_eye_50;
                         await Task.Delay(1000);
 
                         incorrect.Visible = true;
@@ -229,6 +265,7 @@ namespace Dashboard
                         textBoxUsername.BackColor = color;
                         textBoxPassword.Enabled = true;
                         textBoxPassword.BackColor = color;
+                        btnPeek.Visible = true;
 
                         textBoxPassword.Text = "";
                         textBoxUsername.Text = "";
@@ -330,15 +367,6 @@ namespace Dashboard
 
                         bool passwordMatch = PasswordHashing.VerifyPassword(password, hashedPasswordFromDB, salt);
 
-                        if (passwordMatch)
-                        {
-                            Console.WriteLine("Password is correct");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Password is not correct");
-                        }
-
 
                         if (passwordMatch)
                         {
@@ -376,7 +404,7 @@ namespace Dashboard
             {
                 Console.WriteLine("Error: " + ex.Message);
                 incorrect.Visible = true;
-                incorrect.Text = "Server cannot be reached. \nPlease check your connection and restart the app.";
+                incorrect.Text = "Error: " + ex.Message;
                 return false;
             }
 
@@ -510,13 +538,13 @@ namespace Dashboard
 
         private void close_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Are you sure you want to exit?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("Are you sure you want to exit? \nConnection to database will be terminated and closed.", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
+                DatabaseHelper.CloseConnection(DatabaseHelper.GetMemoConnection());
                 DatabaseHelper.CloseConnection(connection);
                 Application.Exit();
-
             }
         }
 
@@ -554,6 +582,14 @@ namespace Dashboard
             {
                 connection.Dispose();
                 connection.Close();
+            }
+        }
+
+        private void textBoxUsername_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                button1.PerformClick();
             }
         }
     }

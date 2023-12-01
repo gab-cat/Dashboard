@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -42,10 +43,14 @@ namespace Dashboard
         private MySqlConnection connection = DatabaseHelper.GetOpenConnection();
         private MySqlConnection async_connection = DatabaseHelper.GetAsyncConnection();
         Clock clock = null;
-        private CancellationTokenSource cancellationTokenSource;
+        private CancellationTokenSource cancellationTokenSourceBackgroundTask;
         private string employee_name;
         private bool isHandleCreated = false;
         private string usernamed;
+        private bool forceLogout = false;
+
+        private System.Timers.Timer activityTimer;
+        private const double InactivityPeriod = 60 * 60 * 1000; // 10 minutes in milliseconds
 
         public Dashboard(string firstName, string lastName, string role, string employee_name)
         {
@@ -66,6 +71,10 @@ namespace Dashboard
             label15.BringToFront();
 
             StartBackgroundTask();
+
+            activityTimer = new System.Timers.Timer(InactivityPeriod);
+            activityTimer.Elapsed += OnInactivity;
+            activityTimer.AutoReset = false;
         }
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -74,26 +83,35 @@ namespace Dashboard
 
         private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
 
+        private Task backgroundTask;
+
+        private void OnInactivity(object source, ElapsedEventArgs e)
+        {
+            UpdateActiveSessionToZero();
+        }
 
         private async void StartBackgroundTask()
         {
-            cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSourceBackgroundTask = new CancellationTokenSource();
             await Task.Run(async () =>
             {
-                while (!cancellationTokenSource.Token.IsCancellationRequested)
+                while (!cancellationTokenSourceBackgroundTask.Token.IsCancellationRequested)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(10)); // Wait for 10 seconds
 
                     try
                     {
-                        await CheckActiveSessionStatus();
+                        if (!forceLogout)
+                        {
+                            await CheckActiveSessionStatus();
+                        }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
                     }
                 }
-            }, cancellationTokenSource.Token);
+            }, cancellationTokenSourceBackgroundTask.Token);
         }
 
         private async Task CheckActiveSessionStatus()
@@ -119,22 +137,28 @@ namespace Dashboard
                     {
                         this.BeginInvoke(new MethodInvoker(delegate
                         {
-                            CloseFormAndShowLogin();
+                            forceLogout = true;
+                            cancellationTokenSourceBackgroundTask?.Cancel();
+                            CloseFormAndShowLogin(2);
                         }));
                     }
                 }
             }
         }
 
-        private void CloseFormAndShowLogin()
+        private void CloseFormAndShowLogin(int a)
         {
-            this.Hide(); // Close the form
+
+            this.Hide();
+            forceLogout = true;
+
             if (clock != null)
             {
                 clock.Close();
             }
-            ShowLoadingForm(username);
-            Login newlogin = new Login(connection); // Ensure 'connection' is accessible here
+
+            ShowLoadingForm(username, a);
+            Login newlogin = new Login(connection); 
 
             if (async_connection != null)
             {
@@ -142,9 +166,15 @@ namespace Dashboard
                 async_connection.CloseAsync();
             }
 
-
             this.Close();
+
+            if (a == 2)
+            {
+                MessageBox.Show("You were logged off by the system. Please try to log in again.", "Logged off", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
             newlogin.ShowDialog();
+
         }
 
         private void userData(string firstName, string lastName, string role)
@@ -405,16 +435,17 @@ namespace Dashboard
 
         }
 
-        private async void button1_Click(object sender, EventArgs e)
+        private  void button1_Click(object sender, EventArgs e)
         {
             DialogResult result = MessageBox.Show("Are you sure you want to exit?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
+                forceLogout = true;
                 // Update active_session to 0
                 try
                 {
-                    await UpdateActiveSessionToZero();
+                    UpdateActiveSessionToZero();
                 }
                 catch (Exception ex)
                 {
@@ -422,31 +453,34 @@ namespace Dashboard
                     Console.WriteLine(ex.Message);
                 }
 
-                CloseFormAndShowLogin();
+                // Cancel background tasks
+                cancellationTokenSourceBackgroundTask?.Cancel();
+
+                CloseFormAndShowLogin(1);
             }
         }
 
-        private async Task UpdateActiveSessionToZero()
+        private void UpdateActiveSessionToZero()
         {
-            using (MySqlConnection connection = async_connection)
+            using (MySqlConnection connection = this.connection)
             {
                 if (connection.State != ConnectionState.Open) 
                 {
-                    await connection.OpenAsync();
+                    connection.Open();
                 }
                 
                 string updateQuery = "UPDATE logins SET active_session = 0 WHERE username = @username";
                 MySqlCommand cmd = new MySqlCommand(updateQuery, connection);
                 cmd.Parameters.AddWithValue("@username", employee_name);
 
-                await cmd.ExecuteNonQueryAsync();
+                cmd.ExecuteNonQuery();
             }
 
         }
 
-        private void ShowLoadingForm(string firstName)
+        private void ShowLoadingForm(string firstName, int a)
         {
-            LoadingForm loadingForm = new LoadingForm(firstName, 1);
+            LoadingForm loadingForm = new LoadingForm(firstName, a);
             loadingForm.StartPosition = FormStartPosition.CenterScreen;
 
             System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
@@ -458,12 +492,6 @@ namespace Dashboard
             };
             timer.Start();
 
-
-            if (async_connection != null)
-            {
-                async_connection.DisposeAsync();
-                async_connection.CloseAsync();
-            }
 
             loadingForm.ShowDialog();
         }
@@ -500,14 +528,18 @@ namespace Dashboard
             {
                 if (currentButton != (Button)btnSender)
                 {
-                    DisableButton();
                     Color color = SelectThemeColor();
+
+                    panelTitleBar.BackColor = ThemeColor.ChangeColorBrightness(color, -0.3);
+                    panelLogo.BackColor = ThemeColor.ChangeColorBrightness(color, -0.3);
+
+                    DisableButton();
+                    
                     currentButton = (Button)btnSender;
 
                     currentButton.ForeColor = Color.White;
                     currentButton.Font = new Font("Outfit Thin SemiBold", 12.5F, FontStyle.Bold, GraphicsUnit.Point);
-                    panelTitleBar.BackColor = ThemeColor.ChangeColorBrightness(color, -0.3);
-                    panelLogo.BackColor = ThemeColor.ChangeColorBrightness(color, -0.3);
+
                     ThemeColor.PrimaryColor = color;
                     ThemeColor.SecondaryColor = ThemeColor.ChangeColorBrightness(color, -0.3);
                     currentButton.BackColor = ThemeColor.SecondaryColor;
@@ -530,12 +562,13 @@ namespace Dashboard
             }
         }
 
-        private void OpenChildForm(Form childForm, object btnSender)
+        public void OpenChildForm(Form childForm, object btnSender)
         {
+            ActivateButton(btnSender);
 
             if (activeForm != null)
                 activeForm.Close();
-            ActivateButton(btnSender);
+
             activeForm = childForm;
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
@@ -546,15 +579,16 @@ namespace Dashboard
             this.panelDesktopPane.BringToFront();
             childForm.BringToFront();
             childForm.Show();
-            lblTitle.Text = childForm.Text;
 
         }
 
         private int OpenChildFormOrder(Form childForm, object btnSender, int customer_id, string username)
         {
+            ActivateButton(btnSender);
+            
             if (activeForm != null)
                 activeForm.Close();
-            ActivateButton(btnSender);
+
             activeForm = childForm;
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
@@ -576,7 +610,7 @@ namespace Dashboard
             Reset();
             panelDesktopPane.Visible = false;
         }
-        private void Reset()
+        public void Reset()
         {
             DisableButton();
             lblTitle.Text = "Dashboard";
@@ -602,7 +636,7 @@ namespace Dashboard
                     {
                         int customer_id = search.SelectedCustomerId;
                         // Pass the customer_id to the FormOrder constructor
-                        OpenChildFormOrder(new Forms.FormOrder(customer_id, username, role, connection), sender, customer_id, username); // Provide customer_id here
+                        OpenChildFormOrder(new Forms.FormOrder(customer_id, username, role, connection), sender, customer_id, username); 
                         lblTitle.Text = "Create Order";
 
                         btnPay.Enabled = false;
@@ -619,13 +653,15 @@ namespace Dashboard
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 OpenChildForm(new Forms.FormCollections(username, role, connection), sender);
-                    lblTitle.Text = "Collections";
-                    btnOrder.Enabled = false;
-                    btnInventory.Enabled = false;
-                    btnReport.Enabled = false;
-                    btnMaintenance.Enabled = false;
-                button1.Enabled = false;
+
             });
+
+            lblTitle.Text = "Collections";
+            btnOrder.Enabled = false;
+            btnInventory.Enabled = false;
+            btnReport.Enabled = false;
+            btnMaintenance.Enabled = false;
+            button1.Enabled = false;
         }
 
         private void btnInventory_Click(object sender, EventArgs e)
@@ -633,13 +669,14 @@ namespace Dashboard
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 OpenChildForm(new Forms.FormInventory(username, role, connection), sender);
-                lblTitle.Text = "Inventory Manager";
-                btnOrder.Enabled = false;
-                btnPay.Enabled = false;
-                btnReport.Enabled = false;
-                btnMaintenance.Enabled = false;
-                button1.Enabled = false;
             });
+
+            lblTitle.Text = "Inventory Manager";
+            btnOrder.Enabled = false;
+            btnPay.Enabled = false;
+            btnReport.Enabled = false;
+            btnMaintenance.Enabled = false;
+            button1.Enabled = false;
         }
 
         private void btnReport_Click(object sender, EventArgs e)
@@ -653,13 +690,14 @@ namespace Dashboard
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 OpenChildForm(new Forms.FormMaintenance(username, role, connection, employee_name), sender);
-                lblTitle.Text = "Maintenance";
-                btnOrder.Enabled = false;
-                btnPay.Enabled = false;
-                btnReport.Enabled = false;
-                btnInventory.Enabled = false;
-                button1.Enabled = false;
             });
+
+            lblTitle.Text = "Maintenance";
+            btnOrder.Enabled = false;
+            btnPay.Enabled = false;
+            btnReport.Enabled = false;
+            btnInventory.Enabled = false;
+            button1.Enabled = false;
         }
 
         private void gunaCircleButton1_Click(object sender, EventArgs e)
@@ -702,6 +740,7 @@ namespace Dashboard
 
         private void Dashboard_FormClosed(object sender, FormClosedEventArgs e)
         {
+            /*
             using (MySqlConnection connection = async_connection)
             {
                 if (connection.State != ConnectionState.Open)
@@ -715,18 +754,20 @@ namespace Dashboard
 
                 cmd.ExecuteNonQueryAsync();
             }
-
-            if (async_connection != null)
-            {
-                async_connection.DisposeAsync();
-                async_connection.CloseAsync();
-            }
-
+            */
         }
 
         private void Dashboard_Load(object sender, EventArgs e)
         {
             isHandleCreated = true;
+        }
+
+        private void Dashboard_Click(object sender, EventArgs e)
+        {
+            // Reset the timer whenever there's activity
+            activityTimer.Stop();
+            activityTimer.Start();
+            Console.WriteLine("Resetted");
         }
     }
 }

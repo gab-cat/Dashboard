@@ -68,6 +68,7 @@
             this.txtSearchTerm.Name = "txtSearchTerm";
             this.txtSearchTerm.Size = new System.Drawing.Size(411, 23);
             this.txtSearchTerm.TabIndex = 10;
+            this.txtSearchTerm.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtSearchTerm_KeyDown);
             // 
             // label2
             // 
@@ -293,6 +294,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Add Items";
             this.Load += new System.EventHandler(this.AddItems_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddItems_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

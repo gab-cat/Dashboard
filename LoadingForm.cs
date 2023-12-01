@@ -60,9 +60,16 @@ namespace Dashboard
 
             this.StartPosition = FormStartPosition.CenterScreen;
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
-
-            label1.Text = "Logging out.";
-            label2.Text = "Thank you, " + firstName + "!";
+            if (message == 1)
+            {
+                label1.Text = "Logging out.";
+                label2.Text = "Thank you, " + firstName + "!";
+            }
+            else if (message == 2)
+            {
+                label1.Text = "Exiting Application.";
+                label2.Text = "You were logged off by the system.";
+            }
         }
     }
 }

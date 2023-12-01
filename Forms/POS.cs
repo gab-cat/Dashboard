@@ -94,6 +94,8 @@ namespace Dashboard.Forms
             orderGrid.AllowUserToDeleteRows = true;
             orderGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
+            this.KeyPreview = true;
+            // this.KeyDown += POS_KeyDown;
         }
 
         [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
@@ -154,7 +156,7 @@ namespace Dashboard.Forms
             // Subscribe to the ItemAdded event
             addItems.ItemAdded += AddItems_ItemAdded;
 
-            addItems.ShowDialog();
+            addItems.Show();
 
 
         }
@@ -346,6 +348,10 @@ namespace Dashboard.Forms
         {
             using (connection)
             {
+                if (connection.State != ConnectionState.Open) 
+                { 
+                    connection.Open();
+                }
                 using (MySqlTransaction transaction = connection.BeginTransaction())
                 {
                     try
@@ -355,11 +361,14 @@ namespace Dashboard.Forms
                         MySqlCommand command = new MySqlCommand(query, connection, transaction);
 
                         // Get the last sale_id or default to 0 if the table is empty
-                        int lastSaleID = Convert.ToInt32(command.ExecuteScalar());
-                        int newSaleID = lastSaleID + 1;
-                        new_sale_id = newSaleID;
+                        object result = command.ExecuteScalar();
+                        int lastSaleID = (result != DBNull.Value && result != null) ? Convert.ToInt32(result) : 0;
 
+                        int newSaleID = (lastSaleID > 0) ? lastSaleID + 1 : 5000; // Use 5000 if there are no existing rows
+
+                        new_sale_id = newSaleID;
                         sale_id = newSaleID;
+
                         string currentDate = DateTime.Now.ToString("yyyyMMdd");
                         string transactionID = currentDate + newSaleID.ToString();
                         transaction_id = transactionID;
@@ -445,6 +454,7 @@ namespace Dashboard.Forms
             string username = Interaction.InputBox("Enter Supervisor's Username:\n\n" +
                 "Warning: Only Supervisors are allowed to add a discount to orders. Once the discount is applied, the order will be final and can no longer be modified. " +
                 "Please proceed with caution.", "Authentication");
+
             // Prompt the user for password with a password input box
             string password = PromptForPassword("Enter Supervisor's Password:");
 
@@ -457,56 +467,50 @@ namespace Dashboard.Forms
                 // Check if the user is an Admin or Manager to apply a discount
                 if (userRole == "Admin" || userRole == "Manager")
                 {
-                    string discountInput = Interaction.InputBox("Enter discount percentage:", "Discount");
+                    string discountInput = Interaction.InputBox("Enter discount amount (with '%' for percentage, without for fixed amount):", "Discount");
 
-                    if (decimal.TryParse(discountInput, out decimal discountPercentage) && discountPercentage >= 0)
+                    bool isPercentage = discountInput.EndsWith("%");
+                    discountInput = discountInput.Trim('%');
+
+                    if ((decimal.TryParse(discountInput, out decimal discountAmount) && discountAmount >= 0) || isPercentage)
                     {
-                        if (discountPercentage <= 100)
+                        decimal totalAmount = decimal.Parse(lblTotalAmount.Text);
+                        total_amount = totalAmount;
+
+                        if (isPercentage)
                         {
-                            // Calculate the discount amount based on the percentage
-                            decimal totalAmount = decimal.Parse(lblTotalAmount.Text);
-                            total_amount = totalAmount;
+                            if (discountAmount <= 100)
+                            {
+                                decimal discountPercentage = discountAmount;
 
+                                decimal discount = (discountPercentage / 100) * totalAmount;
+                                ApplyDiscount(username, totalAmount, discount, discountPercentage);
 
-                            discountPercent = discountPercentage;
-                            decimal discountAmount = (discountPercentage / 100) * totalAmount;
-
-                            // Apply the discount to the total amount
-                            totalAmount -= discountAmount;
-
-                            supervisor_name = username;
-
-                            txtDiscount.Text = discountAmount.ToString("0.00");
-                            discount_amount = discountAmount;
-                            // Update the total amount display
-                            lblTotalAmount.Text = totalAmount.ToString("0.00");
-                            txttotal.Text = lblTotalAmount.Text;
-
-                            // Calculate VAT and vatable amount 
-                            decimal vatRate = 0.12m; // 12% VAT rate
-                            decimal vatableAmount = totalAmount / (1 + vatRate);
-                            decimal vatAmount = totalAmount - vatableAmount;
-
-                            // Update the vatable amount and VAT text boxes
-                            txtVatable.Text = vatableAmount.ToString("0.00");
-                            txtVAT.Text = vatAmount.ToString("0.00");
-
-                            isItemAddingEnabled = false;
-
-                            isDiscountApplied = true;
-
-                            ApplyDiscountToOrderItems(discountPercentage);
-
-                            MessageBox.Show($"Discount of {discountPercentage}% applied successfully.", "Discount", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show($"Discount of {discountPercentage}% applied successfully.", "Discount", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Invalid discount percentage. Please enter a value between 0 and 100.", "Discount", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                         else
                         {
-                            MessageBox.Show("Invalid discount percentage. Please enter a value between 0 and 100.", "Discount", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (discountAmount <= totalAmount)
+                            {
+                                decimal discountPercentage = (discountAmount / totalAmount) * 100;
+                                ApplyDiscount(username, totalAmount, discountAmount, discountPercentage);
+
+                                MessageBox.Show($"Discount of {discountAmount} applied successfully.", "Discount", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            else
+                            {
+                                MessageBox.Show("Invalid discount amount. Please enter an amount less than or equal to the total.", "Discount", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Invalid discount input. Please enter a valid percentage.", "Discount", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Invalid discount input. Please enter a valid amount or percentage.", "Discount", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
@@ -518,6 +522,34 @@ namespace Dashboard.Forms
             {
                 MessageBox.Show("Authentication failed. Please check your username and password.", "Authentication Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void ApplyDiscount(string username, decimal totalAmount, decimal discountAmount, decimal discountPercentage)
+        {
+            // Calculate the new total amount after discount
+            decimal discountedTotalAmount = totalAmount - discountAmount;
+            supervisor_name = username;
+
+            txtDiscount.Text = discountAmount.ToString("0.00");
+            discount_amount = discountAmount;
+
+            // Update the total amount display
+            lblTotalAmount.Text = discountedTotalAmount.ToString("0.00");
+            txttotal.Text = lblTotalAmount.Text;
+
+            // Calculate VAT and vatable amount
+            decimal vatRate = 0.12m; // 12% VAT rate
+            decimal vatableAmount = discountedTotalAmount / (1 + vatRate);
+            decimal vatAmount = discountedTotalAmount - vatableAmount;
+
+            // Update the vatable amount and VAT text boxes
+            txtVatable.Text = vatableAmount.ToString("0.00");
+            txtVAT.Text = vatAmount.ToString("0.00");
+
+            isItemAddingEnabled = false;
+            isDiscountApplied = true;
+
+            // ApplyDiscountToOrderItems(discountPercentage);
         }
 
         private void ApplyDiscountToOrderItems(decimal discountPercentage)
@@ -584,18 +616,47 @@ namespace Dashboard.Forms
         {
             using (connection)
             {
-                if (connection.State != ConnectionState.Open)
+                try
                 {
-                    connection.Open();
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+
+                    // SQL statement to check for the username and password, as well as additional conditions in the 'logins' table
+                    string query = "SELECT password, salt, COUNT(*) FROM logins WHERE BINARY username = @username AND employee_status = 1";
+                    MySqlCommand command = new MySqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@username", username);
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string hashedPasswordFromDB = reader.GetString(0);
+                            string salt = reader.GetString(1);
+                            int count = reader.GetInt32(2);
+                            reader.Close();
+
+                            bool passwordMatch = PasswordHashing.VerifyPassword(password, hashedPasswordFromDB, salt);
+
+
+                            if (passwordMatch)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                    }
                 }
-                string query = "SELECT COUNT(*) FROM logins WHERE username = @username AND password = @password";
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.Parameters.AddWithValue("@username", username);
-                command.Parameters.AddWithValue("@password", password);
-
-                int count = Convert.ToInt32(command.ExecuteScalar());
-
-                return (count == 1);
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                return false;
             }
         }
 
@@ -658,27 +719,27 @@ namespace Dashboard.Forms
             if (e.KeyCode == Keys.F1)
             {
                 NewTransaction();
-                e.Handled = true; 
+                e.Handled = true;
             }
-            if (e.KeyCode == Keys.F2)
+            else if (e.KeyCode == Keys.F2)
             {
                 AddItem();
-                e.Handled = true; 
+                e.Handled = true;
             }
-            if (e.KeyCode == Keys.F3)
+            else if (e.KeyCode == Keys.F3)
             {
                 Discount();
-                e.Handled = true; 
+                e.Handled = true;
             }
-            if (e.KeyCode == Keys.F4)
+            else if (e.KeyCode == Keys.F4)
             {
                 CreateOrderEvent();
-                e.Handled = true; 
+                e.Handled = true;
             }
-            if (e.KeyCode == Keys.F5)
+            else if (e.KeyCode == Keys.F5)
             {
                 BackToForm();
-                e.Handled = true; 
+                e.Handled = true;
             }
         }
 
@@ -686,11 +747,16 @@ namespace Dashboard.Forms
 
         private void CreateOrderEvent()
         {
+            if (orderItems.Count == 0)
+            {
+                MessageBox.Show("No items in the order.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             DialogResult result = MessageBox.Show("Are you sure you want to create this order?", "Confirm Order Creation: " + new_sale_id.ToString(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
-                // User confirmed, proceed to create the order
 
                 if (!isDiscountApplied)
                 {
@@ -727,6 +793,12 @@ namespace Dashboard.Forms
                 btnAddItem.Enabled = false;
                 btnDiscount.Enabled = false;
                 btnCreateOrder.Enabled = false;
+
+                DialogResult resulta = MessageBox.Show("Do you want to make payment for this order now?", "Go to Payment", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (resulta == DialogResult.Yes)
+                {
+                    directToPayment();
+                }
 
             }
         }
@@ -773,6 +845,11 @@ namespace Dashboard.Forms
                         // Iterate through the order items and insert them into the sale_items table
                         foreach (OrderItem item in orderItems)
                         {
+                            if (connection.State != ConnectionState.Open)
+                            {
+                                connection.Open();
+                            }
+
                             string insertSaleItemQuery = "INSERT INTO sale_items (sale_id, product_id, sale_date, quantity_sold, unit_price, subtotal) " +
                                 "VALUES (@sale_id, @product_id, @sale_date, @quantity_sold, @unit_price, @subtotal)";
 
@@ -797,22 +874,62 @@ namespace Dashboard.Forms
                             updateProductStockCommand.ExecuteNonQuery();
                         }
 
+                        if (connection.State != ConnectionState.Open)
+                        {
+                            connection.Open();
+                        }
                         transaction.Commit();
                         MessageBox.Show("Order created successfully.", "Order Created", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         GenerateOrderSummaryPDF(customer_id, transaction_id);
 
                         orderItems.Clear();
-                        UpdateOrderGrid();
+                        UpdateOrderGrid();    
                     }
                     catch (Exception ex)
                     {
-                        // Handle any exceptions that may occur during the transaction
-                        transaction.Rollback();
+                        if (connection.State != ConnectionState.Open)
+                        {
+                            connection.Open();
+                        }
+                        transaction?.Rollback();
                         MessageBox.Show("An error occurred while creating the order: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
+        }
+
+        private void directToPayment()
+        {
+            Dashboard dashboardForm = Application.OpenForms["Dashboard"] as Dashboard;
+            FormOrder formOrderForm = Application.OpenForms["FormOrder"] as FormOrder;
+            if (formOrderForm != null)
+            {
+                formOrderForm.Show();
+            }
+
+            LoadingScreenManager.ShowLoadingScreen(() =>
+            {
+                if (dashboardForm != null)
+                {
+                    dashboardForm.Show();
+                    object sender = dashboardForm.btnPay;
+                    dashboardForm.Reset();
+                    dashboardForm.OpenChildForm(new Forms.FormCollections(employee_name, role, connection, customer_id, new_sale_id), sender);
+
+                    dashboardForm.lblTitle.Text = "Collections";
+                    dashboardForm.btnOrder.Enabled = false;
+                    dashboardForm.btnInventory.Enabled = false;
+                    dashboardForm.btnReport.Enabled = false;
+                    dashboardForm.btnMaintenance.Enabled = false;
+                    dashboardForm.button1.Enabled = false;
+                    this.Close();
+                }
+            });
+
+
+            
+           
         }
 
         private void GenerateOrderSummaryPDF(int customerId, string saleId)

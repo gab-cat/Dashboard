@@ -212,7 +212,6 @@ namespace Dashboard
             if (e.RowIndex >= 0 && e.ColumnIndex == 0)
             {
                 SelectedCustomerId = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
-                this.DialogResult = DialogResult.OK; 
             }
         }
 
@@ -254,6 +253,27 @@ namespace Dashboard
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBox1.Text = string.Empty;
+        }
+
+        private void btnSelect_Click(object sender, EventArgs e)
+        {
+            if (SelectedCustomerId > 0)
+            {
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show("Please select a customer.");
+            }
+        }
+
+        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                SelectedCustomerId = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
+                this.DialogResult = DialogResult.OK;
+            }
         }
     }
 }
