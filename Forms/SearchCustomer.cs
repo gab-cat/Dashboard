@@ -56,6 +56,7 @@ namespace Dashboard
 
 
                     ConfigureDataGridViewColumns();
+                    dataGridView1.Focus();
                 }
                 catch (Exception ex)
                 {
@@ -144,6 +145,7 @@ namespace Dashboard
                 }
 
                 ConfigureDataGridViewColumns();
+                dataGridView1.Focus();
             }
             catch (Exception ex)
             {
@@ -198,18 +200,18 @@ namespace Dashboard
                 if (selectedRow.Cells["customer_id"].Value != null)
                 {
                     SelectedCustomerId = Convert.ToInt32(selectedRow.Cells["customer_id"].Value);
-
+                    Console.WriteLine(SelectedCustomerId);
                 }
             }
             else
             {
-                SelectedCustomerId = -1; // No customer selected
+                SelectedCustomerId = -1;
             }
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && e.ColumnIndex == 0)
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
                 SelectedCustomerId = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
             }
@@ -273,6 +275,15 @@ namespace Dashboard
             {
                 SelectedCustomerId = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value);
                 this.DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) 
+            {
+                this.DialogResult = DialogResult.OK;
+                e.SuppressKeyPress = true;
             }
         }
     }

@@ -55,7 +55,7 @@ namespace Dashboard
             customProgressBar1.BringToFront();
             richTextBox1.GotFocus += (sender, e) => { richTextBox1.Parent.Focus(); };
 
-            this.connection = DatabaseHelper.GetOpenConnection();
+            
         }
 
         private async void Initializer_Shown(object sender, EventArgs e)
@@ -71,13 +71,15 @@ namespace Dashboard
 
             try
             {
-                // Perform the database connection check here
+                this.connection = DatabaseHelper.GetOpenConnection();
                 using (connection)
                 {
                     if (connection == null) 
                     {
                         throw new Exception("Unable to establish a database connection.");
                     }
+
+                    label4.Text = "Setting up user permission   .   .   .";
 
                     string message = "This software is intended solely for legitimate business purposes. Any unauthorized use or misuse of this software may result in legal action by the company." +
                         "\n\nBy clicking 'Agree,' you acknowledge and accept the following:" +
@@ -129,7 +131,8 @@ namespace Dashboard
                 if (!isDatabaseConnected)
                 {
                     // Connection failed, show an error message
-                    MessageBox.Show($"An error occurred while opening the database connection: {ex.Message} The application will now terminate.", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Console.WriteLine($"An error occurred while opening the database connection: {ex.Message} The application will now terminate.", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"{DatabaseHelper.errorMesage}\n\n The application will now terminate.", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
                 }
             }

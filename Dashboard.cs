@@ -1,5 +1,6 @@
 ﻿using Dashboard.Forms;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -101,6 +102,9 @@ namespace Dashboard
 
                     try
                     {
+                        DateTime now = DateTime.Now;
+                        Console.WriteLine("Activee at " + now.ToString());
+
                         if (!forceLogout)
                         {
                             await CheckActiveSessionStatus();
@@ -128,6 +132,16 @@ namespace Dashboard
                 cmd.Parameters.AddWithValue("@username", employee_name);
 
                 object result = await cmd.ExecuteScalarAsync();
+                DateTime now = DateTime.Now;
+                if ((bool)result)
+                {
+                    Console.WriteLine("Active at " + now.ToString());
+                }
+                else
+                {
+                    Console.WriteLine("Logged out at " + now.ToString());
+                }
+
                 if (result != null && result != DBNull.Value)
                 {
                     bool activeSession = (bool)result;
@@ -601,7 +615,7 @@ namespace Dashboard
             childForm.Show();
             lblTitle.Text = childForm.Text;
             return customer_id;
-        }
+        } 
 
         private void btnCloseChildForm_Click(object sender, EventArgs e)
         {

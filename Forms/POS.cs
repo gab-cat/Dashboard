@@ -14,6 +14,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.draw;
 using Font = iTextSharp.text.Font;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace Dashboard.Forms
 {
@@ -899,20 +900,23 @@ namespace Dashboard.Forms
             }
         }
 
-        private void directToPayment()
+        private async void directToPayment()
         {
             Dashboard dashboardForm = Application.OpenForms["Dashboard"] as Dashboard;
             FormOrder formOrderForm = Application.OpenForms["FormOrder"] as FormOrder;
             if (formOrderForm != null)
             {
+                dashboardForm.Show();
                 formOrderForm.Show();
             }
+
+
+            await Task.Delay(2000);
 
             LoadingScreenManager.ShowLoadingScreen(() =>
             {
                 if (dashboardForm != null)
                 {
-                    dashboardForm.Show();
                     object sender = dashboardForm.btnPay;
                     dashboardForm.Reset();
                     dashboardForm.OpenChildForm(new Forms.FormCollections(employee_name, role, connection, customer_id, new_sale_id), sender);

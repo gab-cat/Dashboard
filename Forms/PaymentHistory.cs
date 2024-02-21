@@ -121,6 +121,7 @@ namespace Dashboard.Forms
                                             string text4 = "Refund Method : " + method + Environment.NewLine;
                                             string text5 = "=== User Memo is required ===";
                                             string info = text + text1 + text2 + text3 + text4 + text5;
+                                            transaction.Commit();
                                             LoadingScreenManager.ShowLoadingScreen(() =>
                                             {
                                                 AddMemo memo = new AddMemo(customer_id, employee_name, "Payment Refund", info);
@@ -153,10 +154,14 @@ namespace Dashboard.Forms
                         }
                     }
 
-                    transaction.Commit();
+                    
                 }
                 catch (Exception ex)
                 {
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
                     transaction?.Rollback();
 
                     MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

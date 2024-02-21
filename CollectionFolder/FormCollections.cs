@@ -72,6 +72,7 @@ namespace Dashboard.Forms
             cboxFilter.SelectedIndex = 2;
             searchCX();
 
+            cboxSaleID.SelectedIndex = cboxSaleID.Items.Count - 1;
         }
 
         private void LoadTheme()
@@ -291,14 +292,12 @@ namespace Dashboard.Forms
         {
             using (connection)
             {
-
                 if (connection.State != ConnectionState.Open)
                 {
                     connection.Open();
                 }
                 try
                 {
-                    // Query to get the earliest sale's status for the given customer
                     string query = "SELECT payment_status, sale_date " +
                                    "FROM sales " +
                                    "WHERE customer_id = @customer_id " +
@@ -314,11 +313,9 @@ namespace Dashboard.Forms
                             if (reader.Read())
                             {
                                 DateTime saleDate = reader.GetDateTime("sale_date");
-
-                                // Check if the sale is past due (7 days after sale_date)
                                 if (DateTime.Now > saleDate.AddDays(7))
                                 {
-                                    return true; // The sale is past due
+                                    return true; 
                                 }
                             }
                         }
@@ -1156,63 +1153,66 @@ namespace Dashboard.Forms
 
         private void btnNotifyEmail_Click(object sender, EventArgs e)
         {
-            if (CustomerGrid.SelectedRows.Count > 0)
+            LoadingScreenManager.ShowLoadingScreen(() =>
             {
-                int selectedCustomerId = customerId;
-                string pastDue = lblTotalPastDue.Text;
-
-                string fromEmail = "gabriel.catimbang30@gmail.com";
-                string fromPassword = "dzfh ejih ihxr vpdd";
-
-                string recipientEmail = txtEmail.Text;
-
-                if (!string.IsNullOrEmpty(recipientEmail))
+                if (CustomerGrid.SelectedRows.Count > 0)
                 {
-                    string subject = "Past Due Amount Notification";
-                    string body = $"Dear Mr./Ms. {txtName.Text} ,\n\nGood day! This is a reminder that you have a past due amount of {pastDue}. Please make the payment at your earliest convenience.\n\nSincerely,\nCollections Department - New Bernales Hardware Store";
+                    int selectedCustomerId = customerId;
+                    string pastDue = lblTotalPastDue.Text;
 
-                    try
+                    string fromEmail = "gabriel.catimbang30@gmail.com";
+                    string fromPassword = "dzfh ejih ihxr vpdd";
+
+                    string recipientEmail = txtEmail.Text;
+
+                    if (!string.IsNullOrEmpty(recipientEmail))
                     {
-                        MailMessage message = new MailMessage
+                        string subject = "Past Due Amount Notification";
+                        string body = $"Dear Mr./Ms. {txtName.Text} ,\n\nGood day! This is a reminder that you have a past due amount of {pastDue}. Please make the payment at your earliest convenience.\n\nSincerely,\nCollections Department - New Bernales Hardware Store";
+
+                        try
                         {
-                            From = new MailAddress(fromEmail, "Contact Center"),
-                            Subject = subject,
-                            Body = body,
-                            IsBodyHtml = false, // Set to false for plain text body
-                        };
+                            MailMessage message = new MailMessage
+                            {
+                                From = new MailAddress(fromEmail, "Contact Center"),
+                                Subject = subject,
+                                Body = body,
+                                IsBodyHtml = false, // Set to false for plain text body
+                            };
 
-                        message.To.Add(recipientEmail);
+                            message.To.Add(recipientEmail);
 
-                        SmtpClient client = new SmtpClient("smtp.gmail.com")
+                            SmtpClient client = new SmtpClient("smtp.gmail.com")
+                            {
+                                Port = 587,
+                                Credentials = new NetworkCredential(fromEmail, fromPassword),
+                                EnableSsl = true,
+                            };
+
+                            // Send the email
+                            client.Send(message);
+
+                            LoadingScreenManager.ShowLoadingScreen(() =>
+                            {
+                                AddMemo newmemo = new AddMemo(customerId, employee_name, "Past Due Payment Notification", "Notified CX of past due amount via email." + Environment.NewLine + body);
+                                newmemo.ShowDialog();
+                            });
+                        }
+                        catch (Exception ex)
                         {
-                            Port = 587,
-                            Credentials = new NetworkCredential(fromEmail, fromPassword),
-                            EnableSsl = true,
-                        };
-
-                        // Send the email
-                        client.Send(message);
-
-                        LoadingScreenManager.ShowLoadingScreen(() =>
-                        {
-                            AddMemo newmemo = new AddMemo(customerId, employee_name, "Past Due Payment Notification", "Notified CX of past due amount via email." + Environment.NewLine + body);
-                            newmemo.ShowDialog();
-                        });
+                            MessageBox.Show("An error occurred while sending the email: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show("An error occurred while sending the email: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Customer's email address not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Customer's email address not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Please select a customer to notify.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
-            else
-            {
-                MessageBox.Show("Please select a customer to notify.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            });
 
         }
 

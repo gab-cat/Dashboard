@@ -146,20 +146,9 @@ namespace Dashboard.Forms
                                 chkEmail.Checked = Convert.ToInt32(reader["email"]) == 1;
                                 chkPhone.Checked = Convert.ToInt32(reader["phone"]) == 1;
                             }
-                            else
-                            {
-
-                            }
-
-                            if (IsPastDue(customerId))
-                            {
-                                chkPastDue.Checked = true; 
-                            }
-                            else
-                            {
-                                chkPastDue.Checked = false; 
-                            }
                         }
+
+                        chkPastDue.Checked = IsPastDue(customer_id) ? true : false;
                     }
                 }
                 catch (Exception ex)
@@ -760,6 +749,8 @@ namespace Dashboard.Forms
 
         private bool IsPastDue(int customerId)
         {
+            decimal totalPastDueAmount = 0;
+
             using (connection)
             {
                 if (connection.State != ConnectionState.Open)
@@ -768,11 +759,11 @@ namespace Dashboard.Forms
                 }
                 try
                 {
-                    string query = "SELECT payment_status, sale_date " +
+                    string query = "SELECT total_amount " +
                                    "FROM sales " +
                                    "WHERE customer_id = @customer_id " +
                                    "AND payment_status = 'Pending' " +
-                                   "ORDER BY sale_date ASC LIMIT 1";
+                                   "AND DATE_ADD(sale_date, INTERVAL 7 DAY) <= NOW()";
 
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
@@ -780,23 +771,24 @@ namespace Dashboard.Forms
 
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
-                            if (reader.Read())
+                            while (reader.Read())
                             {
-                                DateTime saleDate = reader.GetDateTime("sale_date");
-                                if (DateTime.Now > saleDate.AddDays(7))
-                                {
-                                    return true; // The sale is past due
-                                }
+                                decimal totalAmount = reader.GetDecimal("total_amount");
+
+                                // Add the total amount of each past-due sale
+                                totalPastDueAmount += totalAmount;
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    MessageBox.Show("An error occurred: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                return false; 
             }
+            bool hasPastDue = totalPastDueAmount > 0 ? true : false;
+
+            return hasPastDue;
         }
 
         private void checkBox1_Click(object sender, EventArgs e)

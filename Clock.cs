@@ -1111,6 +1111,7 @@ namespace Dashboard
             childForm.BringToFront();
             childForm.Show();
 
+            btnClose.Text = "Close Time Card";
             btnClose.Visible = true;
         }
 
@@ -1140,6 +1141,7 @@ namespace Dashboard
             childForm.BringToFront();
             childForm.Show();
 
+            btnClose.Text = "Close My Disputes";
             btnClose.Visible = true;
         }
 
@@ -1157,6 +1159,7 @@ namespace Dashboard
             childForm.BringToFront();
             childForm.Show();
 
+            btnClose.Text = "Close Review";
             btnClose.Visible = true;
         }
 

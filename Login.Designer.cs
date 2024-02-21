@@ -48,12 +48,14 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label6 = new System.Windows.Forms.Label();
             this.gunaLinePanel1 = new Guna.UI.WinForms.GunaLinePanel();
+            this.loadingGIF = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.btnPeek)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.loadingGIF)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -176,7 +178,7 @@
             this.button1.FocusedColor = System.Drawing.Color.Empty;
             this.button1.Font = new System.Drawing.Font("Outfit Thin", 12F);
             this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
+            this.button1.Image = global::Dashboard.Properties.Resources.login1;
             this.button1.ImageAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.button1.ImageSize = new System.Drawing.Size(20, 20);
             this.button1.Location = new System.Drawing.Point(22, 271);
@@ -320,6 +322,18 @@
             this.gunaLinePanel1.Size = new System.Drawing.Size(2, 225);
             this.gunaLinePanel1.TabIndex = 14;
             // 
+            // loadingGIF
+            // 
+            this.loadingGIF.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(86)))));
+            this.loadingGIF.Image = global::Dashboard.Properties.Resources.Rolling_1s_200px;
+            this.loadingGIF.Location = new System.Drawing.Point(95, 271);
+            this.loadingGIF.Name = "loadingGIF";
+            this.loadingGIF.Size = new System.Drawing.Size(29, 33);
+            this.loadingGIF.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.loadingGIF.TabIndex = 15;
+            this.loadingGIF.TabStop = false;
+            this.loadingGIF.Visible = false;
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -327,6 +341,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(580, 388);
+            this.Controls.Add(this.loadingGIF);
             this.Controls.Add(this.gunaLinePanel1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.guna2HtmlLabel1);
@@ -348,6 +363,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Login_FormClosing);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Login_MouseDown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -356,6 +372,7 @@
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.loadingGIF)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -382,5 +399,6 @@
         private System.Windows.Forms.Label label6;
         private Guna.UI.WinForms.GunaLinePanel gunaLinePanel1;
         private System.Windows.Forms.PictureBox btnPeek;
+        private System.Windows.Forms.PictureBox loadingGIF;
     }
 }

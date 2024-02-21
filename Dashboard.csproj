@@ -474,6 +474,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="login1.ico" />
+    <None Include="Resources\Rolling-1s-200px.gif" />
+    <None Include="Resources\Double Ring-1s-200px.gif" />
+    <None Include="Resources\login1.png" />
     <None Include="Resources\warning.png" />
     <None Include="Resources\icons8-eye-50.png" />
     <None Include="Resources\icons8-eye-641.png" />

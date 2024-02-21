@@ -88,7 +88,7 @@
             this.paymentData.RowHeadersVisible = false;
             this.paymentData.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.paymentData.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.paymentData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.paymentData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.paymentData.ShowCellErrors = false;
             this.paymentData.ShowCellToolTips = false;
             this.paymentData.ShowEditingIcon = false;

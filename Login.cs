@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Security.Cryptography;
+using System.Web.Security;
 
 namespace Dashboard
 {
@@ -39,6 +40,7 @@ namespace Dashboard
         private string tempUsername;
         private int loginAttempts;
         private bool peekActive;
+        private Dashboard form1 = null;
         public Login()
         {
             InitializeComponent();
@@ -123,6 +125,38 @@ namespace Dashboard
             return Task.FromResult(userDetails);
         }
 
+        private void enableForms()
+        {
+            textBoxUsername.Enabled = true;
+            textBoxUsername.BackColor = color;
+            textBoxPassword.Enabled = true;
+            textBoxPassword.BackColor = color;
+            btnPeek.Visible = true;
+            peekActive = false;
+            textBoxPassword.UseSystemPasswordChar = true;
+            btnPeek.Image = Properties.Resources.icons8_eye_50;
+            button1.Text = "Login";
+            button1.Image = Properties.Resources.login1;
+            loadingGIF.Visible = false;
+            button1.Enabled = true;
+        }
+
+        private void disableForms()
+        {
+            textBoxUsername.Enabled = false;
+            textBoxUsername.BackColor = inactive;
+            textBoxPassword.Enabled = false;
+            textBoxPassword.BackColor = inactive;
+            btnPeek.Visible = false;
+            peekActive = false;
+            textBoxPassword.UseSystemPasswordChar = true;
+            btnPeek.Image = Properties.Resources.icons8_eye_50;
+            button1.Text = "Loading";
+            button1.Image = Properties.Resources.Double_Ring_1s_200px;
+            loadingGIF.Visible = true;
+            button1.Enabled = false;
+        }
+
         private async void button1_Click(object sender, EventArgs e)
         {
             string enteredUsername = textBoxUsername.Text;
@@ -142,80 +176,44 @@ namespace Dashboard
             {
                 if (enteredUsername == "" || enteredPassword == "")
                 {
-                    textBoxUsername.Enabled = false;
-                    textBoxUsername.BackColor = inactive;
-                    textBoxPassword.Enabled = false;
-                    textBoxPassword.BackColor = inactive;
-                    btnPeek.Visible = false; 
+                    disableForms();
 
                     await Task.Delay(1000);
                     MessageBox.Show("Username or Password is missing! Please try again.");
 
-                    textBoxUsername.Enabled = true;
-                    textBoxUsername.BackColor = color;
-                    textBoxPassword.Enabled = true;
-                    textBoxPassword.BackColor = color;
-                    btnPeek.Visible = true;
-                    peekActive = false;
-                    textBoxPassword.UseSystemPasswordChar = true;
-                    btnPeek.Image = Properties.Resources.icons8_eye_50;
+                    enableForms();
 
                     return;
                 }
                 else
                 {
-                    textBoxUsername.Enabled = false;
-                    textBoxUsername.BackColor = inactive;
-                    textBoxPassword.Enabled = false;
-                    textBoxPassword.BackColor = inactive;
-                    btnPeek.Visible = false;
-                    peekActive = false;
-                    textBoxPassword.UseSystemPasswordChar = true;
-                    btnPeek.Image = Properties.Resources.icons8_eye_50;
+                    disableForms();
 
                     await Task.Delay(1000);
-                    if (CheckLogin(enteredUsername, enteredPassword))
+                    if ( CheckLogin(enteredUsername, enteredPassword))
                     {
                         incorrect.Visible = false;
 
                         if (updatePasswordMenu)
                         {
 
-                            textBoxUsername.Enabled = true;
-                            textBoxUsername.BackColor = color;
-                            textBoxPassword.Enabled = true;
-                            textBoxPassword.BackColor = color;
+                            enableForms();
                             tempUsername = enteredUsername;
                             textBoxPassword.Text = string.Empty; textBoxUsername.Text = string.Empty;
 
                             passwordChangeUI();
                             return;
                         }
-                        /*
-                        (string firstName, string lastName, string role) = GetUserDetailsFromDatabase(enteredUsername);
-                        Dashboard form1 = new Dashboard(firstName, lastName, role, enteredUsername);
 
-                        
-                        this.Hide();
-                        ShowLoadingForm(firstName);
-
-                        form1.Show();
-                        */
-
-                        // Asynchronously fetch user details and wait for both tasks to complete
                         Task<(string, string, string)> userDetailsTask = GetUserDetailsFromDatabaseAsync(enteredUsername);
                         await Task.WhenAll(userDetailsTask);
 
                         // Retrieve user details
                         (string firstName, string lastName, string role) = await userDetailsTask;
 
-                        Dashboard form1 = new Dashboard(firstName, lastName, role, enteredUsername);
-
-                        // Hide the current form and show loading form
                         this.Hide();
+                        form1 = new Dashboard(firstName, lastName, role, enteredUsername);
                         ShowLoadingForm(firstName);
-
-                        // Show the Dashboard form
                         form1.Show();
 
                         if (connection != null)
@@ -249,31 +247,23 @@ namespace Dashboard
                         }
 
 
-                        textBoxUsername.Enabled = false;
-                        textBoxUsername.BackColor = inactive;
-                        textBoxPassword.Enabled = false;
-                        textBoxPassword.BackColor = inactive;
-                        btnPeek.Visible = false;
-                        peekActive = false;
-                        textBoxPassword.UseSystemPasswordChar = true;
-                        btnPeek.Image = Properties.Resources.icons8_eye_50;
+                        disableForms();
                         await Task.Delay(1000);
 
                         incorrect.Visible = true;
 
-                        textBoxUsername.Enabled = true;
-                        textBoxUsername.BackColor = color;
-                        textBoxPassword.Enabled = true;
-                        textBoxPassword.BackColor = color;
-                        btnPeek.Visible = true;
-
-                        textBoxPassword.Text = "";
-                        textBoxUsername.Text = "";
+                        enableForms();
                         textBoxUsername.Focus();
                     }
                 }
             }
         }
+
+        private async Task CreateDashboardAsync(string firstName, string lastName, string role, string enteredUsername)
+        {
+
+        }
+
 
         private void UpdatePasswordInTable(string username, string newPassword)
         {
@@ -591,6 +581,18 @@ namespace Dashboard
             {
                 button1.PerformClick();
             }
+        }
+
+        [DllImport("user32.DLL", EntryPoint = "ReleaseCapture")]
+        private extern static void ReleaseCapture();
+        [DllImport("user32.DLL", EntryPoint = "SendMessage")]
+
+        private extern static void SendMessage(System.IntPtr hWnd, int wMsg, int wParam, int lParam);
+
+        private void Login_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
     }
 }

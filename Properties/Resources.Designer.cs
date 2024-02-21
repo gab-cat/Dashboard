@@ -73,6 +73,16 @@ namespace Dashboard.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Double_Ring_1s_200px {
+            get {
+                object obj = ResourceManager.GetObject("Double Ring-1s-200px", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap icons8_closed_eye_50 {
             get {
                 object obj = ResourceManager.GetObject("icons8-closed-eye-50", resourceCulture);
@@ -146,6 +156,26 @@ namespace Dashboard.Properties {
         internal static System.Drawing.Bitmap icons8_triangle_arrow_24__1_ {
             get {
                 object obj = ResourceManager.GetObject("icons8-triangle-arrow-24 (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap login1 {
+            get {
+                object obj = ResourceManager.GetObject("login1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Rolling_1s_200px {
+            get {
+                object obj = ResourceManager.GetObject("Rolling-1s-200px", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
